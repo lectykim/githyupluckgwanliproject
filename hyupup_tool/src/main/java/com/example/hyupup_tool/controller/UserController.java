@@ -1,9 +1,6 @@
 package com.example.hyupup_tool.controller;
 
-import com.example.hyupup_tool.entity.dto.ControllerErrorResponse;
-import com.example.hyupup_tool.entity.dto.LoginDTO;
-import com.example.hyupup_tool.entity.dto.SignUpRequestDTO;
-import com.example.hyupup_tool.entity.dto.UserDTO;
+import com.example.hyupup_tool.entity.dto.*;
 import com.example.hyupup_tool.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -36,8 +33,20 @@ public class UserController {
     }
 
     @PostMapping("/modify-user-info")
-    public ResponseEntity<?> modifyUserInfo(@RequestBody UserDTO userDTO){
+    public ResponseEntity<?> modifyUserInfo(@RequestBody UserDTO userDTO,HttpServletRequest httpServletRequest){
+        if(httpServletRequest.getSession(false) == null){
+            ControllerErrorResponse controllerErrorResponse = new ControllerErrorResponse("Not Login");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(controllerErrorResponse);
+        }
+        userDTO.setUserId((Long)httpServletRequest.getAttribute("UserId"));
         return userService.modifyUserInfo(userDTO);
+    }
+
+    @GetMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletRequest httpServletRequest){
+        httpServletRequest.getSession().invalidate();
+        SuccessResponseDTO successResponseDTO = new SuccessResponseDTO("Logout success");
+        return ResponseEntity.ok(successResponseDTO);
     }
 
 }

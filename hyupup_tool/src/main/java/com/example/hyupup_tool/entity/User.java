@@ -1,4 +1,4 @@
-package com.example.hyupup_tool.entity.user;
+package com.example.hyupup_tool.entity;
 
 import com.example.hyupup_tool.util.PurchasePlan;
 import jakarta.annotation.Nullable;
@@ -31,6 +31,7 @@ public class User {
 
     @Column(name="github_access_token",nullable = false)
     private String githubAccessToken;
+
 
     @Enumerated(EnumType.STRING)
     @ColumnDefault("basic_plan")

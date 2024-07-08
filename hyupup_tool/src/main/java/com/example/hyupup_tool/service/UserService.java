@@ -1,9 +1,7 @@
 package com.example.hyupup_tool.service;
 
 import com.example.hyupup_tool.entity.dto.*;
-import com.example.hyupup_tool.entity.user.User;
-import com.example.hyupup_tool.exception.ModifyUserInfoFailException;
-import com.example.hyupup_tool.exception.SignUpFailException;
+import com.example.hyupup_tool.entity.User;
 import com.example.hyupup_tool.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;

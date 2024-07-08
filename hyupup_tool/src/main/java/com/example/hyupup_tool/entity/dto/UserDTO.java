@@ -1,6 +1,6 @@
 package com.example.hyupup_tool.entity.dto;
 
-import com.example.hyupup_tool.entity.user.User;
+import com.example.hyupup_tool.entity.User;
 import com.example.hyupup_tool.util.PurchasePlan;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

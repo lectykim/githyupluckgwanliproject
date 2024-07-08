@@ -4,5 +4,5 @@ import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public class SuccessResponseDTO {
-    private String msg;
+    private String message;
 }

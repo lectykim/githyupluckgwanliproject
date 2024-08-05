@@ -45,6 +45,14 @@ public class User {
 
     private LocalDateTime deletedDate;
 
+    private User(String email,String pw,String githubAccessToken){
+        this.email=email;
+        this.pw=pw;
+        this.githubAccessToken = githubAccessToken;
+    }
 
+    public static User of(String email,String pw,String githubAccessToken){
+        return new User(email,pw,githubAccessToken);
+    }
 
 }

@@ -2,7 +2,12 @@ package com.example.hyupup_tool.service;
 
 import com.example.hyupup_tool.entity.dto.*;
 import com.example.hyupup_tool.entity.User;
+import com.example.hyupup_tool.entity.dto.user.*;
+import com.example.hyupup_tool.exception.client.BadRequestException;
+import com.example.hyupup_tool.exception.client.UnauthorizedException;
+import com.example.hyupup_tool.exception.server.ServerException;
 import com.example.hyupup_tool.repository.UserRepository;
+import com.example.hyupup_tool.validator.UserValidator;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -17,52 +22,56 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
-    public LoginDTO login(String email, String pw) {
-        Optional<User> userOptional = userRepository.findUserByEmailAndPw(email,pw);
+    private final UserValidator userValidator;
+    public LoginResponse login(LoginRequest loginRequest) {
+        Optional<User> userOptional = userRepository.findUserByEmailAndPw(loginRequest.email(),loginRequest.pw());
 
-        if(userOptional.isPresent()){
-            User user = userOptional.get();
-            LoginDTO loginDTO = new LoginDTO();
-            loginDTO.setEmail(user.getEmail());
-            loginDTO.setPurchasePlan(user.getPurchasePlan());
-            return loginDTO;
-
-        }else{
-            return null;
+        if(userOptional.isEmpty()){
+            throw new UnauthorizedException("Email and Password not correct");
         }
+
+        return new LoginResponse(userOptional.get().getUserId());
     }
 
     @Transactional
-    public ResponseEntity<?> signup(SignUpRequestDTO signUpRequestDTO) {
-        User user = signUpRequestDTO.toUserEntity();
-         if(userRepository.existsUserByEmail(signUpRequestDTO.getEmail())){
-             ControllerErrorResponse response = new ControllerErrorResponse("Email already Exists");
-             return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
-         }
-        try{
-            userRepository.save(user);
-        } catch (DataIntegrityViolationException e){
-            throw new SignUpFailException(e.getMessage());
+    public SignupResponse signup(SignupRequest signupRequest) {
+        if(!userValidator.canSignup(signupRequest.email())){
+            throw new BadRequestException("Already signup email");
         }
 
-        SuccessResponseDTO successResponseDTO = new SuccessResponseDTO("Sign up Success");
-        return ResponseEntity.ok(successResponseDTO);
+        User user = User.of(signupRequest.email(),
+                signupRequest.pw(),
+                signupRequest.githubAccessToken()
+        );
+
+        var insertedUser = userRepository.save(user);
+
+        return new SignupResponse(insertedUser.getUserId());
+
+
+    }
+
+    public CanSignupIdResponse canSignupId(String email){
+        return new CanSignupIdResponse(userValidator.canSignup(email));
     }
 
     @Transactional
-    public ResponseEntity<?> modifyUserInfo(UserDTO userDTO) {
-        Optional<User> user = userRepository.findById(userDTO.getUserId());
+    public ModifyUserInfoResponse modifyUserInfo(ModifyUserInfoRequest request) {
+        var user = userRepository.findById(request.userId());
         if(user.isPresent()){
             try {
-                userRepository.save(userDTO.toUserEntity());
+                var updatedUser = userRepository.save(User.of(request.email(),
+                        request.pw(),
+                        request.githubAccessToken())
+                );
+                return new ModifyUserInfoResponse(updatedUser.getUserId());
             } catch (DataIntegrityViolationException e){
-                throw new ModifyUserInfoFailException(e.getMessage());
+                throw new ServerException(e.getMessage());
             }
 
-            SuccessResponseDTO successResponseDTO = new SuccessResponseDTO("modify success");
-            return ResponseEntity.ok(successResponseDTO);
+
         }else{
-            throw new ModifyUserInfoFailException("User is not exist.");
+            throw new ServerException("User is not exist.");
         }
     }
 }

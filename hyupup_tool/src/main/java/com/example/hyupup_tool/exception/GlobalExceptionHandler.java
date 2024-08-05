@@ -1,14 +1,11 @@
 package com.example.hyupup_tool.exception;
 
-import com.example.hyupup_tool.entity.dto.ControllerErrorResponse;
 import com.example.hyupup_tool.exception.client.ClientException;
 import com.example.hyupup_tool.exception.server.ServerException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.ErrorResponse;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 

@@ -1,17 +1,13 @@
 package com.example.hyupup_tool.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "room")
@@ -21,12 +17,14 @@ import java.time.LocalDateTime;
 @Builder
 public class Room {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long roomId;
 
     @Column(name = "max_user",nullable = false)
     private Long maxUser;
 
     @Column(name = "title",nullable = false)
+    @Setter
     private String title;
 
     @CreatedDate
@@ -36,4 +34,18 @@ public class Room {
     private LocalDateTime lastModifiedDate;
 
     private LocalDateTime deletedDate;
+
+    @OneToMany(mappedBy = "room")
+    private List<UserToRoom> userToRoomList = new ArrayList<>();
+
+    public Room(Long maxUser,String title){
+        this.maxUser = maxUser;
+        this.title = title;
+    }
+
+    public static Room of(Long maxUser, String title){
+        return new Room(maxUser,title);
+    }
+
+
 }

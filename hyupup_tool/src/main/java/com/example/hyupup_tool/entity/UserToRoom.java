@@ -1,13 +1,8 @@
 package com.example.hyupup_tool.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
+import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
@@ -20,13 +15,19 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class UserToRoom {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userToRoomId;
 
-    @Column(name = "user_id")
-    private Long userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id",nullable = false,foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    private User user;
 
-    @Column(name = "room_id")
-    private Long roomId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "room_id",nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    private Room room;
+
+    @CreatedDate
+    private LocalDateTime createdDate;
 
     @LastModifiedDate
     private LocalDateTime lastModifiedDate;
@@ -34,6 +35,19 @@ public class UserToRoom {
     private LocalDateTime deletedDate;
 
     @Column(name = "is_master")
+    @Setter
     private boolean isMaster;
+
+    public UserToRoom(User user, Room room, boolean isMaster){
+        this.user = user;
+        this.room = room;
+        this.isMaster = isMaster;
+    }
+
+    public static UserToRoom of(User user, Room room, boolean isMaster){
+        return new UserToRoom(user,room,isMaster);
+    }
+
+
 
 }

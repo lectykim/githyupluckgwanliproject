@@ -21,7 +21,7 @@ public class RoomService {
     private final MemberToRoomRepository memberToRoomRepository;
     @Transactional
     public CreateRoomResponse createRoom(CreateRoomRequest request){
-        var roomEntity = Room.of(request.maxmember(),request.title());
+        var roomEntity = Room.of(request.maxMember(),request.title());
         var memberEntity = memberRepository.findById(request.memberId())
                 .orElseThrow(()-> new BadRequestException("Can't find member"));
 
@@ -64,12 +64,12 @@ public class RoomService {
         var newMemberEntity = memberRepository.findById(request.newMasterId())
                 .orElseThrow(()-> new BadRequestException("Can't find new member"));
 
-        var oldMemberToRoomEntity = memberToRoomRepository.findmembertoRoomBymemberAndRoom(oldMemberEntity,roomEntity)
+        var oldMemberToRoomEntity = memberToRoomRepository.findMemberToRoomByMemberAndRoom(oldMemberEntity,roomEntity)
                 .orElseThrow(()-> new ServerException("Internal Server Error"));
 
         oldMemberToRoomEntity.setMaster(false);
 
-        var newUserToRoomEntity = memberToRoomRepository.findmembertoRoomBymemberAndRoom(newMemberEntity,roomEntity)
+        var newUserToRoomEntity = memberToRoomRepository.findMemberToRoomByMemberAndRoom(newMemberEntity,roomEntity)
                 .orElseThrow(()-> new ServerException("Internal Server Error"));
 
         newUserToRoomEntity.setMaster(true);

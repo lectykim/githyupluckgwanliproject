@@ -37,13 +37,11 @@ public class Member {
 
 
     @Enumerated(EnumType.STRING)
-    @ColumnDefault("basic_plan")
     @Setter
     private PurchasePlan purchasePlan;
 
     @Enumerated(EnumType.STRING)
     @Setter
-    @ColumnDefault("normal_member")
     private AuthorityRole authorityRole;
 
     @CreatedDate

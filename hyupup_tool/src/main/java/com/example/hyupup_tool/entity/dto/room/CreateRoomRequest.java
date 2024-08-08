@@ -6,7 +6,7 @@ public record CreateRoomRequest (
         @NonNull
         Long memberId,
         @NonNull
-        Long maxmember,
+        Long maxMember,
         @NonNull
         String title
 ){

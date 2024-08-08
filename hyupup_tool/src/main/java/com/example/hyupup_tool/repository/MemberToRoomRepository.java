@@ -10,5 +10,5 @@ import java.util.Optional;
 
 @Repository
 public interface MemberToRoomRepository extends JpaRepository<MemberToRoom, Long> {
-    Optional<MemberToRoom> findmembertoRoomBymemberAndRoom(Member member, Room room);
+    Optional<MemberToRoom> findMemberToRoomByMemberAndRoom(Member member, Room room);
 }

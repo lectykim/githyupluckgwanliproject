@@ -18,10 +18,11 @@ import java.util.List;
 public class Room {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "room_id")
     private Long roomId;
 
-    @Column(name = "max_user",nullable = false)
-    private Long maxUser;
+    @Column(name = "max_member",nullable = false)
+    private Long maxmember;
 
     @Column(name = "title",nullable = false)
     @Setter
@@ -36,15 +37,15 @@ public class Room {
     private LocalDateTime deletedDate;
 
     @OneToMany(mappedBy = "room")
-    private List<UserToRoom> userToRoomList = new ArrayList<>();
+    private List<MemberToRoom> memberToRoomList = new ArrayList<>();
 
-    public Room(Long maxUser,String title){
-        this.maxUser = maxUser;
+    public Room(Long maxmember,String title){
+        this.maxmember = maxmember;
         this.title = title;
     }
 
-    public static Room of(Long maxUser, String title){
-        return new Room(maxUser,title);
+    public static Room of(Long maxmember, String title){
+        return new Room(maxmember,title);
     }
 
 

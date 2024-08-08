@@ -1,17 +1,17 @@
 package com.example.hyupup_tool.validator;
 
-import com.example.hyupup_tool.repository.UserRepository;
+import com.example.hyupup_tool.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class UserValidatorImpl implements UserValidator{
+public class MemberValidatorImpl implements MemberValidator{
 
-    private final UserRepository userRepository;
+    private final MemberRepository memberRepository;
 
     @Override
     public boolean canSignup(String email) {
-        return userRepository.existsUserByEmail(email);
+        return memberRepository.existsMemberByEmail(email);
     }
 }

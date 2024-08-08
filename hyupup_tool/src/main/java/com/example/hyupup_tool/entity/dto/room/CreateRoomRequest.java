@@ -4,9 +4,9 @@ import lombok.NonNull;
 
 public record CreateRoomRequest (
         @NonNull
-        Long userId,
+        Long memberId,
         @NonNull
-        Long maxUser,
+        Long maxmember,
         @NonNull
         String title
 ){

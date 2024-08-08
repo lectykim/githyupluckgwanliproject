@@ -35,9 +35,9 @@ public class RoomController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/invite-other-user")
-    public ResponseEntity<InviteUserResponse> inviteUser(InviteUserRequest request){
-        var response = roomService.inviteUser(request);
+    @PostMapping("/invite-other-member")
+    public ResponseEntity<InviteMemberResponse> invitemember(InviteMemberRequest request){
+        var response = roomService.invitemember(request);
 
         return ResponseEntity.ok(response);
     }

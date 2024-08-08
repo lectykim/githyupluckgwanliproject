@@ -1,11 +1,8 @@
-package com.example.hyupup_tool.entity.dto.user;
+package com.example.hyupup_tool.entity.dto.member;
 
 import lombok.NonNull;
 
-public record ModifyUserInfoRequest(
-        @NonNull
-        Long userId
-        ,
+public record SignupRequest(
         @NonNull
         String email,
         @NonNull

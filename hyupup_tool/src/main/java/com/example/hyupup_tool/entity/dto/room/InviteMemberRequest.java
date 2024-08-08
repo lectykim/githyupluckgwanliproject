@@ -2,9 +2,9 @@ package com.example.hyupup_tool.entity.dto.room;
 
 import lombok.NonNull;
 
-public record InviteUserRequest (
+public record InviteMemberRequest(
         @NonNull
-        Long userId,
+        Long memberId,
         @NonNull
         Long roomId
 ){

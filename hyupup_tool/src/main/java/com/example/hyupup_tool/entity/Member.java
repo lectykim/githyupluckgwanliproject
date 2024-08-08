@@ -1,7 +1,7 @@
 package com.example.hyupup_tool.entity;
 
+import com.example.hyupup_tool.util.AuthorityRole;
 import com.example.hyupup_tool.util.PurchasePlan;
-import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
@@ -13,15 +13,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "user")
+@Table(name = "member")
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class User {
+public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userId;
+    @Column(name = "member_id")
+    private Long memberId;
 
     @Column(name = "email",nullable = false)
     private String email;
@@ -40,6 +41,11 @@ public class User {
     @Setter
     private PurchasePlan purchasePlan;
 
+    @Enumerated(EnumType.STRING)
+    @Setter
+    @ColumnDefault("normal_member")
+    private AuthorityRole authorityRole;
+
     @CreatedDate
     private LocalDateTime createdDate;
 
@@ -48,17 +54,19 @@ public class User {
 
     private LocalDateTime deletedDate;
 
-    @OneToMany(mappedBy = "user")
-    private List<UserToRoom> userToRoomList= new ArrayList<>();
 
-    private User(String email,String pw,String githubAccessToken){
+
+    @OneToMany(mappedBy = "member")
+    private List<MemberToRoom> memberToRoomList= new ArrayList<>();
+
+    private Member(String email, String pw, String githubAccessToken){
         this.email=email;
         this.pw=pw;
         this.githubAccessToken = githubAccessToken;
     }
 
-    public static User of(String email,String pw,String githubAccessToken){
-        return new User(email,pw,githubAccessToken);
+    public static Member of(String email, String pw, String githubAccessToken){
+        return new Member(email,pw,githubAccessToken);
     }
 
 }

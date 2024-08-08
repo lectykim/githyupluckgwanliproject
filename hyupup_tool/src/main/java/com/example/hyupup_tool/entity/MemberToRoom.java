@@ -8,19 +8,19 @@ import org.springframework.data.annotation.LastModifiedDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "user_to_room")
+@Table(name = "member_to_room")
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserToRoom {
+public class MemberToRoom {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userToRoomId;
+    private Long memberToRoomId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id",nullable = false,foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
-    private User user;
+    @JoinColumn(name = "member_id",nullable = false,foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "room_id",nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
@@ -38,14 +38,14 @@ public class UserToRoom {
     @Setter
     private boolean isMaster;
 
-    public UserToRoom(User user, Room room, boolean isMaster){
-        this.user = user;
+    public MemberToRoom(Member member, Room room, boolean isMaster){
+        this.member = member;
         this.room = room;
         this.isMaster = isMaster;
     }
 
-    public static UserToRoom of(User user, Room room, boolean isMaster){
-        return new UserToRoom(user,room,isMaster);
+    public static MemberToRoom of(Member member, Room room, boolean isMaster){
+        return new MemberToRoom(member,room,isMaster);
     }
 
 

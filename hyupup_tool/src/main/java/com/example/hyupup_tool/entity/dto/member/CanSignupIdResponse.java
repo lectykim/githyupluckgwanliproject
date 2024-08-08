@@ -1,4 +1,4 @@
-package com.example.hyupup_tool.entity.dto.user;
+package com.example.hyupup_tool.entity.dto.member;
 
 import lombok.NonNull;
 

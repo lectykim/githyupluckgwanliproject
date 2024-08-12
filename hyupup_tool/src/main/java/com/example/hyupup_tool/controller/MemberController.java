@@ -6,14 +6,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@RestController("/api/v1/member-api")
+@RestController
+@RequestMapping("/api/v1/member-api")
 @RequiredArgsConstructor
 public class MemberController {
 
     private final MemberService memberService;
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(LoginRequest loginRequest){
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest){
         LoginResponse response = memberService.login(loginRequest);
 
         // TODO: 세션 맺기
@@ -22,7 +23,7 @@ public class MemberController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<SignupResponse> signup(SignupRequest signupRequest){
+    public ResponseEntity<SignupResponse> signup(@RequestBody SignupRequest signupRequest){
         SignupResponse response = memberService.signup(signupRequest);
 
         return ResponseEntity.ok(response);

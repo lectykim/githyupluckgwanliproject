@@ -7,14 +7,18 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
@@ -28,7 +32,7 @@ public class SecurityConfig {
     private final CustomLogoutSuccessHandler logoutSuccessHander;
     private final CustomAuthenticationEntryPointHandler authenticatinoEntryPointHandler;
     private final CustomAccessDeniedHandler accessDeniedHandler;
-
+    private final UserDetailsService userDetailsService;
 
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder(){
@@ -49,10 +53,10 @@ public class SecurityConfig {
 
         //white list (security 체크 항목 제외)
         MvcRequestMatcher []permitRequestMatcher ={
-                mvc.pattern("/login"),
+                mvc.pattern("/api/v1/member-api/login"),
                 mvc.pattern("/get-login"),
-                mvc.pattern("signup"),
-                mvc.pattern("get-signup"),
+                mvc.pattern("/api/v1/member-api/signup"),
+                mvc.pattern("/get-signup"),
                 mvc.pattern("/css/**"),
                 mvc.pattern("/js/**"),
                 mvc.pattern("/favicon.ico")
@@ -66,9 +70,10 @@ public class SecurityConfig {
                         .anyRequest()
                         .authenticated()
                 )
+                .addFilterBefore(new CustomSecurityFilter(userDetailsService,bCryptPasswordEncoder()),UsernamePasswordAuthenticationFilter.class)
                 //중복 로그인 방지
                 .formLogin(login -> login
-                        .loginProcessingUrl("/login")
+                        .loginProcessingUrl("/api/v1/member-api/login")
                         .successForwardUrl("/dashboard")
                         .successHandler(loginSuccessHandler)
                         .failureHandler(loginFailureHandler)
@@ -82,6 +87,7 @@ public class SecurityConfig {
                 )
                 //csrf 비활성화
                 .csrf(AbstractHttpConfigurer::disable)
+                //프레임 옵션 활성화 (h2 console 접근 위함)
                 .headers(header -> header.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 //session management
                 .sessionManagement(session-> session
@@ -92,10 +98,11 @@ public class SecurityConfig {
                         .accessDeniedHandler(accessDeniedHandler)
                 );
         //build
+
         return http.build();
     }
 
-    @Bean
+    /*@Bean
     public CustomAuthenticationProvider customAuthenticationProvider(){
         return new CustomAuthenticationProvider(bCryptPasswordEncoder(),memberRepository);
     }
@@ -104,7 +111,7 @@ public class SecurityConfig {
     public AuthenticationManager authenticationManager(){
         CustomAuthenticationProvider provider = customAuthenticationProvider();
         return new ProviderManager(provider);
-    }
+    }*/
 
 
 

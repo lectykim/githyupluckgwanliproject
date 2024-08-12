@@ -8,12 +8,14 @@ import com.example.hyupup_tool.service.GithubApiService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@RestController("/api/v1/github-api")
+@RestController
+@RequestMapping("/api/v1/github-api")
 @RequiredArgsConstructor
 public class GithubApiController {
 

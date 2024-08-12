@@ -32,7 +32,7 @@ public class MemberService {
 
     @Transactional
     public SignupResponse signup(SignupRequest signupRequest) {
-        if(!memberValidator.canSignup(signupRequest.email())){
+        if(memberValidator.canSignup(signupRequest.email())){
             throw new BadRequestException("Already signup email");
         }
 
@@ -49,7 +49,7 @@ public class MemberService {
     }
 
     public CanSignupIdResponse canSignupId(String email){
-        return new CanSignupIdResponse(memberValidator.canSignup(email));
+        return new CanSignupIdResponse(!memberValidator.canSignup(email));
     }
 
     @Transactional

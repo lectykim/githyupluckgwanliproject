@@ -13,6 +13,7 @@ import org.springframework.util.StringUtils;
 import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.Enumeration;
 
 public class CachingRequestWrapper extends HttpServletRequestWrapper {
     private byte[] rawData;
@@ -21,10 +22,8 @@ public class CachingRequestWrapper extends HttpServletRequestWrapper {
         try(InputStream inputStream = request.getInputStream()){
             this.rawData = StreamUtils.copyToByteArray(inputStream);
         }
-
-
-
     }
+
     @Override
     public ServletInputStream getInputStream(){
         return new CachedBodyServletInputStream(this.rawData);

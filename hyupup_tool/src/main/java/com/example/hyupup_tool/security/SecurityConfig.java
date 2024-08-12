@@ -19,6 +19,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
+import org.springframework.security.web.context.SecurityContextHolderFilter;
 import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
@@ -32,7 +34,6 @@ public class SecurityConfig {
     private final CustomLogoutSuccessHandler logoutSuccessHander;
     private final CustomAuthenticationEntryPointHandler authenticatinoEntryPointHandler;
     private final CustomAccessDeniedHandler accessDeniedHandler;
-    private final UserDetailsService userDetailsService;
 
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder(){
@@ -64,13 +65,13 @@ public class SecurityConfig {
 
 
         http
+                .addFilterBefore(new CustomSecurityFilter(authenticationManager()), UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests((authorize)-> authorize
                         .requestMatchers(permitRequestMatcher).permitAll()
                         .requestMatchers(PathRequest.toH2Console()).permitAll()
                         .anyRequest()
                         .authenticated()
                 )
-                .addFilterBefore(new CustomSecurityFilter(userDetailsService,bCryptPasswordEncoder()),UsernamePasswordAuthenticationFilter.class)
                 //중복 로그인 방지
                 .formLogin(login -> login
                         .loginProcessingUrl("/api/v1/member-api/login")
@@ -101,8 +102,7 @@ public class SecurityConfig {
 
         return http.build();
     }
-
-    /*@Bean
+    @Bean
     public CustomAuthenticationProvider customAuthenticationProvider(){
         return new CustomAuthenticationProvider(bCryptPasswordEncoder(),memberRepository);
     }
@@ -111,7 +111,7 @@ public class SecurityConfig {
     public AuthenticationManager authenticationManager(){
         CustomAuthenticationProvider provider = customAuthenticationProvider();
         return new ProviderManager(provider);
-    }*/
+    }
 
 
 

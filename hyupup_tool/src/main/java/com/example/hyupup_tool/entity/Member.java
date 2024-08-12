@@ -57,14 +57,15 @@ public class Member {
     @OneToMany(mappedBy = "member")
     private List<MemberToRoom> memberToRoomList= new ArrayList<>();
 
-    private Member(String email, String pw, String githubAccessToken){
+    private Member(String email, String pw, String githubAccessToken,AuthorityRole role){
         this.email=email;
         this.pw=pw;
         this.githubAccessToken = githubAccessToken;
+        this.authorityRole = role;
     }
 
-    public static Member of(String email, String pw, String githubAccessToken){
-        return new Member(email,pw,githubAccessToken);
+    public static Member of(String email, String pw, String githubAccessToken,AuthorityRole role){
+        return new Member(email,pw,githubAccessToken,role);
     }
 
 }

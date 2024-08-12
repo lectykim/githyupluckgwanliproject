@@ -7,8 +7,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,31 +24,37 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-@RequiredArgsConstructor
-public class CustomSecurityFilter extends OncePerRequestFilter {
+@Slf4j
 
-    private final UserDetailsService userDetailsService;
-    private final PasswordEncoder passwordEncoder;
+public class CustomSecurityFilter extends UsernamePasswordAuthenticationFilter {
+
+    private final AuthenticationManager authenticationManager;
+
+    public CustomSecurityFilter(AuthenticationManager authenticationManager){
+        this.authenticationManager = authenticationManager;
+
+        setFilterProcessesUrl("/api/v1/member-api/login");
+    }
+
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        CachingRequestWrapper requestWrapper = new CachingRequestWrapper(request);
+    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException{
+        ContentCachingRequestWrapper wrappedRequest = new ContentCachingRequestWrapper(request);
+
+        // Read the body (this will cache the body)
         ObjectMapper mapper = new ObjectMapper();
-        Map<String,Object> jsonMap = mapper.readValue(requestWrapper.getInputStream(),Map.class);
-        String username = (String)jsonMap.get("email");
-        String pw = (String)jsonMap.get("pw");
-        String url = request.getRequestURI();
-
-        if(username != null && pw != null && url.equals("/api/v1/member-api/login")){
-            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-            if(!passwordEncoder.matches(pw,userDetails.getPassword())){
-                throw new IllegalAccessError("password not corrected");
-            }
-            SecurityContext context = SecurityContextHolder.createEmptyContext();
-            Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails,null,userDetails.getAuthorities());
-            context.setAuthentication(authentication);
-
-            SecurityContextHolder.setContext(context);
+        Map<String, Object> jsonMap = null;
+        try {
+            jsonMap = mapper.readValue(wrappedRequest.getInputStream(), Map.class);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-        filterChain.doFilter(requestWrapper,response);
+
+        // Your authentication logic here
+        String email = (String) jsonMap.get("email");
+        String pw = (String) jsonMap.get("pw");
+
+        UsernamePasswordAuthenticationToken authRequest = UsernamePasswordAuthenticationToken.unauthenticated(email, pw);
+
+        return authenticationManager.authenticate(authRequest);
     }
 }

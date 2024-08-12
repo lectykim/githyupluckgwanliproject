@@ -6,10 +6,12 @@ import com.example.hyupup_tool.exception.client.BadRequestException;
 import com.example.hyupup_tool.exception.client.UnauthorizedException;
 import com.example.hyupup_tool.exception.server.ServerException;
 import com.example.hyupup_tool.repository.MemberRepository;
+import com.example.hyupup_tool.util.AuthorityRole;
 import com.example.hyupup_tool.validator.MemberValidator;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -20,6 +22,7 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final MemberValidator memberValidator;
+    private final PasswordEncoder passwordEncoder;
     public LoginResponse login(LoginRequest loginRequest) {
         Optional<Member> memberOptional = memberRepository.findMemberByEmailAndPw(loginRequest.email(),loginRequest.pw());
 
@@ -37,8 +40,9 @@ public class MemberService {
         }
 
         Member member = Member.of(signupRequest.email(),
-                signupRequest.pw(),
-                signupRequest.githubAccessToken()
+                passwordEncoder.encode(signupRequest.pw()),
+                signupRequest.githubAccessToken(),
+                AuthorityRole.NORMAL_MEMBER
         );
 
         var insertedmember = memberRepository.save(member);
@@ -59,7 +63,8 @@ public class MemberService {
             try {
                 var updatedUser = memberRepository.save(Member.of(request.email(),
                         request.pw(),
-                        request.githubAccessToken())
+                        request.githubAccessToken(),
+                        AuthorityRole.NORMAL_MEMBER)
                 );
                 return new ModifyMemberInfoResponse(updatedUser.getMemberId());
             } catch (DataIntegrityViolationException e){

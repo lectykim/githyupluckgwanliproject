@@ -1,7 +1,7 @@
 package com.example.hyupup_tool.controller;
 
 import com.example.hyupup_tool.entity.dto.member.*;
-import com.example.hyupup_tool.service.MemberService;
+import com.example.hyupup_tool.service.MemberServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,11 +11,11 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class MemberController {
 
-    private final MemberService memberService;
+    private final MemberServiceImpl memberServiceImpl;
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest){
-        LoginResponse response = memberService.login(loginRequest);
+        LoginResponse response = memberServiceImpl.login(loginRequest);
 
         // TODO: 세션 맺기
 
@@ -24,7 +24,7 @@ public class MemberController {
 
     @PostMapping("/signup")
     public ResponseEntity<SignupResponse> signup(@RequestBody SignupRequest signupRequest){
-        SignupResponse response = memberService.signup(signupRequest);
+        SignupResponse response = memberServiceImpl.signup(signupRequest);
 
         return ResponseEntity.ok(response);
     }
@@ -32,7 +32,7 @@ public class MemberController {
 
     @GetMapping("/can-signup-id")
     public ResponseEntity<CanSignupIdResponse> canSignupId(String email){
-        return ResponseEntity.ok(memberService.canSignupId(email));
+        return ResponseEntity.ok(memberServiceImpl.canSignupId(email));
     }
 
 
@@ -40,7 +40,7 @@ public class MemberController {
 
     @PostMapping("/modify-member-info")
     public ResponseEntity<ModifyMemberInfoResponse> modifymemberInfo(ModifyMemberInfoRequest request){
-        var response = memberService.modifyMemberInfo(request);
+        var response = memberServiceImpl.modifyMemberInfo(request);
         return ResponseEntity.ok(response);
     }
 

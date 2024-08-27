@@ -1,5 +1,6 @@
 package com.example.hyupup_tool.entity;
 
+import com.example.hyupup_tool.entity.base.BaseEntity;
 import com.example.hyupup_tool.util.AuthorityRole;
 import com.example.hyupup_tool.util.PurchasePlan;
 import jakarta.persistence.*;
@@ -18,7 +19,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Member {
+public class Member extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")
@@ -44,13 +45,6 @@ public class Member {
     @Setter
     private AuthorityRole authorityRole;
 
-    @CreatedDate
-    private LocalDateTime createdDate;
-
-    @LastModifiedDate
-    private LocalDateTime lastModifiedDate;
-
-    private LocalDateTime deletedDate;
 
 
 

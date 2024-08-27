@@ -7,6 +7,7 @@ import com.example.hyupup_tool.repository.IMemberToRoomRepository;
 import lombok.Getter;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
@@ -35,4 +36,26 @@ public class FakeIMemberToRoomRepository implements IMemberToRoomRepository {
     public void delete(MemberToRoom memberToRoom) {
 
     }
+
+    @Override
+    public List<MemberToRoom> findMemberToRoomByRoom(Room room) {
+        return null;
+    }
+
+    @Override
+    public List<MemberToRoom> findMemberToRoomByMember(Member member) {
+        return null;
+    }
+
+    @Override
+    public Optional<MemberToRoom> findMemberToRoomByRoomAndMaster(Room room, Boolean isMaster) {
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<MemberToRoom> findMemberToRoomByMemberAndMaster(Member member, Boolean isMaster) {
+        return Optional.empty();
+    }
+
+
 }

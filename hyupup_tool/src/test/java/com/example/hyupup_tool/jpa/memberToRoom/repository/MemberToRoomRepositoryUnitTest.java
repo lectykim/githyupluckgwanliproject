@@ -154,12 +154,14 @@ public class MemberToRoomRepositoryUnitTest {
         memberToRoomRepository.save(newMemberToRoomEntity);
 
         //마스터 유저 조회
-        var oldMemberToRoomEntity = memberToRoomRepository.findMemberToRoomByRoomAndMaster(roomEntity,true);
+        var oldMemberToRoomEntity = memberToRoomRepository.findByIsMasterTrueAndRoom(roomEntity);
 
         //마스터 유저 권한과 슬레이브 유저 권한을 바꿔치기
         oldMemberToRoomEntity.get().setMaster(false);
         newMemberToRoomEntity.setMaster(true);
 
+        memberToRoomRepository.save(oldMemberToRoomEntity.get());
+        memberToRoomRepository.save(newMemberToRoomEntity);
 
     }
 }

@@ -19,9 +19,9 @@ public interface IMemberToRoomRepository {
 
     List<MemberToRoom> findMemberToRoomByMember(Member member);
 
-    Optional<MemberToRoom> findMemberToRoomByRoomAndMaster(Room room,Boolean isMaster);
+    Optional<MemberToRoom> findByIsMasterTrueAndRoom(Room room);
 
-    Optional<MemberToRoom> findMemberToRoomByMemberAndMaster(Member member,Boolean isMaster);
+    Optional<MemberToRoom> findByIsMasterTrueAndMember(Member member);
 
 
 }

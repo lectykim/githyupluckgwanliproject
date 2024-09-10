@@ -21,13 +21,11 @@ public interface MemberToRoomRepository extends JpaRepository<MemberToRoom, Long
 
 
     @Override
-    @Query("select mtr from MemberToRoom mtr where mtr.room = :room and mtr.isMaster = :isMaster")
-    Optional<MemberToRoom> findMemberToRoomByRoomAndMaster(@Param("room") Room room,@Param("isMaster") Boolean isMaster);
+    Optional<MemberToRoom> findByIsMasterTrueAndRoom(Room room);
 
 
     @Override
-    @Query("select mtr from MemberToRoom mtr where mtr.member = :member and mtr.isMaster = :isMaster")
-    Optional<MemberToRoom> findMemberToRoomByMemberAndMaster(@Param("member") Member member,@Param("isMaster") Boolean isMaster);
+    Optional<MemberToRoom> findByIsMasterTrueAndMember(Member member);
 
     @Override
     Optional<MemberToRoom> findById(Long id);

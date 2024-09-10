@@ -48,12 +48,12 @@ public class FakeIMemberToRoomRepository implements IMemberToRoomRepository {
     }
 
     @Override
-    public Optional<MemberToRoom> findMemberToRoomByRoomAndMaster(Room room, Boolean isMaster) {
+    public Optional<MemberToRoom> findByIsMasterTrueAndRoom(Room room){
         return Optional.empty();
     }
 
     @Override
-    public Optional<MemberToRoom> findMemberToRoomByMemberAndMaster(Member member, Boolean isMaster) {
+    public Optional<MemberToRoom> findByIsMasterTrueAndMember(Member member){
         return Optional.empty();
     }
 

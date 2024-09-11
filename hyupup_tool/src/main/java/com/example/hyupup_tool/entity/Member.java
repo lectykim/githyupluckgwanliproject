@@ -26,6 +26,7 @@ public class Member extends BaseEntity {
     private Long memberId;
 
     @Column(name = "email",nullable = false)
+    @Setter
     private String email;
 
     @Column(name="pw",nullable = false)

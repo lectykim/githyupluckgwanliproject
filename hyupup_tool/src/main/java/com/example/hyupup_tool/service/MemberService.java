@@ -5,8 +5,10 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface MemberService {
-    LoginResponse login(LoginRequest loginRequest);
-    SignupResponse signup(SignupRequest signupRequest);
-    CanSignupIdResponse canSignupId(String email);
+    LoginResponse login(LoginRequest request);
+    SignupResponse signup(SignupRequest request);
+    CanSignupIdResponse canSignupId(CanSignupIdRequest request);
     ModifyMemberInfoResponse modifyMemberInfo(ModifyMemberInfoRequest request);
+
+
 }

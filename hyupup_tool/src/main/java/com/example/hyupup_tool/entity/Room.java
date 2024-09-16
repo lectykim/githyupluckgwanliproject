@@ -1,6 +1,7 @@
 package com.example.hyupup_tool.entity;
 
 import com.example.hyupup_tool.entity.base.BaseEntity;
+import com.example.hyupup_tool.exception.client.BadRequestException;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -23,6 +24,7 @@ public class Room extends BaseEntity {
     private Long roomId;
 
     @Column(name = "max_member",nullable = false)
+    @Setter
     private Long maxMember;
 
     @Column(name = "title",nullable = false)
@@ -40,7 +42,25 @@ public class Room extends BaseEntity {
     }
 
     public static Room of(Long maxMember, String title){
+        validate(maxMember,title);
         return new Room(maxMember,title);
+    }
+
+    private static void validate(Long maxMember,String title){
+        validateMaxMember(maxMember);
+        validateTitle(title);
+    }
+
+    public static void validateMaxMember(Long maxMember){
+        if(maxMember>5000){
+            throw new BadRequestException("maxMember is not valid");
+        }
+    }
+
+    public static void validateTitle(String title){
+        if(title.length()>255){
+            throw new BadRequestException("title is not valid");
+        }
     }
 
 

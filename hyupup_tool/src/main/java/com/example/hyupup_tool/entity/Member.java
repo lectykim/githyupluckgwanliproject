@@ -1,8 +1,10 @@
 package com.example.hyupup_tool.entity;
 
 import com.example.hyupup_tool.entity.base.BaseEntity;
+import com.example.hyupup_tool.exception.client.BadRequestException;
 import com.example.hyupup_tool.util.AuthorityRole;
 import com.example.hyupup_tool.util.PurchasePlan;
+import com.example.hyupup_tool.validator.RegexValidator;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
@@ -29,7 +31,7 @@ public class Member extends BaseEntity {
     @Setter
     private String email;
 
-    @Column(name="pw",nullable = false)
+    @Column(name="pw",nullable = false,length = 32)
     @Setter
     private String pw;
 
@@ -60,7 +62,41 @@ public class Member extends BaseEntity {
     }
 
     public static Member of(String email, String pw, String githubAccessToken,AuthorityRole role){
+        validate(email,pw,githubAccessToken,role);
         return new Member(email,pw,githubAccessToken,role);
     }
+
+    private static void validate(String email,String pw,String githubAccessToken,AuthorityRole role){
+        validateEmail(email);
+        validatePw(pw);
+        validateGithubAccessToken(githubAccessToken);
+        validateAuthorityRole(role);
+    }
+
+    public static void validateEmail(String email){
+        if(email == null || RegexValidator.validateEmail(email)){
+            throw new BadRequestException("Email is not valid");
+        }
+    }
+
+    public static void validatePw(String pw){
+        if(pw == null || RegexValidator.validatePw(pw)){
+            throw new BadRequestException("PW is not valid");
+        }
+    }
+
+    public static void validateGithubAccessToken(String githubAccessToken){
+        if(githubAccessToken == null || githubAccessToken.isEmpty()){
+            throw new BadRequestException("Github Access Token is not valid");
+        }
+    }
+
+    public static void validateAuthorityRole(AuthorityRole role){
+        if(role == null){
+            throw new BadRequestException("Role is not valid");
+        }
+    }
+
+
 
 }

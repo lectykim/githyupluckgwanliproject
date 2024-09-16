@@ -6,6 +6,8 @@ public record UpdateRoomRequest (
         @NonNull
         Long roomId,
         @NonNull
-        String newTitle
+        String title,
+        @NonNull
+        Long maxMember
 ){
 }

@@ -23,8 +23,9 @@ public class MemberServiceImpl implements MemberService{
     private final MemberRepository memberRepository;
     private final MemberValidator memberValidator;
     private final PasswordEncoder passwordEncoder;
-    public LoginResponse login(LoginRequest loginRequest) {
-        Optional<Member> memberOptional = memberRepository.findMemberByEmailAndPw(loginRequest.email(),loginRequest.pw());
+    public LoginResponse login(LoginRequest request) {
+        memberValidator.loginRequestValidator(request);
+        Optional<Member> memberOptional = memberRepository.findMemberByEmailAndPw(request.email(),request.pw());
 
         if(memberOptional.isEmpty()){
             throw new UnauthorizedException("Email and Password not correct");
@@ -34,14 +35,15 @@ public class MemberServiceImpl implements MemberService{
     }
 
     @Transactional
-    public SignupResponse signup(SignupRequest signupRequest) {
-        if(memberValidator.canSignup(signupRequest.email())){
+    public SignupResponse signup(SignupRequest request) {
+        memberValidator.signupValidator(request);
+        if(memberValidator.canSignup(request.email())){
             throw new BadRequestException("Already signup email");
         }
 
-        Member member = Member.of(signupRequest.email(),
-                passwordEncoder.encode(signupRequest.pw()),
-                signupRequest.githubAccessToken(),
+        Member member = Member.of(request.email(),
+                passwordEncoder.encode(request.pw()),
+                request.githubAccessToken(),
                 AuthorityRole.NORMAL_MEMBER
         );
 
@@ -52,14 +54,16 @@ public class MemberServiceImpl implements MemberService{
 
     }
 
-    public CanSignupIdResponse canSignupId(String email){
-        return new CanSignupIdResponse(!memberValidator.canSignup(email));
+    public CanSignupIdResponse canSignupId(CanSignupIdRequest request){
+        memberValidator.canSignupValidator(request);
+        return new CanSignupIdResponse(!memberValidator.canSignup(request.email()));
     }
 
     @Transactional
     public ModifyMemberInfoResponse modifyMemberInfo(ModifyMemberInfoRequest request) {
-        var user = memberRepository.findById(request.memberId());
-        if(user.isPresent()){
+        memberValidator.modifyMemberInfoRequestValidator(request);
+        var user = memberRepository.findById(request.memberId())
+                .orElseThrow(()-> new BadRequestException("Id is not found"));
             try {
                 var updatedUser = memberRepository.save(Member.of(request.email(),
                         request.pw(),
@@ -70,10 +74,5 @@ public class MemberServiceImpl implements MemberService{
             } catch (DataIntegrityViolationException e){
                 throw new ServerException(e.getMessage());
             }
-
-
-        }else{
-            throw new ServerException("User is not exist.");
-        }
     }
 }

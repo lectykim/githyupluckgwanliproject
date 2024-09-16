@@ -31,8 +31,8 @@ public class MemberController {
 
 
     @GetMapping("/can-signup-id")
-    public ResponseEntity<CanSignupIdResponse> canSignupId(String email){
-        return ResponseEntity.ok(memberServiceImpl.canSignupId(email));
+    public ResponseEntity<CanSignupIdResponse> canSignupId(CanSignupIdRequest request){
+        return ResponseEntity.ok(memberServiceImpl.canSignupId(request));
     }
 
 

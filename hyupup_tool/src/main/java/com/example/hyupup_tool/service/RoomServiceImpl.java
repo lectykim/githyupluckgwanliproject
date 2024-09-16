@@ -8,6 +8,7 @@ import com.example.hyupup_tool.exception.server.ServerException;
 import com.example.hyupup_tool.repository.RoomRepository;
 import com.example.hyupup_tool.repository.MemberRepository;
 import com.example.hyupup_tool.repository.MemberToRoomRepository;
+import com.example.hyupup_tool.validator.RoomValidator;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,8 +20,10 @@ public class RoomServiceImpl implements RoomService{
     private final RoomRepository roomRepository;
     private final MemberRepository memberRepository;
     private final MemberToRoomRepository memberToRoomRepository;
+    private final RoomValidator roomValidator;
     @Transactional
     public CreateRoomResponse createRoom(CreateRoomRequest request){
+        roomValidator.createRoomValidator(request);
         var roomEntity = Room.of(request.maxMember(),request.title());
         var memberEntity = memberRepository.findById(request.memberId())
                 .orElseThrow(()-> new BadRequestException("Can't find member"));
@@ -35,26 +38,31 @@ public class RoomServiceImpl implements RoomService{
     }
 
     public UpdateRoomResponse updateRoom(UpdateRoomRequest request){
+        roomValidator.updateRoomValidator(request);
         var roomEntity = roomRepository.findById(request.roomId())
                 .orElseThrow(()-> new BadRequestException("Can't find room"));
 
-        roomEntity.setTitle(request.newTitle());
+        roomEntity.setTitle(request.title());
+        roomEntity.setMaxMember(request.maxMember());
 
         return new UpdateRoomResponse(request.roomId());
     }
 
     public DeleteRoomResponse deleteRoom(DeleteRoomRequest request){
+        roomValidator.deleteRoomValidator(request);
         roomRepository.deleteById(request.roomId());
         return new DeleteRoomResponse();
     }
 
     public InviteMemberResponse inviteMember(InviteMemberRequest request){
+        roomValidator.inviteMemberValidator(request);
         // TODO: Redis를 이용한 초대 보내기 코드 작성
         return new InviteMemberResponse();
     }
 
     @Transactional
     public ChangeMasterResponse changeMaster(ChangeMasterRequest request){
+        roomValidator.changeMasterValidator(request);
         var roomEntity = roomRepository.findById(request.roomId())
                 .orElseThrow(()-> new BadRequestException("Can't find room"));
 

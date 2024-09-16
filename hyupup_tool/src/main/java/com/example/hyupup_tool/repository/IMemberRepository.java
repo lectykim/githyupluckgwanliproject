@@ -15,4 +15,6 @@ public interface IMemberRepository {
     Member save(Member member);
 
     void delete(Member member);
+
+    Boolean existsByMemberId(Long memberId);
 }

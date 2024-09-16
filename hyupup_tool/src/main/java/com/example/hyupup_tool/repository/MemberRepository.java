@@ -21,4 +21,7 @@ public interface MemberRepository extends JpaRepository<Member,Long>,IMemberRepo
 
     @Override
     void delete(Member member);
+
+    @Override
+    Boolean existsByMemberId(Long memberId);
 }

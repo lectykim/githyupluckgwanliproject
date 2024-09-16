@@ -50,7 +50,7 @@ public class Member extends BaseEntity {
 
 
     @OneToMany(mappedBy = "member")
-    private List<MemberToRoom> memberToRoomList= new ArrayList<>();
+    private List<MemberToRoom> memberToRoomList;
 
     private Member(String email, String pw, String githubAccessToken,AuthorityRole role){
         this.email=email;

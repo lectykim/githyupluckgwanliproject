@@ -12,21 +12,31 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public class FakeIRoomRepository implements IRoomRepository {
     @Getter
-    Map<Long, Member> db = new HashMap<>();
+    Map<Long, Room> db = new HashMap<>();
 
     AtomicLong idGenerator = new AtomicLong();
     @Override
     public Optional<Room> findById(Long id) {
-        return Optional.empty();
+        return db.get(id) == null ? Optional.empty() : Optional.of(db.get(id));
     }
 
     @Override
     public Room save(Room room) {
-        return null;
+        if(room.getRoomId() != null){
+            db.put(room.getRoomId(),room);
+            return room;
+        }
+        var newId = idGenerator.addAndGet(1);
+        FakeSetter.setField(room,"roomId",newId);
+
+        db.put(newId,room);
+        return room;
     }
 
     @Override
     public void delete(Room room) {
-
+        db.remove(room.getRoomId());
     }
+
+
 }

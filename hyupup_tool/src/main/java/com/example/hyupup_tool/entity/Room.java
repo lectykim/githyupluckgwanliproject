@@ -32,7 +32,7 @@ public class Room extends BaseEntity {
 
 
     @OneToMany(mappedBy = "room")
-    private List<MemberToRoom> memberToRoomList = new ArrayList<>();
+    private List<MemberToRoom> memberToRoomList;
 
     public Room(Long maxMember,String title){
         this.maxMember = maxMember;

@@ -1,4 +1,4 @@
-package com.example.hyupup_tool.jpa.member.service;
+package com.example.hyupup_tool.domain.member.service;
 
 import com.example.hyupup_tool.entity.Member;
 import com.example.hyupup_tool.fake.FakeDaoManager;

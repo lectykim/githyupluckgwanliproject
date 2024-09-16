@@ -6,15 +6,12 @@ import com.example.hyupup_tool.entity.Room;
 import com.example.hyupup_tool.repository.IMemberToRoomRepository;
 import lombok.Getter;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class FakeIMemberToRoomRepository implements IMemberToRoomRepository {
     @Getter
-    Map<Long,Member> db = new HashMap<>();
+    Map<Long,MemberToRoom> db = new HashMap<>();
 
     AtomicLong idGenerator = new AtomicLong();
     @Override
@@ -24,36 +21,66 @@ public class FakeIMemberToRoomRepository implements IMemberToRoomRepository {
 
     @Override
     public Optional<MemberToRoom> findById(Long id) {
-        return Optional.empty();
+        return db.get(id) == null ? Optional.empty() : Optional.of(db.get(id));
     }
 
     @Override
     public MemberToRoom save(MemberToRoom memberToRoom) {
-        return null;
+        if(memberToRoom.getMemberToRoomId() != null){
+            db.put(memberToRoom.getMemberToRoomId(),memberToRoom);
+            return memberToRoom;
+        }
+        var newId = idGenerator.addAndGet(1);
+        FakeSetter.setField(memberToRoom,"memberToRoomId",newId);
+
+        db.put(newId,memberToRoom);
+        return memberToRoom;
     }
 
     @Override
     public void delete(MemberToRoom memberToRoom) {
-
+        db.remove(memberToRoom.getMemberToRoomId());
     }
 
     @Override
     public List<MemberToRoom> findMemberToRoomByRoom(Room room) {
-        return null;
+        List<MemberToRoom> memberToRoomList = new ArrayList<>();
+        for(Long id:db.keySet()){
+            if(Objects.equals(db.get(id).getRoom().getRoomId(), room.getRoomId())){
+                memberToRoomList.add(db.get(id));
+            }
+        }
+        return memberToRoomList;
     }
 
     @Override
     public List<MemberToRoom> findMemberToRoomByMember(Member member) {
-        return null;
+        List<MemberToRoom> memberToRoomList = new ArrayList<>();
+        for(Long id:db.keySet()){
+            if(Objects.equals(db.get(id).getMember().getMemberId(), member.getMemberId())){
+                memberToRoomList.add(db.get(id));
+            }
+        }
+        return memberToRoomList;
     }
 
     @Override
     public Optional<MemberToRoom> findByIsMasterTrueAndRoom(Room room){
+        for(Long id:db.keySet()){
+            if(db.get(id).isMaster() && db.get(id).getRoom().getRoomId().equals(room.getRoomId())){
+                return Optional.of(db.get(id));
+            }
+        }
         return Optional.empty();
     }
 
     @Override
     public Optional<MemberToRoom> findByIsMasterTrueAndMember(Member member){
+        for(Long id:db.keySet()){
+            if(db.get(id).isMaster() && db.get(id).getMember().getMemberId().equals(member.getMemberId())){
+                return Optional.of(db.get(id));
+            }
+        }
         return Optional.empty();
     }
 

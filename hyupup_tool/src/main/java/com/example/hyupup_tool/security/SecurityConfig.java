@@ -54,10 +54,11 @@ public class SecurityConfig {
 
         //white list (security 체크 항목 제외)
         MvcRequestMatcher []permitRequestMatcher ={
+                mvc.pattern("/login-page"),
+                mvc.pattern("/signup-page"),
                 mvc.pattern("/api/v1/member-api/login"),
-                mvc.pattern("/get-login"),
                 mvc.pattern("/api/v1/member-api/signup"),
-                mvc.pattern("/get-signup"),
+                mvc.pattern("/api/v1/member-api/can-signup-id"),
                 mvc.pattern("/css/**"),
                 mvc.pattern("/js/**"),
                 mvc.pattern("/favicon.ico")

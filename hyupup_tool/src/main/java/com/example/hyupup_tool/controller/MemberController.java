@@ -39,7 +39,7 @@ public class MemberController {
 
 
     @PostMapping("/modify-member-info")
-    public ResponseEntity<ModifyMemberInfoResponse> modifymemberInfo(ModifyMemberInfoRequest request){
+    public ResponseEntity<ModifyMemberInfoResponse> modifyMemberInfo(ModifyMemberInfoRequest request){
         var response = memberServiceImpl.modifyMemberInfo(request);
         return ResponseEntity.ok(response);
     }

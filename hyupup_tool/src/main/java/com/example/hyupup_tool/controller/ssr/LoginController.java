@@ -17,4 +17,12 @@ public class LoginController {
     private String signUpPage(Model model){
         return "/SignUpPage";
     }
+
+    @GetMapping("/error")
+    private String errorPage(Model model){return "/error";}
+
+    @GetMapping("/")
+    private String indexPage(Model model){
+        return "/index";
+    }
 }

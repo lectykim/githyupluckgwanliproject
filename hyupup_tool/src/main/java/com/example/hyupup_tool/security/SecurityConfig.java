@@ -18,21 +18,24 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.intercept.AuthorizationFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.context.SecurityContextHolderFilter;
 import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
+import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter;
+import org.springframework.security.web.session.SessionManagementFilter;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
 @Configuration
-@EnableWebSecurity
+@EnableWebSecurity(debug = true)
 @RequiredArgsConstructor
 public class SecurityConfig {
-    private final MemberRepository memberRepository;
+    private final CustomUserDetailsService userDetailsService;
     private final CustomLoginSuccessHandler loginSuccessHandler;
     private final CustomLoginFailureHandler loginFailureHandler;
-    private final CustomLogoutSuccessHandler logoutSuccessHander;
-    private final CustomAuthenticationEntryPointHandler authenticatinoEntryPointHandler;
+    private final CustomLogoutSuccessHandler logoutSuccessHandler;
+    private final CustomAuthenticationEntryPointHandler authenticationEntryPointHandler;
     private final CustomAccessDeniedHandler accessDeniedHandler;
 
     @Bean
@@ -55,8 +58,10 @@ public class SecurityConfig {
         //white list (security 체크 항목 제외)
         MvcRequestMatcher []permitRequestMatcher ={
                 mvc.pattern("/login-page"),
+                mvc.pattern("/"),
                 mvc.pattern("/signup-page"),
                 mvc.pattern("/api/v1/member-api/login"),
+                mvc.pattern("/error"),
                 mvc.pattern("/api/v1/member-api/signup"),
                 mvc.pattern("/api/v1/member-api/can-signup-id"),
                 mvc.pattern("/css/**"),
@@ -65,8 +70,9 @@ public class SecurityConfig {
         };
 
 
+
         http
-                .addFilterBefore(new CustomSecurityFilter(authenticationManager()), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(getCustomFilter(), UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests((authorize)-> authorize
                         .requestMatchers(permitRequestMatcher).permitAll()
                         .requestMatchers(PathRequest.toH2Console()).permitAll()
@@ -75,14 +81,13 @@ public class SecurityConfig {
                 )
                 //중복 로그인 방지
                 .formLogin(login -> login
+                        .loginPage("/login-page")
                         .loginProcessingUrl("/api/v1/member-api/login")
-                        .successForwardUrl("/dashboard")
-                        .successHandler(loginSuccessHandler)
-                        .failureHandler(loginFailureHandler)
+
                 )
                 .logout(logout->logout
                         .logoutUrl("/logout")
-                        .logoutSuccessHandler(logoutSuccessHander)
+                        .logoutSuccessHandler(logoutSuccessHandler)
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID")
                         .permitAll()
@@ -96,7 +101,7 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
                 //entry point exception handler
                 .exceptionHandling(conf->conf
-                        .authenticationEntryPoint(authenticatinoEntryPointHandler)
+                        .authenticationEntryPoint(authenticationEntryPointHandler)
                         .accessDeniedHandler(accessDeniedHandler)
                 );
         //build
@@ -105,13 +110,29 @@ public class SecurityConfig {
     }
     @Bean
     public CustomAuthenticationProvider customAuthenticationProvider(){
-        return new CustomAuthenticationProvider(bCryptPasswordEncoder(),memberRepository);
+        return new CustomAuthenticationProvider(bCryptPasswordEncoder(),userDetailsService);
     }
 
     @Bean
     public AuthenticationManager authenticationManager(){
         CustomAuthenticationProvider provider = customAuthenticationProvider();
         return new ProviderManager(provider);
+    }
+
+
+    /*
+    * Custom Filter 만들 때에는
+    * 그 Filter가 어떤 일을 하는지에 대해
+    * 정확하게 분석하고 만들어야 한다.
+    * 이번 경우에는 UsernamePasswordAuthenticationFilter 대신 CustomSecurityFilter를 사용하였지만
+    * CustomSecurityFilter가 가르키는 successhandler는 기본 successhandler이기 때문에
+    * index로 redirecting 되었던 것
+    * */
+    protected UsernamePasswordAuthenticationFilter getCustomFilter(){
+        CustomSecurityFilter customSecurityFilter =new CustomSecurityFilter(authenticationManager());
+        customSecurityFilter.setAuthenticationSuccessHandler(loginSuccessHandler);
+        customSecurityFilter.setAuthenticationFailureHandler(loginFailureHandler);
+        return customSecurityFilter;
     }
 
 

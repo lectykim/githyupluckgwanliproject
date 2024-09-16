@@ -116,15 +116,19 @@
             },
             body: JSON.stringify({ email, pw })
         })
-            .then((response)=>response.json())
-            .then((data)=>{
+            .then((response)=>{
+                if(response.ok&& response.status===200&&response.redirected){
+                    window.location.href = response.url
+                }
+            })
+            /*.then((data)=>{
                 alert("login success");
                 console.log(data);
             })
             .catch((error)=>{
                 errorMessageDiv.textContent = 'An error occurred. Please try again later.';
                 console.error('Error:', error);
-            });
+            });*/
 
 
     }

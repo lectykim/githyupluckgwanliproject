@@ -13,14 +13,14 @@ public class MemberController {
 
     private final MemberServiceImpl memberServiceImpl;
 
-    @PostMapping("/login")
+    /*@PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest){
         LoginResponse response = memberServiceImpl.login(loginRequest);
 
         // TODO: 세션 맺기
 
         return ResponseEntity.ok(response);
-    }
+    }*/
 
     @PostMapping("/signup")
     public ResponseEntity<SignupResponse> signup(@RequestBody SignupRequest signupRequest){

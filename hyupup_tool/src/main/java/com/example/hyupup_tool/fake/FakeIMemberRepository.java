@@ -41,6 +41,11 @@ public class FakeIMemberRepository implements IMemberRepository {
     }
 
     @Override
+    public Boolean existsByMemberId(Long memberId) {
+        return null;
+    }
+
+    @Override
     public Optional<Member> findMemberByEmailAndPw(String email, String pw) {
         for(Long id:db.keySet()){
             if(db.get(id).getEmail().equals(email) && db.get(id).getPw().equals(pw)){

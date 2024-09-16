@@ -96,9 +96,13 @@
 
     const errorMessageDiv = document.getElementById('error-message');
     const successMessageDiv = document.getElementById('success-message');
+    let isEmailChecked = false;
 
     const SignUp = ()=>{
-
+        if(!isEmailChecked){
+            alert("plz first email validate")
+            return false;
+        }
 
         const email = document.getElementById('email').value;
         if(!emailCheck(email)){
@@ -122,10 +126,24 @@
             },
             body: JSON.stringify({ email, pw, githubAccessToken})
         })
-            .then((response)=>response.json())
+            .then((response)=>{
+                if(response.ok){
+                    return response.json()
+                }else{
+                    console.log(response)
+                }
+            })
             .then((data)=>{
-                alert("Sign Up Success");
-                console.log(data);
+                if(data.memberId != null){
+                    alert("Sign Up Success");
+                    window.location.href = "/login-page"
+                }else{
+
+                    alert("Sign up failed, because " + data.message);
+
+                }
+
+
             })
             .catch((error)=>{
                 errorMessageDiv.textContent = 'An error occurred. Please try again later.';
@@ -158,8 +176,16 @@
         })
             .then((response)=>response.json())
             .then((data)=>{
-                alert('can signup');
-                console.log(data);
+
+                if(data.canSignup){
+                    alert('can signup');
+                    isEmailChecked = true;
+                }else if(data.status != null){
+                    alert('signup validate failed, because ' + data.message)
+                }else{
+                    alert('duplicated email');
+                }
+
             })
             .catch((error)=>{
                 errorMessageDiv.textContent = 'Email Check failed!';

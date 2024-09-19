@@ -29,7 +29,7 @@ public class MemberServiceTest {
     private static final String GITHUB_ACCESS_TOKEN = "github_access_token";
 
 
-    private static final AuthorityRole AUTHORITY_ROLE = AuthorityRole.NORMAL_MEMBER;
+    private static final AuthorityRole AUTHORITY_ROLE = AuthorityRole.ROLE_NORMAL_MEMBER;
     @Test
     @DisplayName("성공 : 회원가입")
     void success_signup_01(){

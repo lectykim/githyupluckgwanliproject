@@ -6,11 +6,15 @@ import com.example.hyupup_tool.exception.client.BadRequestException;
 import com.example.hyupup_tool.exception.client.UnauthorizedException;
 import com.example.hyupup_tool.exception.server.ServerException;
 import com.example.hyupup_tool.repository.MemberRepository;
+import com.example.hyupup_tool.security.CustomUserDetails;
 import com.example.hyupup_tool.util.AuthorityRole;
 import com.example.hyupup_tool.validator.MemberValidator;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -44,7 +48,7 @@ public class MemberServiceImpl implements MemberService{
         Member member = Member.of(request.email(),
                 passwordEncoder.encode(request.pw()),
                 request.githubAccessToken(),
-                AuthorityRole.NORMAL_MEMBER
+                AuthorityRole.ROLE_NORMAL_MEMBER
         );
 
         var insertedmember = memberRepository.save(member);
@@ -68,11 +72,18 @@ public class MemberServiceImpl implements MemberService{
                 var updatedUser = memberRepository.save(Member.of(request.email(),
                         request.pw(),
                         request.githubAccessToken(),
-                        AuthorityRole.NORMAL_MEMBER)
+                        AuthorityRole.ROLE_NORMAL_MEMBER)
                 );
                 return new ModifyMemberInfoResponse(updatedUser.getMemberId());
             } catch (DataIntegrityViolationException e){
                 throw new ServerException(e.getMessage());
             }
+    }
+
+    @Override
+    public GetMemberInfoResponse getMemberInfo(GetMemberInfoRequest request) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getDetails();
+        return new GetMemberInfoResponse(userDetails.getMember().toDto());
     }
 }

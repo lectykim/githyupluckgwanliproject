@@ -8,10 +8,16 @@ import com.example.hyupup_tool.exception.server.ServerException;
 import com.example.hyupup_tool.repository.RoomRepository;
 import com.example.hyupup_tool.repository.MemberRepository;
 import com.example.hyupup_tool.repository.MemberToRoomRepository;
+import com.example.hyupup_tool.security.CustomUserDetails;
 import com.example.hyupup_tool.validator.RoomValidator;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -58,6 +64,23 @@ public class RoomServiceImpl implements RoomService{
         roomValidator.inviteMemberValidator(request);
         // TODO: Redis를 이용한 초대 보내기 코드 작성
         return new InviteMemberResponse();
+    }
+
+    @Override
+    public GetCurrentRoomResponse getCurrentRoom(GetCurrentRoomRequest request) {
+        roomValidator.getCurrentRoomValidator(request);
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getDetails();
+
+        var memberToRoomList = memberToRoomRepository.findMemberToRoomByMember(userDetails.getMember())
+                .orElseThrow(()->new BadRequestException("Not exist Member"));
+
+        List<RoomDTO> roomDTOList = memberToRoomList.stream()
+                .map(MemberToRoom::getRoom)
+                .map(Room::toDto)
+                .toList();
+        return new GetCurrentRoomResponse(roomDTOList);
     }
 
     @Transactional

@@ -12,4 +12,6 @@ public interface RoomValidator {
     void inviteMemberValidator(InviteMemberRequest request);
 
     void changeMasterValidator(ChangeMasterRequest request);
+
+    void getCurrentRoomValidator(GetCurrentRoomRequest request);
 }

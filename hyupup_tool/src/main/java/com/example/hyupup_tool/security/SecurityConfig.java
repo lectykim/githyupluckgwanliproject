@@ -98,7 +98,7 @@ public class SecurityConfig {
                 .headers(header -> header.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 //session management
                 .sessionManagement(session-> session
-                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
+                        .sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
                 //entry point exception handler
                 .exceptionHandling(conf->conf
                         .authenticationEntryPoint(authenticationEntryPointHandler)
@@ -132,6 +132,7 @@ public class SecurityConfig {
         CustomSecurityFilter customSecurityFilter =new CustomSecurityFilter(authenticationManager());
         customSecurityFilter.setAuthenticationSuccessHandler(loginSuccessHandler);
         customSecurityFilter.setAuthenticationFailureHandler(loginFailureHandler);
+
         return customSecurityFilter;
     }
 

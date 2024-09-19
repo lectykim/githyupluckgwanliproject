@@ -15,9 +15,9 @@ public interface IMemberToRoomRepository {
 
     void delete(MemberToRoom memberToRoom);
 
-    List<MemberToRoom> findMemberToRoomByRoom(Room room);
+    Optional<List<MemberToRoom>> findMemberToRoomByRoom(Room room);
 
-    List<MemberToRoom> findMemberToRoomByMember(Member member);
+    Optional<List<MemberToRoom>> findMemberToRoomByMember(Member member);
 
     Optional<MemberToRoom> findByIsMasterTrueAndRoom(Room room);
 

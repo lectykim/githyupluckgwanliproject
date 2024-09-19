@@ -42,4 +42,9 @@ public class RoomValidatorImpl implements RoomValidator{
     public void changeMasterValidator(ChangeMasterRequest request) {
 
     }
+
+    @Override
+    public void getCurrentRoomValidator(GetCurrentRoomRequest request) {
+
+    }
 }

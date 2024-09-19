@@ -13,6 +13,7 @@ import java.util.Collection;
 
 @AllArgsConstructor
 public class CustomUserDetails implements UserDetails {
+    @Getter
     private final Member member;
     private final String email;
     private final String pw;
@@ -36,4 +37,5 @@ public class CustomUserDetails implements UserDetails {
     public String getUsername() {
         return email;
     }
+
 }

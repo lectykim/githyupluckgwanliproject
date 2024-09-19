@@ -43,7 +43,7 @@ public class MemberToRoomRepositoryUnitTest {
 
     private static final String GITHUB_ACCESS_TOKEN = "github_access_token";
 
-    private static final AuthorityRole AUTHORITY_ROLE = AuthorityRole.NORMAL_MEMBER;
+    private static final AuthorityRole AUTHORITY_ROLE = AuthorityRole.ROLE_NORMAL_MEMBER;
 
     private static final Long MAX_MEMBER = 5L;
 

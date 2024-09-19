@@ -1,6 +1,7 @@
 package com.example.hyupup_tool.entity;
 
 import com.example.hyupup_tool.entity.base.BaseEntity;
+import com.example.hyupup_tool.entity.dto.room.RoomDTO;
 import com.example.hyupup_tool.exception.client.BadRequestException;
 import jakarta.persistence.*;
 import lombok.*;
@@ -31,7 +32,13 @@ public class Room extends BaseEntity {
     @Setter
     private String title;
 
-
+    public RoomDTO toDto(){
+        return RoomDTO.builder()
+                .roomId(roomId)
+                .title(title)
+                .maxMember(maxMember)
+                .build();
+    }
 
     @OneToMany(mappedBy = "room")
     private List<MemberToRoom> memberToRoomList;

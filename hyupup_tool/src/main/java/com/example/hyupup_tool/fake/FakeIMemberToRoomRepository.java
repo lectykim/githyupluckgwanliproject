@@ -43,25 +43,25 @@ public class FakeIMemberToRoomRepository implements IMemberToRoomRepository {
     }
 
     @Override
-    public List<MemberToRoom> findMemberToRoomByRoom(Room room) {
+    public Optional<List<MemberToRoom>> findMemberToRoomByRoom(Room room) {
         List<MemberToRoom> memberToRoomList = new ArrayList<>();
         for(Long id:db.keySet()){
             if(Objects.equals(db.get(id).getRoom().getRoomId(), room.getRoomId())){
                 memberToRoomList.add(db.get(id));
             }
         }
-        return memberToRoomList;
+        return Optional.of(memberToRoomList);
     }
 
     @Override
-    public List<MemberToRoom> findMemberToRoomByMember(Member member) {
+    public Optional<List<MemberToRoom>> findMemberToRoomByMember(Member member) {
         List<MemberToRoom> memberToRoomList = new ArrayList<>();
         for(Long id:db.keySet()){
             if(Objects.equals(db.get(id).getMember().getMemberId(), member.getMemberId())){
                 memberToRoomList.add(db.get(id));
             }
         }
-        return memberToRoomList;
+        return Optional.of(memberToRoomList);
     }
 
     @Override

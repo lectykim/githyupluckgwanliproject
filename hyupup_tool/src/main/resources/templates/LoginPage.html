@@ -118,7 +118,7 @@
         })
             .then((response)=>{
                 if(response.ok&& response.status===200&&response.redirected){
-                    window.location.href = response.url
+                    redirectDashboard()
                 }
             })
             /*.then((data)=>{
@@ -131,6 +131,10 @@
             });*/
 
 
+    }
+
+    const redirectDashboard = ()=>{
+        window.location.href = "/dashboard/main"
     }
 
 

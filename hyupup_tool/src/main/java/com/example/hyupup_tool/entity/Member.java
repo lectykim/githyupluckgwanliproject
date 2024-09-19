@@ -1,6 +1,7 @@
 package com.example.hyupup_tool.entity;
 
 import com.example.hyupup_tool.entity.base.BaseEntity;
+import com.example.hyupup_tool.entity.dto.member.MemberDTO;
 import com.example.hyupup_tool.exception.client.BadRequestException;
 import com.example.hyupup_tool.util.AuthorityRole;
 import com.example.hyupup_tool.util.PurchasePlan;
@@ -48,7 +49,16 @@ public class Member extends BaseEntity {
     @Setter
     private AuthorityRole authorityRole;
 
-
+    public MemberDTO toDto(){
+        return MemberDTO.builder()
+                .email(email)
+                .authorityRole(authorityRole)
+                .memberId(memberId)
+                .pw(pw)
+                .purchasePlan(purchasePlan)
+                .githubAccessToken(githubAccessToken)
+                .build();
+    }
 
 
     @OneToMany(mappedBy = "member")

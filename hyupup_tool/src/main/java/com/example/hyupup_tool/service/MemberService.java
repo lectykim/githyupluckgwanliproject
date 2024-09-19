@@ -10,5 +10,5 @@ public interface MemberService {
     CanSignupIdResponse canSignupId(CanSignupIdRequest request);
     ModifyMemberInfoResponse modifyMemberInfo(ModifyMemberInfoRequest request);
 
-
+    GetMemberInfoResponse getMemberInfo(GetMemberInfoRequest request);
 }

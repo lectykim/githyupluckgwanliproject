@@ -37,7 +37,7 @@ public class RoomServiceTest {
     private static final String GITHUB_ACCESS_TOKEN = "github_access_token";
 
 
-    private static final AuthorityRole AUTHORITY_ROLE = AuthorityRole.NORMAL_MEMBER;
+    private static final AuthorityRole AUTHORITY_ROLE = AuthorityRole.ROLE_NORMAL_MEMBER;
     @Test
     @DisplayName("성공 : 방 개설")
     void success_make_room_01(){

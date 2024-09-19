@@ -9,4 +9,6 @@ public interface RoomService {
     UpdateRoomResponse updateRoom(UpdateRoomRequest request);
     DeleteRoomResponse deleteRoom(DeleteRoomRequest request);
     InviteMemberResponse inviteMember(InviteMemberRequest request);
+
+    GetCurrentRoomResponse getCurrentRoom(GetCurrentRoomRequest request);
 }

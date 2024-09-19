@@ -15,9 +15,9 @@ import java.util.Optional;
 public interface MemberToRoomRepository extends JpaRepository<MemberToRoom, Long>,IMemberToRoomRepository {
     Optional<MemberToRoom> findMemberToRoomByMemberAndRoom(Member member, Room room);
 
-    List<MemberToRoom> findMemberToRoomByRoom(Room room);
+    Optional<List<MemberToRoom>> findMemberToRoomByRoom(Room room);
 
-    List<MemberToRoom> findMemberToRoomByMember(Member member);
+    Optional<List<MemberToRoom>> findMemberToRoomByMember(Member member);
 
 
     @Override

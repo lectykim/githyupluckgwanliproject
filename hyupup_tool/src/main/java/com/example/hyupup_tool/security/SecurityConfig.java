@@ -129,7 +129,7 @@ public class SecurityConfig {
     * index로 redirecting 되었던 것
     * */
     protected UsernamePasswordAuthenticationFilter getCustomFilter(){
-        CustomSecurityFilter customSecurityFilter =new CustomSecurityFilter(authenticationManager());
+        CustomSecurityFilter customSecurityFilter =new CustomSecurityFilter(authenticationManager(),userDetailsService);
         customSecurityFilter.setAuthenticationSuccessHandler(loginSuccessHandler);
         customSecurityFilter.setAuthenticationFailureHandler(loginFailureHandler);
 

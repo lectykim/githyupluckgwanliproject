@@ -29,10 +29,11 @@ import java.util.Map;
 public class CustomSecurityFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
+    private final UserDetailsService userDetailsService;
 
-    public CustomSecurityFilter(AuthenticationManager authenticationManager){
+    public CustomSecurityFilter(AuthenticationManager authenticationManager,CustomUserDetailsService userDetailsService){
         this.authenticationManager = authenticationManager;
-
+        this.userDetailsService = userDetailsService;
         setFilterProcessesUrl("/api/v1/member-api/login");
     }
 
@@ -54,7 +55,8 @@ public class CustomSecurityFilter extends UsernamePasswordAuthenticationFilter {
         String pw = (String) jsonMap.get("pw");
 
         UsernamePasswordAuthenticationToken authRequest = UsernamePasswordAuthenticationToken.unauthenticated(email, pw);
-
+        UserDetails details = userDetailsService.loadUserByUsername(email);
+        authRequest.setDetails(details);
         return authenticationManager.authenticate(authRequest);
     }
 }

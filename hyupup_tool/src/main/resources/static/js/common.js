@@ -20,3 +20,11 @@ const checkPassword = (password) =>{
 const isNotEmpty = (data) =>{
     return !(data === "" || data === null || data === undefined);
 }
+
+const checkTitle = (title) =>{
+    return title.length < 255;
+}
+
+const checkMaxMember = (maxMember)=>{
+    return maxMember<5000;
+}

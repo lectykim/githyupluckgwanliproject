@@ -17,35 +17,35 @@ public class RoomController {
     private final RoomServiceImpl roomServiceImpl;
 
     @PostMapping("/create")
-    public ResponseEntity<CreateRoomResponse> createRoom(CreateRoomRequest request){
+    public ResponseEntity<CreateRoomResponse> createRoom(@RequestBody CreateRoomRequest request){
         var response = roomServiceImpl.createRoom(request);
 
         return ResponseEntity.ok(response);
     }
 
     @PostMapping("/update")
-    public ResponseEntity<UpdateRoomResponse> updateRoom(UpdateRoomRequest request){
+    public ResponseEntity<UpdateRoomResponse> updateRoom(@RequestBody UpdateRoomRequest request){
         var response = roomServiceImpl.updateRoom(request);
 
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<DeleteRoomResponse> deleteRoom(DeleteRoomRequest request){
+    public ResponseEntity<DeleteRoomResponse> deleteRoom(@RequestBody DeleteRoomRequest request){
         var response = roomServiceImpl.deleteRoom(request);
 
         return ResponseEntity.ok(response);
     }
 
     @PostMapping("/invite-other-member")
-    public ResponseEntity<InviteMemberResponse> invitemember(InviteMemberRequest request){
+    public ResponseEntity<InviteMemberResponse> inviteMember(@RequestBody  InviteMemberRequest request){
         var response = roomServiceImpl.inviteMember(request);
 
         return ResponseEntity.ok(response);
     }
 
     @PostMapping("/change-master")
-    public ResponseEntity<ChangeMasterResponse> changeMaster(ChangeMasterRequest request){
+    public ResponseEntity<ChangeMasterResponse> changeMaster(@RequestBody  ChangeMasterRequest request){
         var response = roomServiceImpl.changeMaster(request);
 
         return ResponseEntity.ok(response);

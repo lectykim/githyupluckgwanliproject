@@ -117,24 +117,21 @@
             body: JSON.stringify({ email, pw })
         })
             .then((response)=>{
-                if(response.ok&& response.status===200&&response.redirected){
-                    redirectDashboard()
+                console.log(response);
+                if(response.ok&& response.status===200){
+                    window.location.href = "/dashboard/main"
                 }
             })
-            /*.then((data)=>{
+            .then((data)=>{
                 alert("login success");
                 console.log(data);
             })
             .catch((error)=>{
                 errorMessageDiv.textContent = 'An error occurred. Please try again later.';
                 console.error('Error:', error);
-            });*/
+            });
 
 
-    }
-
-    const redirectDashboard = ()=>{
-        window.location.href = "/dashboard/main"
     }
 
 

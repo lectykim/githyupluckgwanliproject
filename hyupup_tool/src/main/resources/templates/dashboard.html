@@ -99,6 +99,44 @@
         }
 
 
+        /* 방 생성 폼 스타일 */
+        .room-form {
+            display: none; /* 처음에는 숨김 */
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #218838;
+        }
+
         /* 페이지의 반응형 설정 */
         @media screen and (max-width: 600px) {
             .sidebar {
@@ -126,8 +164,12 @@
 <body>
 
 <!-- 사이드바 -->
-<div class="sidebar" th:each="room : ${roomDtoList}">
-    <p><span th:text="${room.title}"></span></p>
+<div class="sidebar" >
+    <div th:each="room : ${roomDtoList}">
+        <p onclick="connectChatting([[${room.roomId}]])">
+            <span th:text="${room.title}"></span>
+        </p>
+    </div>
 </div>
 
 <!-- 상단 네비게이션 바 -->
@@ -137,9 +179,66 @@
 </div>
 
 <!-- 메인 콘텐츠 -->
+<!-- 메인 콘텐츠 -->
 <div class="main-content">
-    <button class="create-room-btn" onclick="window.location.href='/create-room'">Create Room</button>
-</div>
+    <button class="create-room-btn" onclick="showRoomForm()">Create Room</button>
 
+    <!-- 방 생성 폼 -->
+    <div class="room-form" id="roomForm">
+        <div id="createRoomForm">
+            <label for="title">Room Title:</label>
+            <input type="text" id="title" name="title" placeholder="Enter room title" required>
+
+            <label for="maxMembers">Max Members:</label>
+            <input type="number" id="maxMembers" name="maxMembers" placeholder="Enter max members" required>
+
+            <input type="submit" onclick="createRoomRequest()" value="Create Room">
+        </div>
+    </div>
+</div>
+<script type="text/javascript" th:src="@{/js/common.js}">
+
+</script>
+<script>
+
+    const showRoomForm = ()=>{
+        const form = document.getElementById('roomForm');
+        form.style.display = 'block'; // 폼을 보이도록 설정
+    }
+
+    const createRoomRequest = ()=>{
+        const title = document.getElementById('title').value;
+        if(!checkTitle(title)){
+            alert("형식에 맞는 title을 입력해 주세요.")
+            return false;
+        }
+        const maxMember = parseInt(document.getElementById('maxMembers').value);
+        if(!checkMaxMember(maxMember)){
+            alert('형식에 맞는 maxMembers를 입력해 주세요.');
+            return false;
+        }
+
+        fetch('/api/v1/room-api/create',{
+            method:'POST',
+            headers:{
+                'Content-Type':'application/json'
+            },
+            body:JSON.stringify({maxMember,title})
+        })
+            .then((response)=>response.json())
+            .then((data)=>{
+                console.log(data);
+                window.location.reload();
+            })
+            .catch((error)=>{
+                console.error(error)
+            });
+    }
+
+    const connectChatting = (roomNum)=>{
+        //TODO : Websocket Connection 열기 .. ^^
+    }
+
+</script>
 </body>
 </html>

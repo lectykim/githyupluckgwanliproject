@@ -28,7 +28,7 @@ import org.springframework.security.web.session.SessionManagementFilter;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
 @Configuration
-@EnableWebSecurity(debug = true)
+@EnableWebSecurity()
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final CustomUserDetailsService userDetailsService;

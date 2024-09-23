@@ -9,6 +9,7 @@ import com.example.hyupup_tool.repository.RoomRepository;
 import com.example.hyupup_tool.repository.MemberRepository;
 import com.example.hyupup_tool.repository.MemberToRoomRepository;
 import com.example.hyupup_tool.security.CustomUserDetails;
+import com.example.hyupup_tool.util.SessionGetter;
 import com.example.hyupup_tool.validator.RoomValidator;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -30,8 +31,9 @@ public class RoomServiceImpl implements RoomService{
     @Transactional
     public CreateRoomResponse createRoom(CreateRoomRequest request){
         roomValidator.createRoomValidator(request);
+        var memberId = SessionGetter.getCurrentMemberDto().getMemberId();
         var roomEntity = Room.of(request.maxMember(),request.title());
-        var memberEntity = memberRepository.findById(request.memberId())
+        var memberEntity = memberRepository.findById(memberId)
                 .orElseThrow(()-> new BadRequestException("Can't find member"));
 
 

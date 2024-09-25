@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simple Sidebar</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
     <style>
         /* 전체 페이지 설정 */
         body {
@@ -108,6 +110,10 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
+        .chatting-global-container{
+            display: none;
+        }
+
         label {
             display: block;
             margin-bottom: 8px;
@@ -135,6 +141,37 @@
 
         input[type="submit"]:hover {
             background-color: #218838;
+        }
+
+        #chat-container {
+            background: white;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            height: 300px;
+            overflow-y: scroll;
+        }
+        #input-container {
+            display: flex;
+            margin-top: 10px;
+        }
+        #chat-input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        #send-button {
+            padding: 10px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+            margin-left: 5px;
+            cursor: pointer;
+        }
+        #send-button:hover {
+            background-color: #0056b3;
         }
 
         /* 페이지의 반응형 설정 */
@@ -165,6 +202,11 @@
 
 <!-- 사이드바 -->
 <div class="sidebar" >
+    <div>
+        <p onclick="showMakeButtonForm()">
+            <span>Make Room Button</span>
+        </p>
+    </div>
     <div th:each="room : ${roomDtoList}">
         <p onclick="connectChatting([[${room.roomId}]])">
             <span th:text="${room.title}"></span>
@@ -181,7 +223,7 @@
 <!-- 메인 콘텐츠 -->
 <!-- 메인 콘텐츠 -->
 <div class="main-content">
-    <button class="create-room-btn" onclick="showRoomForm()">Create Room</button>
+    <button class="create-room-btn" id="createRoomBtn" onclick="showRoomForm()">Create Room</button>
 
     <!-- 방 생성 폼 -->
     <div class="room-form" id="roomForm">
@@ -195,15 +237,66 @@
             <input type="submit" onclick="createRoomRequest()" value="Create Room">
         </div>
     </div>
+
+    <div class="chatting-global-container" id="chatting-global-container">
+        <div id="chat-container"></div>
+        <div id="input-container">
+            <input type="text" id="chat-input" placeholder="채팅을 입력하세요..." />
+            <button id="send-button">전송</button>
+        </div>
+    </div>
+
 </div>
 <script type="text/javascript" th:src="@{/js/common.js}">
 
 </script>
 <script>
+    const form = document.getElementById('roomForm');
+    const createRoomButton = document.getElementById('createRoomBtn');
+    const chattingForm = document.getElementById('chatting-global-container');
+    const chatContainer = document.getElementById('chat-container');
 
+    let roomDtoList = /*[[${roomDtoList}]]*/'[]';
+    let stompClients = null;
+    let currentClientChannelId = null;
+    roomDtoList = JSON.parse(roomDtoList);
+    stompClients = new Client[roomDtoList.length];
+    for(let i=0;i<roomDtoList.length;i++){
+        let socket = new SockJS('/ws');
+        stompClients[i] = new Stomp.over(socket);
+        stompClients[i].connect({},(frame)=>{
+            stompClients[i].subscribe('/topic/chat/'+roomDtoList[i].roomId,(message)=>{
+                handleChatting(JSON.parse(message.body));
+            })
+        })
+    }
+    const handleChatting = (message)=>{
+        if(message.channelId === currentClientChannelId){
+            addChildChatting(message);
+        }else{
+            notificationSynchronization(message);
+
+        }
+    }
+
+    const notificationSynchronization = ()=>{
+        //TODO : th:each로 만든 타이틀 옆에 숫자 붙히기
+    }
+
+    const getNotification = ()=>{
+
+    }
+
+    const showMakeButtonForm= ()=>{
+        createRoomButton.style.display='block';
+    }
     const showRoomForm = ()=>{
-        const form = document.getElementById('roomForm');
         form.style.display = 'block'; // 폼을 보이도록 설정
+    }
+
+    const hideChattingContent = ()=>{
+        createRoomButton.style.display='none';
+        form.style.display='none';
     }
 
     const createRoomRequest = ()=>{
@@ -236,8 +329,18 @@
     }
 
     const connectChatting = (roomNum)=>{
-        //TODO : Websocket Connection 열기 .. ^^
+        hideChattingContent();
+        chattingForm.style.display='block';
     }
+
+    const addChildChatting = (message)=>{
+        const messageElement = document.createElement('div')
+        messageElement.textContent = message.sender + ' : ' + message.data
+        chatContainer.appendChild(messageElement);
+        chatContainer.scrollTop = chatContainer.scrollHeight; // 스크롤을 가장 아래로
+    }
+
+
 
 </script>
 </body>

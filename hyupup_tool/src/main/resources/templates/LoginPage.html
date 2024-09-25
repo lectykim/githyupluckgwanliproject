@@ -85,8 +85,8 @@
         </div>
         <button onclick="Login()" class="btn">Login</button>
         <!-- 회원가입 버튼 -->
-        <div class="signup-btn">
-            <a href="/signup-page" style="color: white; text-decoration: none;">Sign Up</a>
+        <div class="signup-btn" onclick="GoSignUp()">
+            <a style="color: white; text-decoration: none;">Sign Up</a>
         </div>
     </div>
 
@@ -96,7 +96,9 @@
 
 </script>
 <script>
-
+    const GoSignUp = ()=>{
+        window.location.href = "/signup-page";
+    }
     const Login = ()=>{
         const errorMessageDiv = document.getElementById('error-message');
         const email = document.getElementById('email').value;
@@ -120,12 +122,14 @@
                 console.log(response);
                 if(response.ok&& response.status===200){
                     window.location.href = "/dashboard/main"
+                }else if(response.status === 400 || response.status === 500){
+                    alert("id pw not corrected");
                 }
             })
-            .then((data)=>{
+            /*.then((data)=>{
                 alert("login success");
                 console.log(data);
-            })
+            })*/
             .catch((error)=>{
                 errorMessageDiv.textContent = 'An error occurred. Please try again later.';
                 console.error('Error:', error);

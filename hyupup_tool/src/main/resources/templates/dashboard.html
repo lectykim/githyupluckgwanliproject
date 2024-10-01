@@ -100,6 +100,41 @@
             background-color: #218838;
         }
 
+        .modal {
+            display: none; /* 기본적으로 모달을 숨김 */
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* 반투명 배경 */
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 30%;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+
+
 
         /* 방 생성 폼 스타일 */
         .room-form {
@@ -174,6 +209,7 @@
             background-color: #0056b3;
         }
 
+
         /* 페이지의 반응형 설정 */
         @media screen and (max-width: 600px) {
             .sidebar {
@@ -208,7 +244,7 @@
         </p>
     </div>
     <div th:each="room : ${roomDtoList}">
-        <p onclick="connectChatting([[${room.roomId}]])">
+        <p th:onclick="'connectChatting(' + ${room.roomId} + ')'">
             <span th:text="${room.title}"></span>
         </p>
     </div>
@@ -221,6 +257,7 @@
             <span id="notification"></span>
     </button>
     <button onclick="window.location.href='/dashboard/mypage'">My Page</button>
+    <button onclick="logout()">로그아웃</button>
 </div>
 
 <!-- 메인 콘텐츠 -->
@@ -243,6 +280,43 @@
 
     <div class="chatting-global-container" id="chatting-global-container">
         <div id="chat-container"></div>
+
+        <!-- 오른쪽에 배치할 버튼들을 포함한 컨테이너 추가 -->
+        <div id="button-container">
+            <button onclick="inviteMember()" id="invite-button">멤버 초대하기</button>
+            <button onclick="getCurrentMember()" id="view-current-member-button">현재 멤버 보기</button>
+            <button onclick="gitSetting()" id="git-setting-button">Git 설정 변경하기</button>
+        </div>
+
+
+        <!-- 모달 구조 -->
+        <div id="inviteMemberModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="removeModal(0)">&times;</span>
+                <h2 >초대자 이메일을 입력하세요.</h2>
+                <input type="text" id="invite-email" name="invite-email" placeholder="Enter invite user email" required>
+                <button onclick="callInvite()">전송</button>
+            </div>
+        </div>
+
+        <!-- 모달 구조 -->
+        <div id="getCurrentMemberModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="removeModal(1)">&times;</span>
+                <h2 >현재 방의 멤버입니다.</h2>
+            </div>
+        </div>
+
+        <!-- 모달 구조 -->
+        <div id="gitSettingModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="removeModal(2)">&times;</span>
+                <h2 >협업시 관측하고싶은 레포지토리를 입력해주세요.</h2>
+                <input type="text" id="git-repository" name="git-repository" placeholder="Enter git repository and branch" required>
+                <button onclick="callRepository()">전송</button>
+            </div>
+        </div>
+
         <div id="input-container">
             <input type="text" id="chat-input" placeholder="채팅을 입력하세요..." />
             <button id="send-button">전송</button>
@@ -259,11 +333,15 @@
     const chattingForm = document.getElementById('chatting-global-container');
     const chatContainer = document.getElementById('chat-container');
 
+
+
+    const span = document.getElementsByClassName('close')[0];
+    let currentRoomNum = 0;
     let roomDtoList = /*[[${roomDtoList}]]*/'[]';
-    let stompClients = null;
+    let stompClients = {};
     let currentClientChannelId = null;
     roomDtoList = JSON.parse(roomDtoList);
-    stompClients = new Client[roomDtoList.length];
+    //stompClients = new Client[roomDtoList.length];
     for(let i=0;i<roomDtoList.length;i++){
         let socket = new SockJS('/ws');
         stompClients[i] = new Stomp.over(socket);
@@ -272,6 +350,67 @@
                 handleChatting(JSON.parse(message.body));
             })
         })
+    }
+
+    const logout = ()=>{
+        window.location.href = 'http://localhost:8080/logout';
+    }
+
+    const inviteMember = ()=>{
+        const modal = document.getElementById('inviteMemberModal');
+        modal.style.display = 'block';
+    }
+
+    const getCurrentMember = ()=>{
+        const modal = document.getElementById('getCurrentMemberModal');
+        modal.style.display = 'block'
+    }
+
+    const callInvite = ()=>{
+        const email = document.getElementById('invite-email').value;
+        if(!emailCheck(email)){
+            alert('형식에 맞는 이메일을 입력해주세요');
+            return false;
+        }
+        fetch('http://localhost:8080/api/v1/room-api/invite-other-member',{
+            method:'POST',
+            headers:{
+                'Content-Type':'application/json'
+            },
+            body:JSON.stringify({email:email,roomId:currentRoomNum})
+        })
+            .then((response)=>{
+            if(response.ok&&response.status===200){
+                alert('초대에 성공 했습니다.');
+            }else if(response.status === 400){
+                alert('초대에 실패 했습니다.');
+            }
+        })
+            .catch((error)=>{
+                console.error(error)
+            });
+
+    }
+
+    const callRepository = ()=>{
+
+    }
+    const gitSetting = () => {
+        const modal = document.getElementById('gitSettingModal');
+        modal.style.display = 'block';
+    }
+    const removeModal = (num)=>{
+        if(num === 0){
+            const modal = document.getElementById('inviteMemberModal');
+            modal.style.display = 'none';
+        }else if(num === 1){
+            const modal = document.getElementById('getCurrentMemberModal');
+            modal.style.display = 'none'
+        }else{
+            const modal = document.getElementById('gitSettingModal');
+            modal.style.display = 'none';
+        }
+
     }
     const handleChatting = (message)=>{
         if(message.channelId === currentClientChannelId){
@@ -287,16 +426,22 @@
     }
 
     const getNotification = ()=>{
-        fetch('api/v1/room-api/get-all-event',{
+        fetch('http://localhost:8080/api/v1/room-api/get-all-event',{
             method:'GET',
             headers:{
                 'Content-Type':'application/json'
             },
         })
-            .then((response)=>response.json())
+            .then((response)=>{
+                if(response.ok){
+                    return response.json();
+                }else{
+                    console.log(response);
+                }
+            })
             .then((data)=>{
-                const count = data.length;
-
+                console.log(data);
+                const count = data.inviteRoomDTOList.length;
                 document.getElementById('notification').textContent = count > 0 ? `(${count})` : '';
 
 
@@ -334,10 +479,12 @@
             },
             body:JSON.stringify({maxMember,title})
         })
-            .then((response)=>response.json())
-            .then((data)=>{
-                console.log(data);
-                window.location.reload();
+            .then((response)=>{
+                if(response.ok&&response.status===200){
+                    window.location.onload();
+                }else if(response.status === 400){
+                    alert('방 생성에 실패했습니다.');
+                }
             })
             .catch((error)=>{
                 console.error(error)
@@ -345,6 +492,7 @@
     }
 
     const connectChatting = (roomNum)=>{
+        currentRoomNum = roomNum;
         hideChattingContent();
         chattingForm.style.display='block';
     }

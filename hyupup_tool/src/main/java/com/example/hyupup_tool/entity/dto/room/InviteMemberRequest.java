@@ -4,7 +4,7 @@ import lombok.NonNull;
 
 public record InviteMemberRequest(
         @NonNull
-        Long memberId,
+        String email,
         @NonNull
         Long roomId
 ){

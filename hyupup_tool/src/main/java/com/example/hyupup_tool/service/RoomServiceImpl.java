@@ -71,7 +71,9 @@ public class RoomServiceImpl implements RoomService{
         roomValidator.inviteMemberValidator(request);
 
         HashOperations<String, String,String> hashOperations = redisTemplate.opsForHash();
-        hashOperations.put("Invite:"+request.memberId(),request.roomId().toString(),"false");
+        var member = memberRepository.findMemberByEmail(request.email())
+                        .orElseThrow(()-> new BadRequestException("Member not found"));
+        hashOperations.put("Invite:"+member.getMemberId(),request.roomId().toString(),"false");
         return new InviteMemberResponse();
     }
 
@@ -96,7 +98,7 @@ public class RoomServiceImpl implements RoomService{
     public GetAllEventResponse getAllEvent(GetAllEventRequest request) {
         var memberId = SessionGetter.getCurrentMemberDto().getMemberId();
         HashOperations<String,String,String> hashOperations = redisTemplate.opsForHash();
-        Map<String,String> entries = hashOperations.entries("invite:"+memberId);
+        Map<String,String> entries = hashOperations.entries("Invite:"+memberId);
         Iterable<Long> hashIterable = entries.keySet()
                 .stream()
                         .map(Long::parseLong)

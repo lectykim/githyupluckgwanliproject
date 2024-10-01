@@ -1,6 +1,7 @@
 package com.example.hyupup_tool.controller.ssr;
 
 import com.example.hyupup_tool.entity.dto.member.GetMemberInfoRequest;
+import com.example.hyupup_tool.entity.dto.room.GetAllEventRequest;
 import com.example.hyupup_tool.entity.dto.room.GetCurrentRoomRequest;
 import com.example.hyupup_tool.service.MemberService;
 import com.example.hyupup_tool.service.RoomService;
@@ -19,9 +20,10 @@ public class DashboardController {
     private final MemberService memberService;
     @GetMapping("/main")
     private String dashboardMainPage(Model model){
-        var response = roomService.getCurrentRoom(new GetCurrentRoomRequest());
+        var getCurrentRoomResponse = roomService.getCurrentRoom(new GetCurrentRoomRequest());
 
-        model.addAttribute("roomDtoList",response.roomDTOList());
+        model.addAttribute("roomDtoList",getCurrentRoomResponse.roomDTOList());
+
         return "/dashboard";
     }
 

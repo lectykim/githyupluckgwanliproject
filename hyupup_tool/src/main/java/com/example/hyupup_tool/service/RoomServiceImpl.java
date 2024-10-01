@@ -1,29 +1,34 @@
 package com.example.hyupup_tool.service;
 
-import com.example.hyupup_tool.entity.Room;
 import com.example.hyupup_tool.entity.MemberToRoom;
+import com.example.hyupup_tool.entity.Room;
 import com.example.hyupup_tool.entity.dto.room.*;
 import com.example.hyupup_tool.exception.client.BadRequestException;
 import com.example.hyupup_tool.exception.server.ServerException;
-import com.example.hyupup_tool.repository.RoomRepository;
 import com.example.hyupup_tool.repository.MemberRepository;
 import com.example.hyupup_tool.repository.MemberToRoomRepository;
+import com.example.hyupup_tool.repository.RoomRepository;
 import com.example.hyupup_tool.security.CustomUserDetails;
 import com.example.hyupup_tool.util.SessionGetter;
 import com.example.hyupup_tool.validator.RoomValidator;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.HashOperations;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class RoomServiceImpl implements RoomService{
 
+    private final RedisTemplate<String,String> redisTemplate;
     private final RoomRepository roomRepository;
     private final MemberRepository memberRepository;
     private final MemberToRoomRepository memberToRoomRepository;
@@ -64,7 +69,9 @@ public class RoomServiceImpl implements RoomService{
 
     public InviteMemberResponse inviteMember(InviteMemberRequest request){
         roomValidator.inviteMemberValidator(request);
-        // TODO: Redis를 이용한 초대 보내기 코드 작성
+
+        HashOperations<String, String,String> hashOperations = redisTemplate.opsForHash();
+        hashOperations.put("Invite:"+request.memberId(),request.roomId().toString(),"false");
         return new InviteMemberResponse();
     }
 
@@ -83,6 +90,22 @@ public class RoomServiceImpl implements RoomService{
                 .map(Room::toDto)
                 .toList();
         return new GetCurrentRoomResponse(roomDTOList);
+    }
+
+    @Override
+    public GetAllEventResponse getAllEvent(GetAllEventRequest request) {
+        var memberId = SessionGetter.getCurrentMemberDto().getMemberId();
+        HashOperations<String,String,String> hashOperations = redisTemplate.opsForHash();
+        Map<String,String> entries = hashOperations.entries("invite:"+memberId);
+        Iterable<Long> hashIterable = entries.keySet()
+                .stream()
+                        .map(Long::parseLong)
+                                .collect(Collectors.toList());
+        var roomDTOList = roomRepository.findAllById(hashIterable)
+                .stream()
+                .map(Room::toDto)
+                .toList();
+        return new GetAllEventResponse(roomDTOList);
     }
 
     @Transactional

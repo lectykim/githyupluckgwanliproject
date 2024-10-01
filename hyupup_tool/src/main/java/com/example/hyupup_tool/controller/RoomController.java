@@ -59,4 +59,12 @@ public class RoomController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/get-all-event")
+    public ResponseEntity<GetAllEventResponse> getAllEvent(GetAllEventRequest request){
+
+        var response = roomServiceImpl.getAllEvent(request);
+
+        return ResponseEntity.ok(response);
+    }
+
 }

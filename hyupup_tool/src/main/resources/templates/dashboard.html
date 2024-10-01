@@ -216,7 +216,10 @@
 
 <!-- 상단 네비게이션 바 -->
 <div class="topnav">
-    <button onclick="alert('You have no new notifications!')">🔔 Notifications</button>
+    <button onclick="alert('You have no new notifications!')">
+        🔔 Notifications
+            <span id="notification"></span>
+    </button>
     <button onclick="window.location.href='/dashboard/mypage'">My Page</button>
 </div>
 
@@ -284,7 +287,20 @@
     }
 
     const getNotification = ()=>{
+        fetch('api/v1/room-api/get-all-event',{
+            method:'GET',
+            headers:{
+                'Content-Type':'application/json'
+            },
+        })
+            .then((response)=>response.json())
+            .then((data)=>{
+                const count = data.length;
 
+                document.getElementById('notification').textContent = count > 0 ? `(${count})` : '';
+
+
+            })
     }
 
     const showMakeButtonForm= ()=>{
@@ -341,7 +357,7 @@
     }
 
 
-
+    window.onload=getNotification
 </script>
 </body>
 </html>

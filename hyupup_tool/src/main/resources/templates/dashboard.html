@@ -252,7 +252,7 @@
 
 <!-- 상단 네비게이션 바 -->
 <div class="topnav">
-    <button onclick="alert('You have no new notifications!')">
+    <button onclick="openEventModal()">
         🔔 Notifications
             <span id="notification"></span>
     </button>
@@ -277,7 +277,15 @@
             <input type="submit" onclick="createRoomRequest()" value="Create Room">
         </div>
     </div>
-
+    <div>
+        <!-- 모달 구조 -->
+        <div id="eventModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="removeModal(3)">&times;</span>
+                <div id="event-container"></div>
+            </div>
+        </div>
+    </div>
     <div class="chatting-global-container" id="chatting-global-container">
         <div id="chat-container"></div>
 
@@ -317,6 +325,8 @@
             </div>
         </div>
 
+
+
         <div id="input-container">
             <input type="text" id="chat-input" placeholder="채팅을 입력하세요..." />
             <button id="send-button">전송</button>
@@ -332,13 +342,14 @@
     const createRoomButton = document.getElementById('createRoomBtn');
     const chattingForm = document.getElementById('chatting-global-container');
     const chatContainer = document.getElementById('chat-container');
-
+    const eventContainer = document.getElementById('event-container');
 
 
     const span = document.getElementsByClassName('close')[0];
     let currentRoomNum = 0;
     let roomDtoList = /*[[${roomDtoList}]]*/'[]';
     let stompClients = {};
+    let currentEvents = {};
     let currentClientChannelId = null;
     roomDtoList = JSON.parse(roomDtoList);
     //stompClients = new Client[roomDtoList.length];
@@ -365,6 +376,46 @@
         const modal = document.getElementById('getCurrentMemberModal');
         modal.style.display = 'block'
     }
+
+    const openEventModal = () => {
+        const modal = document.getElementById('eventModal');
+        modal.style.display = 'block';
+        eventContainer.innerHTML=''
+        currentEvents.forEach((data) => {
+            // 메시지 요소 생성
+            const messageElement = document.createElement('div');
+            messageElement.textContent = data.title + " 방에 초대되었습니다. ";
+
+            // 버튼 컨테이너 생성
+            const buttonContainer = document.createElement('div');
+
+            // 수락 버튼 생성
+            const acceptButton = document.createElement('button');
+            acceptButton.textContent = '수락';
+            acceptButton.onclick = () => {
+                // 수락 버튼 클릭 시 실행할 코드
+                console.log(`${data.title} 방 수락됨`);
+                // 필요에 따라 추가 로직 작성 (예: 서버로 수락 상태 전송)
+            };
+
+            // 거절 버튼 생성
+            const declineButton = document.createElement('button');
+            declineButton.textContent = '거절';
+            declineButton.onclick = () => {
+                // 거절 버튼 클릭 시 실행할 코드
+                console.log(`${data.title} 방 거절됨`);
+                // 필요에 따라 추가 로직 작성 (예: 서버로 거절 상태 전송)
+            };
+
+            // 버튼들을 버튼 컨테이너에 추가
+            buttonContainer.appendChild(acceptButton);
+            buttonContainer.appendChild(declineButton);
+
+            // 메시지와 버튼 컨테이너를 모달에 추가
+            messageElement.appendChild(buttonContainer);
+            eventContainer.appendChild(messageElement);
+        });
+    };
 
     const callInvite = ()=>{
         const email = document.getElementById('invite-email').value;
@@ -406,8 +457,11 @@
         }else if(num === 1){
             const modal = document.getElementById('getCurrentMemberModal');
             modal.style.display = 'none'
-        }else{
+        }else if(num === 2){
             const modal = document.getElementById('gitSettingModal');
+            modal.style.display = 'none';
+        }else{
+            const modal = document.getElementById('eventModal');
             modal.style.display = 'none';
         }
 
@@ -443,7 +497,7 @@
                 console.log(data);
                 const count = data.inviteRoomDTOList.length;
                 document.getElementById('notification').textContent = count > 0 ? `(${count})` : '';
-
+                currentEvents = data.inviteRoomDTOList;
 
             })
     }

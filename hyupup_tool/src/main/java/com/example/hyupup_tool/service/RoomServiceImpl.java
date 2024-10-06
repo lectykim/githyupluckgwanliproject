@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -108,6 +109,36 @@ public class RoomServiceImpl implements RoomService{
                 .map(Room::toDto)
                 .toList();
         return new GetAllEventResponse(roomDTOList);
+    }
+
+    @Override
+    public AcceptInviteResponse acceptInvite(AcceptInviteRequest request) {
+        var memberId = SessionGetter.getCurrentMemberDto().getMemberId();
+        HashOperations<String,String,String> hashOperations = redisTemplate.opsForHash();
+        Map<String,String> entries = hashOperations.entries("Invite:"+memberId);
+        Iterable<Long> hashIterable = entries.keySet()
+                .stream()
+                .map(Long::parseLong)
+                .collect(Collectors.toList());
+
+        for (Long key : hashIterable) {
+            if(Objects.equals(request.roomId(), key)){
+                hashOperations.delete("Invite:"+memberId,key);
+                var member = memberRepository.findById(memberId)
+                        .orElseThrow(()-> new BadRequestException("Member not found"));
+                var room = roomRepository.findById(key)
+                        .orElseThrow(()->new BadRequestException("Room not found"));
+                var memberToRoom  = MemberToRoom.of(member,room,false);
+                memberToRoomRepository.save(memberToRoom);
+                return new AcceptInviteResponse();
+            }
+        }
+        throw new BadRequestException("Invalid invite");
+    }
+
+    @Override
+    public DenyInviteReseponse denyInvite(DenyInviteRequest request) {
+        return null;
     }
 
     @Transactional

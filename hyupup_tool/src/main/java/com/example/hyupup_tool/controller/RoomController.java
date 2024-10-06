@@ -67,4 +67,16 @@ public class RoomController {
         return ResponseEntity.ok(response);
     }
 
+    @PostMapping("/deny-invite")
+    public ResponseEntity<DenyInviteReseponse> denyInvite(DenyInviteRequest request){
+
+    }
+
+    @PostMapping("/accept-invite")
+    public ResponseEntity<AcceptInviteResponse> acceptInvite(AcceptInviteRequest request) {
+        var response = roomServiceImpl.acceptInvite(request);
+
+        return ResponseEntity.ok(response);
+    }
+
 }

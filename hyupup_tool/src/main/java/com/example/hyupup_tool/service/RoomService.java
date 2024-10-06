@@ -13,4 +13,8 @@ public interface RoomService {
     GetCurrentRoomResponse getCurrentRoom(GetCurrentRoomRequest request);
 
     GetAllEventResponse getAllEvent(GetAllEventRequest request);
+
+    AcceptInviteResponse acceptInvite(AcceptInviteRequest request);
+
+    DenyInviteReseponse denyInvite(DenyInviteRequest request);
 }

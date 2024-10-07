@@ -123,11 +123,14 @@ public class RoomServiceImpl implements RoomService{
 
         for (Long key : hashIterable) {
             if(Objects.equals(request.roomId(), key)){
-                hashOperations.delete("Invite:"+memberId,key);
+                hashOperations.delete("Invite:"+memberId,key.toString());
                 var member = memberRepository.findById(memberId)
                         .orElseThrow(()-> new BadRequestException("Member not found"));
                 var room = roomRepository.findById(key)
                         .orElseThrow(()->new BadRequestException("Room not found"));
+                if(memberToRoomRepository.existsByMemberAndRoom(member,room)){
+                    throw new BadRequestException("Already joined this room");
+                }
                 var memberToRoom  = MemberToRoom.of(member,room,false);
                 memberToRoomRepository.save(memberToRoom);
                 return new AcceptInviteResponse();
@@ -138,7 +141,21 @@ public class RoomServiceImpl implements RoomService{
 
     @Override
     public DenyInviteReseponse denyInvite(DenyInviteRequest request) {
-        return null;
+        var memberId = SessionGetter.getCurrentMemberDto().getMemberId();
+        HashOperations<String,String,String> hashOperations = redisTemplate.opsForHash();
+        Map<String,String> entries = hashOperations.entries("Invite:"+memberId);
+        Iterable<Long> hashIterable = entries.keySet()
+                .stream()
+                .map(Long::parseLong)
+                .collect(Collectors.toList());
+
+        for(Long key: hashIterable){
+            if(Objects.equals(request.roomId(),key)){
+                hashOperations.delete("Invite:"+memberId,key.toString());
+                return new DenyInviteReseponse();
+            }
+        }
+        throw new BadRequestException("Invalid deny");
     }
 
     @Transactional

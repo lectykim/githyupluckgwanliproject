@@ -394,7 +394,22 @@
             acceptButton.textContent = '수락';
             acceptButton.onclick = () => {
                 // 수락 버튼 클릭 시 실행할 코드
-
+                fetch('http://localhost:8080/api/v1/room-api/accept-invite',{
+                    method:'POST',
+                    headers:{
+                        'Content-Type':'application/json'
+                    },
+                    body:JSON.stringify({roomId:data.roomId})
+                })
+                    .then((response)=>{
+                        if(response.ok&&response.status===200){
+                            alert('방 수락에 성공 했습니다!');
+                            window.location.reload();
+                        }else{
+                            alert('방 수락에 실패 했습니다.')
+                            window.location.reload();
+                        }
+                    })
 
             };
 
@@ -403,6 +418,22 @@
             declineButton.textContent = '거절';
             declineButton.onclick = () => {
                 // 거절 버튼 클릭 시 실행할 코드
+                fetch('http://localhost:8080/api/v1/room-api/deny-invite',{
+                    method:'POST',
+                    headers:{
+                        'Content-Type':'application/json'
+                    },
+                    body:JSON.stringify({roomId:data.roomId})
+                })
+                    .then((response)=>{
+                        if(response.ok&&response.status===200){
+                            alert('방 거절에 성공 했습니다!');
+                            window.location.reload();
+                        }else{
+                            alert('방 거절에 실패 했습니다.')
+                            window.location.reload();
+                        }
+                    })
 
 
             };
@@ -535,7 +566,7 @@
         })
             .then((response)=>{
                 if(response.ok&&response.status===200){
-                    window.location.onload();
+                    window.location.reload();
                 }else if(response.status === 400){
                     alert('방 생성에 실패했습니다.');
                 }

@@ -38,6 +38,11 @@ public class FakeIMemberToRoomRepository implements IMemberToRoomRepository {
     }
 
     @Override
+    public boolean existsByMemberAndRoom(Member member, Room room) {
+        return false;
+    }
+
+    @Override
     public void delete(MemberToRoom memberToRoom) {
         db.remove(memberToRoom.getMemberToRoomId());
     }

@@ -20,6 +20,7 @@ public interface MemberToRoomRepository extends JpaRepository<MemberToRoom, Long
     Optional<List<MemberToRoom>> findMemberToRoomByMember(Member member);
 
 
+    boolean existsByMemberAndRoom(Member member, Room room);
     @Override
     Optional<MemberToRoom> findByIsMasterTrueAndRoom(Room room);
 

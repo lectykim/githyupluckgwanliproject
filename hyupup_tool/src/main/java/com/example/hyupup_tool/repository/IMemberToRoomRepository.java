@@ -13,6 +13,7 @@ public interface IMemberToRoomRepository {
     Optional<MemberToRoom> findById(Long id);
     MemberToRoom save(MemberToRoom memberToRoom);
 
+    boolean existsByMemberAndRoom(Member member, Room room);
     void delete(MemberToRoom memberToRoom);
 
     Optional<List<MemberToRoom>> findMemberToRoomByRoom(Room room);

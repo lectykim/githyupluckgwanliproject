@@ -5,6 +5,7 @@ import com.example.hyupup_tool.entity.dto.room.GetAllEventRequest;
 import com.example.hyupup_tool.entity.dto.room.GetCurrentRoomRequest;
 import com.example.hyupup_tool.service.MemberService;
 import com.example.hyupup_tool.service.RoomService;
+import com.example.hyupup_tool.util.SessionGetter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,9 +22,10 @@ public class DashboardController {
     @GetMapping("/main")
     private String dashboardMainPage(Model model){
         var getCurrentRoomResponse = roomService.getCurrentRoom(new GetCurrentRoomRequest());
+        var currentMemberDTO = SessionGetter.getCurrentMemberDto();
 
         model.addAttribute("roomDtoList",getCurrentRoomResponse.roomDTOList());
-
+        model.addAttribute("currentMemberDTO",currentMemberDTO);
         return "/dashboard";
     }
 

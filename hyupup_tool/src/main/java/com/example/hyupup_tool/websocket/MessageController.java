@@ -11,8 +11,8 @@ public class MessageController {
 
     private final SimpMessageSendingOperations simpMessageSendingOperations;
 
-    @MessageMapping("/chat/{chennelId}")
+    @MessageMapping("/chat/{channelId}")
     public void message(Message message){
-        simpMessageSendingOperations.convertAndSend("/topic/messages/"+message.getChannelId(),message);
+        simpMessageSendingOperations.convertAndSend("/sub/chat/"+message.getChannelId(),message);
     }
 }

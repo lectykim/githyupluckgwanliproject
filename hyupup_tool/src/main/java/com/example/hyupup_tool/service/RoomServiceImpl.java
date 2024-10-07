@@ -98,6 +98,8 @@ public class RoomServiceImpl implements RoomService{
     @Override
     public GetAllEventResponse getAllEvent(GetAllEventRequest request) {
         var memberId = SessionGetter.getCurrentMemberDto().getMemberId();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getDetails();
         HashOperations<String,String,String> hashOperations = redisTemplate.opsForHash();
         Map<String,String> entries = hashOperations.entries("Invite:"+memberId);
         Iterable<Long> hashIterable = entries.keySet()
@@ -108,7 +110,15 @@ public class RoomServiceImpl implements RoomService{
                 .stream()
                 .map(Room::toDto)
                 .toList();
-        return new GetAllEventResponse(roomDTOList);
+        var memberToRoomList = memberToRoomRepository.findMemberToRoomByMember(userDetails.getMember())
+                .orElseThrow(()->new BadRequestException("Not exist Member"));
+
+        List<RoomDTO> currentRoomDTOList = memberToRoomList.stream()
+                .map(MemberToRoom::getRoom)
+                .map(Room::toDto)
+                .toList();
+
+        return new GetAllEventResponse(roomDTOList,currentRoomDTOList,userDetails.getMember().toDto());
     }
 
     @Override

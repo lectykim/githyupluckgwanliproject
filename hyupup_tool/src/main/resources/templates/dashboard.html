@@ -329,7 +329,7 @@
 
         <div id="input-container">
             <input type="text" id="chat-input" placeholder="채팅을 입력하세요..." />
-            <button id="send-button">전송</button>
+            <button id="send-button" onclick="sendMessage()">전송</button>
         </div>
     </div>
 
@@ -348,20 +348,27 @@
     const span = document.getElementsByClassName('close')[0];
     let currentRoomNum = 0;
     let roomDtoList = /*[[${roomDtoList}]]*/'[]';
+    let currentMemberDTO = /*[[${currentMemberDTO}]]*/{};
     let stompClients = {};
     let currentEvents = {};
     let currentClientChannelId = null;
-    roomDtoList = JSON.parse(roomDtoList);
-    //stompClients = new Client[roomDtoList.length];
-    for(let i=0;i<roomDtoList.length;i++){
-        let socket = new SockJS('/ws');
-        stompClients[i] = new Stomp.over(socket);
-        stompClients[i].connect({},(frame)=>{
-            stompClients[i].subscribe('/topic/chat/'+roomDtoList[i].roomId,(message)=>{
-                handleChatting(JSON.parse(message.body));
-            })
-        })
+
+
+    const onError = (error)=>{
+        console.error(error);
     }
+
+
+    const onMessageReceived = (data)=>{
+        const chat = JSON.parse(data);
+
+        if(chat.type==='CHAT'&&chat.channelId==currentRoomNum){
+            addChildChatting(data);
+        }else{
+            notificationSynchronization(data);
+        }
+    }
+
 
     const logout = ()=>{
         window.location.href = 'http://localhost:8080/logout';
@@ -377,6 +384,20 @@
         modal.style.display = 'block'
     }
 
+    const sendMessage = ()=>{
+        const message = document.getElementById('chat-input').value;
+        const chattingData = {
+            sender:currentMemberDTO.email,
+            channelId:currentRoomNum.toString(),
+            type:'CHAT',
+            data:message
+        }
+        stompClients[currentRoomNum].send(
+            "/pub/chat/"+currentRoomNum,
+            {},
+            JSON.stringify(chattingData)
+        )
+    }
     const openEventModal = () => {
         const modal = document.getElementById('eventModal');
         modal.style.display = 'block';
@@ -529,8 +550,21 @@
                 const count = data.inviteRoomDTOList.length;
                 document.getElementById('notification').textContent = count > 0 ? `(${count})` : '';
                 currentEvents = data.inviteRoomDTOList;
+                roomDtoList = data.currentRoomDTOList;
+                currentMemberDTO = data.currentMemberDTO;
+                console.log(roomDtoList);
+                //roomDtoList 가져오기
+                for(let i=0;i<roomDtoList.length;i++){
+                    let socket = new SockJS('/ws');
+                    stompClients[i] = new Stomp.over(socket);
+                    stompClients[i].connect({},()=>{
+                        stompClients[i].subscribe("/sub/chat/"+roomDtoList[i].roomId,onMessageReceived);
+                    },onError);
 
+                }
             })
+
+
     }
 
     const showMakeButtonForm= ()=>{

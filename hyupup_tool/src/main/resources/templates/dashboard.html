@@ -360,12 +360,13 @@
 
 
     const onMessageReceived = (data)=>{
-        const chat = JSON.parse(data);
+        console.log(data);
+        const chat = JSON.parse(data.body);
 
         if(chat.type==='CHAT'&&chat.channelId==currentRoomNum){
-            addChildChatting(data);
+            addChildChatting(chat);
         }else{
-            notificationSynchronization(data);
+            notificationSynchronization(chat);
         }
     }
 
@@ -556,9 +557,9 @@
                 //roomDtoList 가져오기
                 for(let i=0;i<roomDtoList.length;i++){
                     let socket = new SockJS('/ws');
-                    stompClients[i] = new Stomp.over(socket);
-                    stompClients[i].connect({},()=>{
-                        stompClients[i].subscribe("/sub/chat/"+roomDtoList[i].roomId,onMessageReceived);
+                    stompClients[roomDtoList[i].roomId] = new Stomp.over(socket);
+                    stompClients[roomDtoList[i].roomId].connect({},()=>{
+                        stompClients[roomDtoList[i].roomId].subscribe("/sub/chat/"+roomDtoList[i].roomId,onMessageReceived);
                     },onError);
 
                 }

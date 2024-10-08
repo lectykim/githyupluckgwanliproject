@@ -38,7 +38,7 @@ public class RoomServiceImpl implements RoomService{
     public CreateRoomResponse createRoom(CreateRoomRequest request){
         roomValidator.createRoomValidator(request);
         var memberId = SessionGetter.getCurrentMemberDto().getMemberId();
-        var roomEntity = Room.of(request.maxMember(),request.title(),request.repository());
+        var roomEntity = Room.of(request.maxMember(),request.title(),request.repository(),request.owner());
         var memberEntity = memberRepository.findById(memberId)
                 .orElseThrow(()-> new BadRequestException("Can't find member"));
 

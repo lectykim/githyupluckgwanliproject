@@ -304,6 +304,7 @@
             <div class="profile-name" id="profile-name"></div>
             <div class="profile-bio" id="profile-bio"></div>
         </div>
+
     </div>
 
 
@@ -319,6 +320,8 @@
             <label for="repository"> Repository : </label>
             <input type="text" id="repository" name="repository" placeholder="input target repository" required>
 
+            <label for="owner">Owner : </label>
+            <input type="text" id="owner" name="owner" placeholder="input target owner" required>
             <input type="submit" onclick="createRoomRequest()" value="Create Room">
         </div>
     </div>
@@ -334,6 +337,13 @@
     <div class="chatting-global-container" id="chatting-global-container">
         <div id="chat-container"></div>
 
+        <div id="test-text-viewer">
+            <div id="branch-title">브런치</div>
+            <div id="branch-data"></div>
+
+            <div id="commit-title">커밋</div>
+            <div id="commit-data"></div>
+        </div>
         <!-- 오른쪽에 배치할 버튼들을 포함한 컨테이너 추가 -->
         <div id="button-container">
             <button onclick="inviteMember()" id="invite-button">멤버 초대하기</button>
@@ -668,13 +678,18 @@
             alert('타겟 레포지토리를 입력해 주세요');
             return false;
         }
+        const owner = document.getElementById('owner').value;
+        if(!isNotEmpty(owner)){
+            alert("타겟 오너를 입력해 주세요");
+            return false;
+        }
 
         fetch('/api/v1/room-api/create',{
             method:'POST',
             headers:{
                 'Content-Type':'application/json'
             },
-            body:JSON.stringify({maxMember,title,repository})
+            body:JSON.stringify({maxMember,title,repository,owner})
         })
             .then((response)=>{
                 if(response.ok&&response.status===200){
@@ -690,8 +705,68 @@
 
     const connectChatting = (roomNum)=>{
         currentRoomNum = roomNum;
+        roomDtoList.forEach((data)=>{
+            if(data.roomId === roomNum){
+                const branchApiCallUrl = 'http://localhost:8080/api/v1/github-api/get-branch-list';
+                const branchParam = {
+                    owner:data.owner,
+                    repo:data.repository
+                }
+                const branchQueryString = new URLSearchParams(branchParam).toString()
+                const branchApiReqUrl = `${branchApiCallUrl}?${branchQueryString}`;
+                fetch(branchApiReqUrl,{
+                    method:'GET',
+                })
+                    .then((response)=>response.text())
+                    .then((text)=>{
+
+                        //TODO : string -> object 로 데이터 직렬화 하기
+
+                        let textData = '';
+                        console.log(text);
+                        const textIterator = JSON.parse(text);
+
+                        textIterator.forEach((data)=>{
+
+                            textData += data.name;
+                            textData += '\n';
+                        })
+                        document.getElementById('branch-data').textContent=textData
+                    })
+                const commitApiCallUrl = 'http://localhost:8080/api/v1/github-api/get-commit-list';
+                const commitParam = {
+                    owner:data.owner,
+                    repo:data.repository
+                };
+                const commitQueryString = new URLSearchParams(commitParam).toString()
+                const commitApiReqUrl = `${commitApiCallUrl}?${commitQueryString}`;
+                fetch(commitApiReqUrl,{
+                    method:'GET',
+                })
+                    .then((response)=>response.text())
+                    .then((text)=>{
+
+                        //TODO : string -> object 로 데이터 직렬화 하기
+
+                        let textData = '';
+                        console.log(text);
+                        //console.log(typeof(text));
+                        const textIterator = JSON.parse(text);
+                        //console.log(text);
+
+                        textIterator.forEach((data)=>{
+
+                            textData += data.commit.message;
+                            textData += '\n';
+                        })
+                        document.getElementById('commit-data').textContent = textData;
+                    })
+
+            }
+        })
         hideChattingContent();
         chattingForm.style.display='block';
+
     }
 
     const addChildChatting = (message)=>{

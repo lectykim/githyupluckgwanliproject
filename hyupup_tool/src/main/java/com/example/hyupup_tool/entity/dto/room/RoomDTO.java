@@ -17,5 +17,6 @@ public class RoomDTO {
     private String title;
     private List<MemberToRoom> memberToRoomList;
     private String repository;
+    private String owner;
 
 }

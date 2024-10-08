@@ -27,19 +27,19 @@ public class GithubApiServiceImpl implements GithubApiService{
         return userManager.getUserInfo(new GithubUserInfoRequest());
     }
 
-    public ResponseEntity<List<GetBranchListResponseDTO>> gerBranchList(String owner, String repo) {
+    public ResponseEntity<byte[]> gerBranchList(String owner, String repo) {
         return branchManager.getBranchList(owner,repo);
     }
 
-    public ResponseEntity<GetBranchDetailsResponseDTO> getBranchDetail(String owner, String repo, String branch) {
+    public ResponseEntity<byte[]> getBranchDetail(String owner, String repo, String branch) {
         return branchManager.getBranchDetail(owner,repo,branch);
     }
 
-    public ResponseEntity<List<GetCommitListResponseDTO>> getCommitList(String owner, String repo) {
+    public ResponseEntity<byte[]> getCommitList(String owner, String repo) {
         return commitManager.getCommitList(owner,repo);
     }
 
-    public ResponseEntity<GetCommitDetailsResponseDTO> getCommitDetail(String owner, String repo, String sha) {
+    public ResponseEntity<byte[]> getCommitDetail(String owner, String repo, String sha) {
         return commitManager.getCommitDetail(owner,repo,sha);
     }
 }

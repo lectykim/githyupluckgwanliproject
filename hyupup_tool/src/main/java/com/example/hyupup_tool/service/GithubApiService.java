@@ -11,8 +11,8 @@ import java.util.List;
 
 @Service
 public interface GithubApiService {
-    ResponseEntity<List<GetBranchListResponseDTO>> gerBranchList(String owner, String repo);
-    ResponseEntity<GetBranchDetailsResponseDTO> getBranchDetail(String owner, String repo, String branch);
-    ResponseEntity<List<GetCommitListResponseDTO>> getCommitList(String owner, String repo);
-    ResponseEntity<GetCommitDetailsResponseDTO> getCommitDetail(String owner, String repo, String sha);
+    ResponseEntity<byte[]> gerBranchList(String owner, String repo);
+    ResponseEntity<byte[]> getBranchDetail(String owner, String repo, String branch);
+    ResponseEntity<byte[]> getCommitList(String owner, String repo);
+    ResponseEntity<byte[]> getCommitDetail(String owner, String repo, String sha);
 }

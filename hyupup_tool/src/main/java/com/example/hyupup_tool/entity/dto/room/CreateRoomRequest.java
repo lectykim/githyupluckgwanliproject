@@ -8,6 +8,8 @@ public record CreateRoomRequest (
         @NonNull
         String title,
         @NonNull
-        String repository
+        String repository,
+        @NonNull
+        String owner
 ){
 }

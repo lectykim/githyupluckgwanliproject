@@ -45,21 +45,24 @@ public class Room extends BaseEntity {
                 .roomId(roomId)
                 .title(title)
                 .maxMember(maxMember)
+                .repository(repository)
+                .owner(owner)
                 .build();
     }
 
     @OneToMany(mappedBy = "room")
     private List<MemberToRoom> memberToRoomList;
 
-    public Room(Long maxMember,String title,String repository){
+    public Room(Long maxMember,String title,String repository,String owner){
         this.maxMember = maxMember;
         this.title = title;
         this.repository = repository;
+        this.owner=owner;
     }
 
-    public static Room of(Long maxMember, String title,String repository){
+    public static Room of(Long maxMember, String title,String repository,String owner){
         validate(maxMember,title,repository);
-        return new Room(maxMember,title,repository);
+        return new Room(maxMember,title,repository,owner);
     }
 
     private static void validate(Long maxMember,String title,String repository){

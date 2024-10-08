@@ -27,22 +27,22 @@ public class GithubApiController {
         return githubApiServiceImpl.getUserInfo();
     }
     @GetMapping("/get-branch-list")
-    public ResponseEntity<List<GetBranchListResponseDTO>> getBranchList(@RequestParam String owner,@RequestParam String repo){
+    public ResponseEntity<byte[]> getBranchList(@RequestParam String owner,@RequestParam String repo){
         return githubApiServiceImpl.gerBranchList(owner,repo);
     }
 
     @GetMapping("/get-branch-detail")
-    public ResponseEntity<GetBranchDetailsResponseDTO> getBranchDetail(@RequestParam String owner, @RequestParam String repo, @RequestParam String branch){
+    public ResponseEntity<byte[]> getBranchDetail(@RequestParam String owner, @RequestParam String repo, @RequestParam String branch){
         return githubApiServiceImpl.getBranchDetail(owner,repo,branch);
     }
 
     @GetMapping("/get-commit-list")
-    public ResponseEntity<List<GetCommitListResponseDTO>> getCommitList(@RequestParam String owner,@RequestParam String repo){
+    public ResponseEntity<byte[]> getCommitList(@RequestParam String owner,@RequestParam String repo){
         return githubApiServiceImpl.getCommitList(owner,repo);
     }
 
     @GetMapping("/get-commit-detail")
-    public ResponseEntity<GetCommitDetailsResponseDTO> getCommitDetail(@RequestParam String owner,@RequestParam String repo,@RequestParam String sha){
+    public ResponseEntity<byte[]> getCommitDetail(@RequestParam String owner,@RequestParam String repo,@RequestParam String sha){
         return githubApiServiceImpl.getCommitDetail(owner,repo,sha);
     }
 

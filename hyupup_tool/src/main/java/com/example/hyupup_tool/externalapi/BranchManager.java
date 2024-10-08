@@ -26,7 +26,7 @@ public class BranchManager {
 
     private final RestTemplate restTemplate;
 
-    public ResponseEntity<List<GetBranchListResponseDTO>> getBranchList(String owner, String repo) {
+    public ResponseEntity<byte[]> getBranchList(String owner, String repo) {
         var memberDto = SessionGetter.getCurrentMemberDto();
         HttpHeaders httpHeaders = GithubHTTPHeader.getHttpHeaders(memberDto.getGithubAccessToken());
 
@@ -34,18 +34,27 @@ public class BranchManager {
 
         String url = "https://api.github.com/repos/"+owner+"/"+repo+"/branches";
 
-        ResponseEntity<List<GetBranchListResponseDTO>> response = restTemplate.exchange(url, HttpMethod.GET,entity,new ParameterizedTypeReference<List<GetBranchListResponseDTO>>(){});
+        ResponseEntity<byte[]> response = restTemplate.exchange(url, HttpMethod.GET,entity,byte[].class);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(response.getHeaders().getContentType());
+        headers.setContentLength(response.getBody().length);
 
-        return response;
+
+        return new ResponseEntity<>(response.getBody(), headers, response.getStatusCode());
     }
 
-    public ResponseEntity<GetBranchDetailsResponseDTO> getBranchDetail(String owner, String repo, String branch) {
+    public ResponseEntity<byte[]> getBranchDetail(String owner, String repo, String branch) {
         var memberDto = SessionGetter.getCurrentMemberDto();
         HttpHeaders httpHeaders = GithubHTTPHeader.getHttpHeaders(memberDto.getGithubAccessToken());
         HttpEntity<String> entity = new HttpEntity<>(null,httpHeaders);
         String url = "https://api.github.com/repose/"+owner+"/"+repo+"/branches/"+branch;
 
-        ResponseEntity<GetBranchDetailsResponseDTO> response = restTemplate.exchange(url,HttpMethod.GET,entity, GetBranchDetailsResponseDTO.class);
-        return response;
+        ResponseEntity<byte[]> response = restTemplate.exchange(url, HttpMethod.GET,entity,byte[].class);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(response.getHeaders().getContentType());
+        headers.setContentLength(response.getBody().length);
+
+
+        return new ResponseEntity<>(response.getBody(), headers, response.getStatusCode());
     }
 }

@@ -48,7 +48,8 @@ public class MemberServiceImpl implements MemberService{
         Member member = Member.of(request.email(),
                 passwordEncoder.encode(request.pw()),
                 request.githubAccessToken(),
-                AuthorityRole.ROLE_NORMAL_MEMBER
+                AuthorityRole.ROLE_NORMAL_MEMBER,
+                request.nickname()
         );
 
         var insertedmember = memberRepository.save(member);
@@ -72,7 +73,9 @@ public class MemberServiceImpl implements MemberService{
                 var updatedUser = memberRepository.save(Member.of(request.email(),
                         request.pw(),
                         request.githubAccessToken(),
-                        AuthorityRole.ROLE_NORMAL_MEMBER)
+                        AuthorityRole.ROLE_NORMAL_MEMBER,
+                        request.nickname()
+                        )
                 );
                 return new ModifyMemberInfoResponse(updatedUser.getMemberId());
             } catch (DataIntegrityViolationException e){

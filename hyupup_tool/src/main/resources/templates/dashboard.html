@@ -149,6 +149,39 @@
             display: none;
         }
 
+        .profile-container {
+            display: flex;
+            align-items: center;
+            border: 1px solid #ddd;
+            padding: 20px;
+            max-width: 600px;
+            margin: auto;
+        }
+
+        .profile-image {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 20px;
+        }
+
+        .profile-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .profile-name {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .profile-bio {
+            font-size: 16px;
+            color: #555;
+        }
+
         label {
             display: block;
             margin-bottom: 8px;
@@ -265,6 +298,15 @@
 <div class="main-content">
     <button class="create-room-btn" id="createRoomBtn" onclick="showRoomForm()">Create Room</button>
 
+    <div class="profile-container">
+        <img class="profile-image" src="" alt="Profile Image">
+        <div class="profile-details">
+            <div class="profile-name"></div>
+            <div class="profile-bio"></div>
+        </div>
+    </div>
+
+
     <!-- 방 생성 폼 -->
     <div class="room-form" id="roomForm">
         <div id="createRoomForm">
@@ -273,6 +315,9 @@
 
             <label for="maxMembers">Max Members:</label>
             <input type="number" id="maxMembers" name="maxMembers" placeholder="Enter max members" required>
+
+            <label for="repository"> Repository : </label>
+            <input type="text" id="repository" name="repository" placeholder="input target repository" required>
 
             <input type="submit" onclick="createRoomRequest()" value="Create Room">
         </div>
@@ -346,6 +391,7 @@
 
 
     const span = document.getElementsByClassName('close')[0];
+    let owner;
     let currentRoomNum = 0;
     let roomDtoList = /*[[${roomDtoList}]]*/'[]';
     let currentMemberDTO = /*[[${currentMemberDTO}]]*/{};
@@ -540,6 +586,7 @@
             },
         })
             .then((response)=>{
+                console.log(response);
                 if(response.ok){
                     return response.json();
                 }else{
@@ -564,7 +611,31 @@
 
                 }
             })
-
+        fetch('http://localhost:8080/api/v1/github-api/user',{
+            method:'GET',
+            headers:{
+                'Content-Type':'application/json',
+                'Cache-Control': 'no-cache',
+            },
+        })
+            .then((response)=>{
+                console.log(response);
+                if(response.ok){
+                    return response.json();
+                }else{
+                    console.log(response);
+                }
+            })
+            .then((data)=>{
+                console.log(data);
+                owner = data.login;
+                document.getElementById('profile-image').src = data.avatar_url;
+                document.getElementById('profile-name').textContent = data.login;
+                document.getElementById('profile-bio').textContent = data.bio;
+            })
+            .catch((error)=>{
+                console.error(error);
+            })
 
     }
 
@@ -591,13 +662,18 @@
             alert('형식에 맞는 maxMembers를 입력해 주세요.');
             return false;
         }
+        const repository = document.getElementById('repository').value;
+        if(!isNotEmpty(repository)){
+            alert('타겟 레포지토리를 입력해 주세요');
+            return false;
+        }
 
         fetch('/api/v1/room-api/create',{
             method:'POST',
             headers:{
                 'Content-Type':'application/json'
             },
-            body:JSON.stringify({maxMember,title})
+            body:JSON.stringify({maxMember,title,repository})
         })
             .then((response)=>{
                 if(response.ok&&response.status===200){

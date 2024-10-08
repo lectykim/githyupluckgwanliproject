@@ -32,6 +32,14 @@ public class Room extends BaseEntity {
     @Setter
     private String title;
 
+    @Column(name="repository",nullable = false)
+    @Setter
+    private String repository;
+
+    @Column(name = "owner",nullable = false)
+    @Setter
+    private String owner;
+
     public RoomDTO toDto(){
         return RoomDTO.builder()
                 .roomId(roomId)
@@ -43,17 +51,18 @@ public class Room extends BaseEntity {
     @OneToMany(mappedBy = "room")
     private List<MemberToRoom> memberToRoomList;
 
-    public Room(Long maxMember,String title){
+    public Room(Long maxMember,String title,String repository){
         this.maxMember = maxMember;
         this.title = title;
+        this.repository = repository;
     }
 
-    public static Room of(Long maxMember, String title){
-        validate(maxMember,title);
-        return new Room(maxMember,title);
+    public static Room of(Long maxMember, String title,String repository){
+        validate(maxMember,title,repository);
+        return new Room(maxMember,title,repository);
     }
 
-    private static void validate(Long maxMember,String title){
+    private static void validate(Long maxMember,String title,String repository){
         validateMaxMember(maxMember);
         validateTitle(title);
     }

@@ -4,6 +4,7 @@ import com.example.hyupup_tool.entity.dto.GetBranchDetailsResponseDTO;
 import com.example.hyupup_tool.entity.dto.GetBranchListResponseDTO;
 import com.example.hyupup_tool.entity.dto.GetCommitDetailsResponseDTO;
 import com.example.hyupup_tool.entity.dto.GetCommitListResponseDTO;
+import com.example.hyupup_tool.entity.dto.github.GithubUserInfoResponse;
 import com.example.hyupup_tool.service.GithubApiServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,11 @@ import java.util.List;
 public class GithubApiController {
 
     private final GithubApiServiceImpl githubApiServiceImpl;
+
+    @GetMapping("/user")
+    public ResponseEntity<GithubUserInfoResponse> getUserInfo(){
+        return githubApiServiceImpl.getUserInfo();
+    }
     @GetMapping("/get-branch-list")
     public ResponseEntity<List<GetBranchListResponseDTO>> getBranchList(@RequestParam String owner,@RequestParam String repo){
         return githubApiServiceImpl.gerBranchList(owner,repo);

@@ -21,5 +21,5 @@ public class MemberDTO {
     private AuthorityRole authorityRole;
     private List<MemberToRoom> memberToRoomList;
     private String githubAccessToken;
-
+    private String nickname;
 }

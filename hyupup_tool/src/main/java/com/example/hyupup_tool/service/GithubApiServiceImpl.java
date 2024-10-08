@@ -4,8 +4,11 @@ import com.example.hyupup_tool.entity.dto.GetBranchDetailsResponseDTO;
 import com.example.hyupup_tool.entity.dto.GetBranchListResponseDTO;
 import com.example.hyupup_tool.entity.dto.GetCommitDetailsResponseDTO;
 import com.example.hyupup_tool.entity.dto.GetCommitListResponseDTO;
+import com.example.hyupup_tool.entity.dto.github.GithubUserInfoRequest;
+import com.example.hyupup_tool.entity.dto.github.GithubUserInfoResponse;
 import com.example.hyupup_tool.externalapi.BranchManager;
 import com.example.hyupup_tool.externalapi.CommitManager;
+import com.example.hyupup_tool.externalapi.UserManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -18,6 +21,11 @@ public class GithubApiServiceImpl implements GithubApiService{
 
     private final BranchManager branchManager;
     private final CommitManager commitManager;
+    private final UserManager userManager;
+
+    public ResponseEntity<GithubUserInfoResponse> getUserInfo(){
+        return userManager.getUserInfo(new GithubUserInfoRequest());
+    }
 
     public ResponseEntity<List<GetBranchListResponseDTO>> gerBranchList(String owner, String repo) {
         return branchManager.getBranchList(owner,repo);

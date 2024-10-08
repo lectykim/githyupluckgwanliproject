@@ -3,6 +3,7 @@ package com.example.hyupup_tool.externalapi;
 import com.example.hyupup_tool.config.GithubHTTPHeader;
 import com.example.hyupup_tool.entity.dto.GetCommitDetailsResponseDTO;
 import com.example.hyupup_tool.entity.dto.GetCommitListResponseDTO;
+import com.example.hyupup_tool.util.SessionGetter;
 import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;
@@ -21,7 +22,8 @@ public class CommitManager {
     private final RestTemplate restTemplate;
 
     public ResponseEntity<List<GetCommitListResponseDTO>> getCommitList(String owner, String repo) {
-        HttpHeaders httpHeaders = GithubHTTPHeader.getHttpHeaders();
+        var memberDto = SessionGetter.getCurrentMemberDto();
+        HttpHeaders httpHeaders = GithubHTTPHeader.getHttpHeaders(memberDto.getGithubAccessToken());
 
         HttpEntity<String> entity = new HttpEntity<>(null,httpHeaders);
 
@@ -32,7 +34,8 @@ public class CommitManager {
     }
 
     public ResponseEntity<GetCommitDetailsResponseDTO> getCommitDetail(String owner, String repo, String sha) {
-        HttpHeaders httpHeaders = GithubHTTPHeader.getHttpHeaders();
+        var memberDto = SessionGetter.getCurrentMemberDto();
+        HttpHeaders httpHeaders = GithubHTTPHeader.getHttpHeaders(memberDto.getGithubAccessToken());
         HttpEntity<String> entity = new HttpEntity<>(null,httpHeaders);
         String url = "https://api.github.com/repos/"+owner+"/"+repo+"/commits/"+sha;
 

@@ -82,6 +82,10 @@
             <label for="githubAccessToken">Github Access Token:</label>
             <input type="text" id="githubAccessToken" name="githubAccessToken" required>
         </div>
+        <div class="form-group">
+            <label for="nickname">Nickname : </label>
+            <input type="text" id="nickname" name="nickname" required>
+        </div>
         <button onclick="SignUp()" class="btn">Sign Up</button>
     </div>
     <div id="error-message" class="error-message"></div>
@@ -119,12 +123,17 @@
             alert("깃허브 엑세스 토큰을 입력해 주세요");
             return false;
         }
+        const nickname = document.getElementById('nickname').value;
+        if(!isNotEmpty(nickname)){
+            alert('닉네임을 입력해 주세요.');
+            return false
+        }
         fetch('/api/v1/member-api/signup', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ email, pw, githubAccessToken})
+            body: JSON.stringify({ email, pw, githubAccessToken,nickname})
         })
             .then((response)=>{
                 if(response.ok){

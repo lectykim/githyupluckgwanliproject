@@ -9,6 +9,7 @@ import com.example.hyupup_tool.validator.RegexValidator;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -49,6 +50,10 @@ public class Member extends BaseEntity {
     @Setter
     private AuthorityRole authorityRole;
 
+    @Column(name = "nickname",nullable = false)
+    @Setter
+    private String nickname;
+
     public MemberDTO toDto(){
         return MemberDTO.builder()
                 .email(email)
@@ -64,19 +69,20 @@ public class Member extends BaseEntity {
     @OneToMany(mappedBy = "member")
     private List<MemberToRoom> memberToRoomList;
 
-    private Member(String email, String pw, String githubAccessToken,AuthorityRole role){
+    private Member(String email, String pw, String githubAccessToken,AuthorityRole role,String nickname){
         this.email=email;
         this.pw=pw;
         this.githubAccessToken = githubAccessToken;
         this.authorityRole = role;
+        this.nickname=nickname;
     }
 
-    public static Member of(String email, String pw, String githubAccessToken,AuthorityRole role){
-        validate(email,pw,githubAccessToken,role);
-        return new Member(email,pw,githubAccessToken,role);
+    public static Member of(String email, String pw, String githubAccessToken,AuthorityRole role,String nickname){
+        validate(email,pw,githubAccessToken,role,nickname);
+        return new Member(email,pw,githubAccessToken,role,nickname);
     }
 
-    private static void validate(String email,String pw,String githubAccessToken,AuthorityRole role){
+    private static void validate(String email,String pw,String githubAccessToken,AuthorityRole role,String nickname){
         validateEmail(email);
         validatePw(pw);
         validateGithubAccessToken(githubAccessToken);

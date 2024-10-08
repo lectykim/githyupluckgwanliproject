@@ -16,6 +16,6 @@ public class RoomDTO {
     private Long maxMember;
     private String title;
     private List<MemberToRoom> memberToRoomList;
-
+    private String repository;
 
 }

@@ -6,6 +6,8 @@ public record CreateRoomRequest (
         @NonNull
         Long maxMember,
         @NonNull
-        String title
+        String title,
+        @NonNull
+        String repository
 ){
 }

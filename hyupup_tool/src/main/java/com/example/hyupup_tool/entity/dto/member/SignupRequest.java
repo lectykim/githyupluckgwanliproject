@@ -8,6 +8,8 @@ public record SignupRequest(
         @NonNull
         String pw,
         @NonNull
-        String githubAccessToken
+        String githubAccessToken,
+        @NonNull
+        String nickname
 ) {
 }

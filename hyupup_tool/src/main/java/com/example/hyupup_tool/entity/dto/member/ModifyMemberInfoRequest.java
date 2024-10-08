@@ -11,6 +11,8 @@ public record ModifyMemberInfoRequest(
         @NonNull
         String pw,
         @NonNull
-        String githubAccessToken
+        String githubAccessToken,
+        @NonNull
+        String nickname
 ) {
 }

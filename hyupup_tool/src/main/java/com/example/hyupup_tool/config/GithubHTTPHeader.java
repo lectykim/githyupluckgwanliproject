@@ -4,13 +4,10 @@ import org.springframework.http.HttpHeaders;
 
 public class GithubHTTPHeader {
 
-    public static HttpHeaders getHttpHeaders(){
-        //TODO : ERD 완성 후 퍼스널토큰 삽입
-        //String token = userService.getPersonalToken();
-        String token = "";
+    public static HttpHeaders getHttpHeaders(String accessToken){
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.set("Accept","application/vnd.github+json");
-        httpHeaders.set("Authorization","Bearer "+token);
+        httpHeaders.set("Authorization","Bearer "+accessToken);
         httpHeaders.set("X-Github-Api-Version","2022-11-28");
         return httpHeaders;
     }

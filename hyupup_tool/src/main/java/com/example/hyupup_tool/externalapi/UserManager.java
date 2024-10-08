@@ -14,6 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Objects;
+
 @Component
 @RequiredArgsConstructor
 @Slf4j
@@ -21,7 +23,7 @@ public class UserManager {
 
     private final RestTemplate restTemplate;
 
-    public ResponseEntity<GithubUserInfoResponse> getUserInfo(GithubUserInfoRequest request){
+    public ResponseEntity<byte[]> getUserInfo(GithubUserInfoRequest request){
         var memberDto = SessionGetter.getCurrentMemberDto();
         HttpHeaders httpHeaders = GithubHTTPHeader.getHttpHeaders(memberDto.getGithubAccessToken());
 
@@ -29,9 +31,16 @@ public class UserManager {
 
         String url = "https://api.github.com/user";
 
-        ResponseEntity<GithubUserInfoResponse> response = restTemplate.exchange(url, HttpMethod.GET,entity,new ParameterizedTypeReference<GithubUserInfoResponse>(){});
-        log.info("{}",response.getHeaders());
-        return response;
+        ResponseEntity<byte[]> response = restTemplate.exchange(url, HttpMethod.GET,entity,byte[].class);
+
+        //log.info("{}",response.getHeaders());
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(response.getHeaders().getContentType());
+        headers.setContentLength(response.getBody().length);
+
+
+
+        return new ResponseEntity<>(response.getBody(),headers,response.getStatusCode());
     }
 
 }

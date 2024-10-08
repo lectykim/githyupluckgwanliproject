@@ -23,7 +23,7 @@ public class GithubApiController {
     private final GithubApiServiceImpl githubApiServiceImpl;
 
     @GetMapping("/user")
-    public ResponseEntity<GithubUserInfoResponse> getUserInfo(){
+    public ResponseEntity<byte[]> getUserInfo(){
         return githubApiServiceImpl.getUserInfo();
     }
     @GetMapping("/get-branch-list")

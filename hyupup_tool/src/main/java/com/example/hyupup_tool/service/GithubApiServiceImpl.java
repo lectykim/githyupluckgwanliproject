@@ -23,7 +23,7 @@ public class GithubApiServiceImpl implements GithubApiService{
     private final CommitManager commitManager;
     private final UserManager userManager;
 
-    public ResponseEntity<GithubUserInfoResponse> getUserInfo(){
+    public ResponseEntity<byte[]> getUserInfo(){
         return userManager.getUserInfo(new GithubUserInfoRequest());
     }
 

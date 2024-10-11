@@ -21,6 +21,7 @@ public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         context.setAuthentication(authentication);
+
         SecurityContextHolder.setContext(context);
         RequestContextHolder.currentRequestAttributes().setAttribute("SPRING_SECURITY_CONTEXT", context, RequestAttributes.SCOPE_SESSION);
 

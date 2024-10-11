@@ -16,6 +16,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "member")
@@ -61,6 +62,11 @@ public class Member extends BaseEntity {
                 .memberId(memberId)
                 .pw(pw)
                 .purchasePlan(purchasePlan)
+                .memberToRoomDTOList(
+                        memberToRoomList.stream()
+                                .map(MemberToRoom::toDto)
+                                .collect(Collectors.toList())
+                )
                 .githubAccessToken(githubAccessToken)
                 .build();
     }

@@ -34,6 +34,7 @@ public class RoomServiceImpl implements RoomService{
     private final MemberRepository memberRepository;
     private final MemberToRoomRepository memberToRoomRepository;
     private final RoomValidator roomValidator;
+    private final SessionGetter sessionGetter;
     @Transactional
     public CreateRoomResponse createRoom(CreateRoomRequest request){
         roomValidator.createRoomValidator(request);
@@ -47,7 +48,7 @@ public class RoomServiceImpl implements RoomService{
         var savedRoomEntity = roomRepository.save(roomEntity);
         var memberToRoomEntity = MemberToRoom.of(memberEntity,savedRoomEntity,true);
         memberToRoomRepository.save(memberToRoomEntity);
-
+        sessionGetter.resetCurrentMemberDto();
         return new CreateRoomResponse(savedRoomEntity.getRoomId());
     }
 
@@ -58,13 +59,14 @@ public class RoomServiceImpl implements RoomService{
 
         roomEntity.setTitle(request.title());
         roomEntity.setMaxMember(request.maxMember());
-
+        sessionGetter.resetCurrentMemberDto();
         return new UpdateRoomResponse(request.roomId());
     }
 
     public DeleteRoomResponse deleteRoom(DeleteRoomRequest request){
         roomValidator.deleteRoomValidator(request);
         roomRepository.deleteById(request.roomId());
+        sessionGetter.resetCurrentMemberDto();
         return new DeleteRoomResponse();
     }
 
@@ -146,6 +148,7 @@ public class RoomServiceImpl implements RoomService{
                 return new AcceptInviteResponse();
             }
         }
+        sessionGetter.resetCurrentMemberDto();
         throw new BadRequestException("Invalid invite");
     }
 

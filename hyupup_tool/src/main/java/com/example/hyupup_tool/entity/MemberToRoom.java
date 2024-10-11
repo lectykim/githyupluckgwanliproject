@@ -1,6 +1,7 @@
 package com.example.hyupup_tool.entity;
 
 import com.example.hyupup_tool.entity.base.BaseEntity;
+import com.example.hyupup_tool.entity.dto.MemberToRoomDTO;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -41,6 +42,12 @@ public class MemberToRoom extends BaseEntity {
         return new MemberToRoom(member,room,isMaster);
     }
 
-
+    public MemberToRoomDTO toDto(){
+        return MemberToRoomDTO.builder()
+                .memberId(member.getMemberId())
+                .roomId(room.getRoomId())
+                .isMaster(isMaster)
+                .build();
+    }
 
 }

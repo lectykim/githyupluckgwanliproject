@@ -47,7 +47,7 @@ public class BranchManager {
         var memberDto = SessionGetter.getCurrentMemberDto();
         HttpHeaders httpHeaders = GithubHTTPHeader.getHttpHeaders(memberDto.getGithubAccessToken());
         HttpEntity<String> entity = new HttpEntity<>(null,httpHeaders);
-        String url = "https://api.github.com/repose/"+owner+"/"+repo+"/branches/"+branch;
+        String url = "https://api.github.com/repos/"+owner+"/"+repo+"/branches/"+branch;
 
         ResponseEntity<byte[]> response = restTemplate.exchange(url, HttpMethod.GET,entity,byte[].class);
         HttpHeaders headers = new HttpHeaders();

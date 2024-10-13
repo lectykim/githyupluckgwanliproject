@@ -16,6 +16,9 @@ public class Message {
 
     private Object data;
 
+    @Setter
+    private String messageNum;
+
     public void newConnect(){
         this.type = "new";
     }

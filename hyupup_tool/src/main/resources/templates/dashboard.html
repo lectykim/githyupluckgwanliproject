@@ -311,7 +311,7 @@
     </div>
     <div th:each="room : ${roomDtoList}">
         <p th:onclick="'connectChatting(' + ${room.roomId} + ')'">
-            <span th:text="${room.title}"></span>
+            <span th:text="${room.title}"></span><span th:id="'room-'+${room.roomId}" th:text="'('+${room.getNotReadMessageCount()}+')'" style="color:red;"></span>
         </p>
     </div>
 </div>
@@ -456,10 +456,28 @@
         const chat = JSON.parse(data.body);
 
         if(chat.type==='CHAT'&&chat.channelId==currentRoomNum){
+            //Chat container의 child에 추가
             addChildChatting(chat);
+            //Read Pos를 업데이트 하는 함수
+            updateReceivePos(chat);
         }else{
+            //알림 동기화
             notificationSynchronization(chat);
         }
+    }
+
+    const updateReceivePos = (chat)=>{
+        const chattingData = {
+            sender:currentMemberDTO.email,
+            channelId:currentRoomNum.toString(),
+            type:'RECEIVE',
+            messageNum:chat.messageNum
+        }
+        stompClients[currentRoomNum].send(
+            "/pub/receive/"+currentRoomNum,
+            {},
+            JSON.stringify(chattingData)
+        )
     }
 
 
@@ -611,17 +629,13 @@
         }
 
     }
-    const handleChatting = (message)=>{
-        if(message.channelId === currentClientChannelId){
-            addChildChatting(message);
-        }else{
-            notificationSynchronization(message);
 
-        }
-    }
-
-    const notificationSynchronization = ()=>{
-        //TODO : th:each로 만든 타이틀 옆에 숫자 붙히기
+    const notificationSynchronization = (data)=>{
+        const channelStr = 'room-'+data.channelId;
+        let channelNum = document.getElementById(channelStr).textContent;
+        let number = Number(channelNum.match(/\d+/)[0]);
+        number += 1;
+        document.getElementById(channelStr).textContent='(' + number + ')';
     }
 
     const getNotification = ()=>{

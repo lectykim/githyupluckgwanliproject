@@ -67,6 +67,13 @@ public class RoomController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/get-before-chat")
+    public ResponseEntity<GetBeforeChatContentResponse> getBeforeChat(GetBeforeChatContentRequest request){
+        var response = roomServiceImpl.getBeforeChatContent(request);
+
+        return ResponseEntity.ok(response);
+    }
+
     @PostMapping("/deny-invite")
     public ResponseEntity<DenyInviteReseponse> denyInvite(@RequestBody  DenyInviteRequest request){
         var response = roomServiceImpl.denyInvite(request);

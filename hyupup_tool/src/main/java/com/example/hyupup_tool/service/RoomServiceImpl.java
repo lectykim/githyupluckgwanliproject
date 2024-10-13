@@ -11,6 +11,7 @@ import com.example.hyupup_tool.repository.RoomRepository;
 import com.example.hyupup_tool.security.CustomUserDetails;
 import com.example.hyupup_tool.util.SessionGetter;
 import com.example.hyupup_tool.validator.RoomValidator;
+import com.example.hyupup_tool.websocket.MessageService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.HashOperations;
@@ -19,10 +20,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,6 +33,7 @@ public class RoomServiceImpl implements RoomService{
     private final MemberToRoomRepository memberToRoomRepository;
     private final RoomValidator roomValidator;
     private final SessionGetter sessionGetter;
+    private final MessageService messageService;
     @Transactional
     public CreateRoomResponse createRoom(CreateRoomRequest request){
         roomValidator.createRoomValidator(request);
@@ -94,6 +93,7 @@ public class RoomServiceImpl implements RoomService{
                 .map(MemberToRoom::getRoom)
                 .map(Room::toDto)
                 .toList();
+        roomDTOList = messageService.setNotReadMessageCounts(roomDTOList,userDetails.getMember());
         return new GetCurrentRoomResponse(roomDTOList);
     }
 
@@ -169,6 +169,24 @@ public class RoomServiceImpl implements RoomService{
             }
         }
         throw new BadRequestException("Invalid deny");
+    }
+
+    @Override
+    public GetBeforeChatContentResponse getBeforeChatContent(GetBeforeChatContentRequest request) {
+        var key = "Room:"+request.roomId()+":Chat";
+        List<String> messageList = redisTemplate.opsForList().range(key, 0, -1);
+        if (messageList != null) {
+            List<MessageDTO> messageDTOList = messageList.stream()
+                    .map(s -> MessageDTO.makeMessage(s, request.roomId()))  // 각 String을 MessageDTO로 변환
+                    .collect(Collectors.toList());  // 변환된 결과를 List로 수집
+            return new GetBeforeChatContentResponse(messageDTOList);
+        } else {
+            return new GetBeforeChatContentResponse(null);
+        }
+
+
+
+
     }
 
     @Transactional

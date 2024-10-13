@@ -19,5 +19,6 @@ public class RoomDTO {
     private List<MemberToRoomDTO> memberToRoomDTOList;
     private String repository;
     private String owner;
+    private Long notReadMessageCount;
 
 }

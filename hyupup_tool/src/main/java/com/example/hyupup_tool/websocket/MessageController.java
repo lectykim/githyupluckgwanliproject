@@ -33,4 +33,9 @@ public class MessageController {
             chatDataScheduler.addToQueue(message);
         }
     }
+
+    @MessageMapping("/github/{channelId}")
+    public void settingGithub(Message message){
+        simpMessageSendingOperations.convertAndSend("/sub/chat/"+message.getChannelId(),message);
+    }
 }

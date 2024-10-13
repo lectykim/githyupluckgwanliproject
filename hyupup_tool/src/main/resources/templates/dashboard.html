@@ -460,9 +460,63 @@
             addChildChatting(chat);
             //Read Pos를 업데이트 하는 함수
             updateReceivePos(chat);
+        }else if((chat.type==='COMMIT'||chat.type==='BRANCH')&&chat.channelId==currentRoomNum){
+            showGithubData(chat);
         }else{
             //알림 동기화
             notificationSynchronization(chat);
+        }
+    }
+    const showGithubData = (data)=>{
+
+        if(data.type==='BRANCH'){
+            const branchDetailURL = 'http://localhost:8080/api/v1/github-api/get-branch-detail';
+            const roomDto = findRoomDto(currentRoomNum);
+            const branchQueryParam = {
+                owner:roomDto.owner,
+                repo:roomDto.repository,
+                branch:data.data
+            }
+            const branchQueryString = new URLSearchParams(branchQueryParam).toString()
+            const branchApiReqUrl = `${branchDetailURL}?${branchQueryString}`;
+            fetch(branchApiReqUrl,{
+                method:'GET',
+            })
+                .then((response)=>{
+                    if(response.ok){
+                        return response.text();
+                    }else{
+                        console.log(response);
+                    }
+                })
+                .then((data)=>{
+                    const newData = JSON.parse(data);
+                    document.getElementById('info-data').textContent = newData.name;
+                })
+        }else{
+            const commitDetailURL = 'http://localhost:8080/api/v1/github-api/get-commit-detail';
+            const roomDto = findRoomDto(currentRoomNum);
+            const commitQueryParam = {
+                owner:roomDto.owner,
+                repo:roomDto.repository,
+                sha:data.data
+            }
+            const commitQueryString = new URLSearchParams(commitQueryParam).toString()
+            const commitApiReqUrl = `${commitDetailURL}?${commitQueryString}`;
+            fetch(commitApiReqUrl,{
+                method:'GET',
+            })
+                .then((response)=>{
+                    if(response.ok){
+                        return response.text();
+                    }else{
+                        console.log(response);
+                    }
+                })
+                .then((data)=>{
+                    const newData = JSON.parse(data);
+                    document.getElementById('info-data').textContent = newData.sha;
+                })
         }
     }
 
@@ -838,6 +892,7 @@
                     const branchChild = document.createElement('li');
                     branchChild.textContent=data.name;
                     branchChild.className='button-item'
+                    branchChild.onclick=()=>branchChildOnClick(data.name);
 
                     branchData.appendChild(branchChild);
                 })
@@ -866,10 +921,41 @@
                     const commitChild = document.createElement('li');
                     commitChild.textContent = data.commit.message;
                     commitChild.className='button-item'
+                    commitChild.onclick = ()=>commitChildOnClick(data.sha)
                     commitData.appendChild(commitChild);
                 })
             })
     }
+
+    const branchChildOnClick = (name)=>{
+
+        const chattingData = {
+            sender:currentMemberDTO.email,
+            channelId:currentRoomNum.toString(),
+            type:'BRANCH',
+            data:name
+        }
+        stompClients[currentRoomNum].send(
+            "/pub/github/"+currentRoomNum,
+            {},
+            JSON.stringify(chattingData)
+        )
+    }
+
+    const commitChildOnClick = (sha)=>{
+        const chattingData = {
+            sender:currentMemberDTO.email,
+            channelId:currentRoomNum.toString(),
+            type:'COMMIT',
+            data:sha
+        }
+        stompClients[currentRoomNum].send(
+            "/pub/github/"+currentRoomNum,
+            {},
+            JSON.stringify(chattingData)
+        )
+    }
+
 
     const addChildChatting = (message)=>{
         const messageElement = document.createElement('div')

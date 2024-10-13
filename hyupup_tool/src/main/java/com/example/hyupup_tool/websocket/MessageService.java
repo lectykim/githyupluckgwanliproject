@@ -39,4 +39,9 @@ public class MessageService {
         return roomDTOList;
     }
 
+    public List<String> getMessageList(Long roomId){
+        String key = "Room:"+roomId+":Chat";
+        return redisTemplate.opsForList().range(key,0,-1);
+    }
+
 }

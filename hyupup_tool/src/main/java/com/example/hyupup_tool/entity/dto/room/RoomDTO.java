@@ -20,5 +20,5 @@ public class RoomDTO {
     private String repository;
     private String owner;
     private Long notReadMessageCount;
-
+    private List<String> messageHistory;
 }

@@ -19,4 +19,6 @@ public interface RoomService {
     DenyInviteReseponse denyInvite(DenyInviteRequest request);
 
     GetBeforeChatContentResponse getBeforeChatContent(GetBeforeChatContentRequest request);
+
+    SyncRoomReadPosResponse syncRoomReadPos(SyncRoomReadPosRequest request);
 }

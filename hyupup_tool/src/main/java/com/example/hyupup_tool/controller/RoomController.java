@@ -81,6 +81,12 @@ public class RoomController {
         return ResponseEntity.ok(response);
     }
 
+    @PostMapping("/sync-room-read-pos")
+    public ResponseEntity<SyncRoomReadPosResponse> syncRoomReadPos(@RequestBody  SyncRoomReadPosRequest request){
+        var response = roomServiceImpl.syncRoomReadPos(request);
+
+        return ResponseEntity.ok(response);
+    }
     @PostMapping("/accept-invite")
     public ResponseEntity<AcceptInviteResponse> acceptInvite(@RequestBody AcceptInviteRequest request) {
         var response = roomServiceImpl.acceptInvite(request);

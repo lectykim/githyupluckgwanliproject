@@ -763,20 +763,53 @@
                     if(memberToRoomDTO.roomId === roomNum&&
                         memberToRoomDTO.master&&
                         memberToRoomDTO.memberId === currentMemberDTO.memberId){
-
+                        showBeforeChat(data);
                         masterSettingForm(data);
                         hideChattingContent();
                         chattingForm.style.display='block';
+                        syncReadPos(roomNum);
                         return true;
                     }
                 });
             }
         })
+        showBeforeChat(findRoomDto(roomNum));
         hideChattingContent()
         chattingForm.style.display='block'
+        syncReadPos(roomNum);
 
 
 
+    }
+
+    const syncReadPos = (roomNum)=>{
+        fetch('http://localhost:8080/api/v1/room-api/sync-room-read-pos',{
+            method:'POST',
+            headers:{
+                'Content-Type':'application/json'
+            },
+            body:JSON.stringify({roomId:roomNum})
+        })
+            .then((response)=>{
+                if(response.ok){
+                    document.getElementById('room-'+roomNum).textContent='(0)';
+                }else{
+                    console.log(response);
+                }
+            })
+    }
+
+    const findRoomDto = (roomNum) => {
+        return roomDtoList.find(data => data.roomId === roomNum) || null;
+    };
+
+    const showBeforeChat = (data)=>{
+        data.messageHistory.forEach((message)=>{
+            const messageElement = document.createElement('div')
+            messageElement.textContent = message
+            chatContainer.appendChild(messageElement);
+            chatContainer.scrollTop = chatContainer.scrollHeight; // 스크롤을 가장 아래로
+        })
     }
     const slaveSettingForm = ()=>{
         document.getElementById('info-data').textContent='';

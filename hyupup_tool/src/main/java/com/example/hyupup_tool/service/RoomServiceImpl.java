@@ -92,8 +92,12 @@ public class RoomServiceImpl implements RoomService{
         List<RoomDTO> roomDTOList = memberToRoomList.stream()
                 .map(MemberToRoom::getRoom)
                 .map(Room::toDto)
+                .peek(s-> s.setMessageHistory(
+                        messageService.getMessageList(s.getRoomId())
+                ))
                 .toList();
         roomDTOList = messageService.setNotReadMessageCounts(roomDTOList,userDetails.getMember());
+
         return new GetCurrentRoomResponse(roomDTOList);
     }
 
@@ -111,6 +115,9 @@ public class RoomServiceImpl implements RoomService{
         var roomDTOList = roomRepository.findAllById(hashIterable)
                 .stream()
                 .map(Room::toDto)
+                .peek(s-> s.setMessageHistory(
+                        messageService.getMessageList(s.getRoomId())
+                ))
                 .toList();
         var memberToRoomList = memberToRoomRepository.findMemberToRoomByMember(userDetails.getMember())
                 .orElseThrow(()->new BadRequestException("Not exist Member"));
@@ -118,6 +125,9 @@ public class RoomServiceImpl implements RoomService{
         List<RoomDTO> currentRoomDTOList = memberToRoomList.stream()
                 .map(MemberToRoom::getRoom)
                 .map(Room::toDto)
+                .peek(s-> s.setMessageHistory(
+                        messageService.getMessageList(s.getRoomId())
+                ))
                 .toList();
 
         return new GetAllEventResponse(roomDTOList,currentRoomDTOList,userDetails.getMember().toDto());
@@ -186,6 +196,18 @@ public class RoomServiceImpl implements RoomService{
 
 
 
+
+    }
+
+    @Override
+    public SyncRoomReadPosResponse syncRoomReadPos(SyncRoomReadPosRequest request) {
+        var member = SessionGetter.getCurrentMemberDto();
+        String key = "Room:"+request.roomId()+"Member:"+member.getEmail()+"ReadPos";
+        Long value = redisTemplate.opsForList().size("Room:"+request.roomId()+":Chat");
+        if(value != null){
+            redisTemplate.opsForValue().set(key,value.toString());
+        }
+        return new SyncRoomReadPosResponse();
 
     }
 

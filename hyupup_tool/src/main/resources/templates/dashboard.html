@@ -474,7 +474,11 @@
                 })
                 .then((data)=>{
                     const newData = JSON.parse(data);
-                    document.getElementById('info-data').textContent = newData.sha;
+                    let shaData = '';
+                    newData.files.forEach((res)=>{
+                        shaData += res.patch;
+                    })
+                    document.getElementById('info-data').textContent = shaData;
                 })
         }
     }

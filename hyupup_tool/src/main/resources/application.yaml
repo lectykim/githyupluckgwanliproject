@@ -1,6 +1,6 @@
 spring:
   redis:
-    host: localhost
+    host: 172.18.7.29
     port: 6379
 
   h2:
@@ -9,7 +9,7 @@ spring:
       path: /h2-console
 
   datasource:
-    url: jdbc:mysql://127.0.0.1:8888/web?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul
+    url: jdbc:mysql://172.18.7.29:8888/web?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul
     username: root # username과 password는 자신의 설정에 맞게
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver

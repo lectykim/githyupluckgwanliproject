@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Signup Page</title>
     <style>
         body {
@@ -33,7 +32,7 @@
             margin-bottom: 5px;
         }
         input[type="email"], input[type="password"], input[type="text"] {
-            width: 100%;
+            width: 89%;
             padding: 10px;
             border: 1px solid #ddd;
             border-radius: 4px;
@@ -67,7 +66,7 @@
     <h2>Signup</h2>
     <div id="signupForm">
         <div class="form-group">
-            <label for="email">Email:</label>
+            <label for="email">Email</label>
             <input type="email" id="email" name="email" required>
             <br>
             <button onclick="canSignUp()">Check Available Email</button>
@@ -75,15 +74,15 @@
             <div id="email-check-result"></div>
         </div>
         <div class="form-group">
-            <label for="pw">pw:</label>
+            <label for="pw">PW</label>
             <input type="password" id="pw" name="pw" required>
         </div>
         <div class="form-group">
-            <label for="githubAccessToken">Github Access Token:</label>
+            <label for="githubAccessToken">Github Access Token</label>
             <input type="text" id="githubAccessToken" name="githubAccessToken" required>
         </div>
         <div class="form-group">
-            <label for="nickname">Nickname : </label>
+            <label for="nickname">Nickname</label>
             <input type="text" id="nickname" name="nickname" required>
         </div>
         <button onclick="SignUp()" class="btn">Sign Up</button>

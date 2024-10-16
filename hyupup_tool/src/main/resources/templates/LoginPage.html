@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Page</title>
     <style>
         body {
@@ -33,7 +32,7 @@
             margin-bottom: 5px;
         }
         input[type="text"], input[type="password"] {
-            width: 100%;
+            width: 89%;
             padding: 10px;
             border: 1px solid #ddd;
             border-radius: 4px;
@@ -76,18 +75,16 @@
     <h2>Login</h2>
     <div id="loginForm">
         <div class="form-group">
-            <label for="email">EMAIL:</label>
+            <label for="email">EMAIL</label>
             <input type="text" id="email" name="email" required>
         </div>
         <div class="form-group">
-            <label for="pw">PW:</label>
+            <label for="pw">PW</label>
             <input type="password" id="pw" name="pw" required>
         </div>
         <button onclick="Login()" class="btn">Login</button>
         <!-- 회원가입 버튼 -->
-        <div class="signup-btn" onclick="GoSignUp()">
-            <a style="color: white; text-decoration: none;">Sign Up</a>
-        </div>
+        <button onclick="GoSignUp()" class="signup-btn">Sign Up</button>
     </div>
 
     <div id="error-message" class="error-message"></div>

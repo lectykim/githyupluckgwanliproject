@@ -9,8 +9,9 @@
     <style>
         /* 전체 페이지 설정 */
         body {
-            margin: 0;
+	width: 1920px; height: 1080px; position: relative; overflow: hidden;
             font-family: Arial, sans-serif;
+	background: #313338;
         }
 
         /* 사이드바 스타일 */
@@ -313,8 +314,18 @@
         <p th:onclick="'connectChatting(' + ${room.roomId} + ')'">
             <span th:text="${room.title}"></span><span th:id="'room-'+${room.roomId}" th:text="'('+${room.getNotReadMessageCount()}+')'" style="color:red;"></span>
         </p>
+<button class="create-room-btn" id="createRoomBtn" onclick="showRoomForm()">+</button>
+
+    
+
+    </div>
+
     </div>
 </div>
+
+  <div
+    style="width: 288px; height: 60px; position: absolute; left: 80px; top: 1019px; background: #232428;"
+  ></div>
 
 <!-- 상단 네비게이션 바 -->
 <div class="topnav">
@@ -328,18 +339,14 @@
 
 <!-- 메인 콘텐츠 -->
 <!-- 메인 콘텐츠 -->
-<div class="main-content">
-    <button class="create-room-btn" id="createRoomBtn" onclick="showRoomForm()">Create Room</button>
 
+<div class="main-content">
     <div class="profile-container">
         <img class="profile-image" id="profile-image" src="" alt="Profile Image">
         <div class="profile-details">
             <div class="profile-name" id="profile-name"></div>
             <div class="profile-bio" id="profile-bio"></div>
         </div>
-
-    </div>
-
 
     <!-- 방 생성 폼 -->
     <div class="room-form" id="roomForm">

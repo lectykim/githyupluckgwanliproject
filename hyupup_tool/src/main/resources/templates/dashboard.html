@@ -170,10 +170,11 @@
 
 
 
+
         /* 방 생성 폼 스타일 */
         .room-form {
             display: none; /* 처음에는 숨김 */
-            background-color: white;
+            background-color: #131417;
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -220,10 +221,11 @@
             display: block;
             margin-bottom: 8px;
             font-weight: bold;
+	color: #fff
         }
 
         input[type="text"], input[type="number"] {
-            width: 100%;
+            width: 80%;
             padding: 10px;
             margin-bottom: 15px;
             border: 1px solid #ccc;
@@ -365,6 +367,7 @@
             <input type="submit" onclick="createRoomRequest()" value="Create Room">
         </div>
     </div>
+
     <div>
         <!-- 모달 구조 -->
         <div id="eventModal" class="modal">

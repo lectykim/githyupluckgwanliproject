@@ -6,57 +6,57 @@
     <style>
         body {
             font-family: Arial, sans-serif;
+            background-color: #313338;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
             margin: 0;
             padding: 0;
-            background-color: #f4f4f4;
         }
-
         .container {
+            background-color: #232428;
             max-width: 600px;
             margin: 50px auto;
             padding: 20px;
-            background-color: white;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-
         h2 {
+            color: #FFFFFF;
             text-align: center;
             margin-bottom: 20px;
         }
-
         label {
+            color: #FFFFFF;
             display: block;
             margin: 10px 0 5px;
             font-weight: bold;
         }
-
         input[type="text"], input[type="email"], input[type="password"] {
-            width: 100%;
+            width: 96%;
             padding: 10px;
             margin: 5px 0 20px;
-            border: 1px solid #ccc;
+            -webkit-text-fill-color: #dbdee1;
+            background-color: #383a40;
+            border: 1px solid #404249;
             border-radius: 4px;
         }
-
-        input[type="submit"], .btn {
+        button {
             width: 100%;
             padding: 10px;
             background-color: #28a745;
-            color: white;
+            color: #FFFFFF;
             border: none;
             border-radius: 4px;
             font-size: 16px;
             cursor: pointer;
         }
-
-        input[type="submit"]:hover , .btn{
+        button:hover {
             background-color: #218838;
         }
-
         .message {
-            text-align: center;
             color: red;
+            text-align: center;
             margin-bottom: 20px;
         }
     </style>
@@ -76,7 +76,6 @@
         <label for="email">Email</label>
         <input type="email" id="email" name="email" placeholder="Enter your email"  th:value="${memberDto.getEmail()}">
 
-
         <!-- Password 수정 필드 -->
         <label for="pw">PW</label>
         <input type="password" id="pw" name="pw" placeholder="Enter new password" th:value="${memberDto.getPw()}" required>
@@ -86,8 +85,7 @@
         <input type="text" id="githubAccessToken" name="githubAccessToken" placeholder="Enter GitHub Access Token" th:value="${memberDto.getGithubAccessToken()}">
 
         <!-- 제출 버튼 -->
-        <input type="submit" value="Update Information">
-        <!--<button type="button" onclick="submit()" class="btn">Update Information</button>-->
+        <button onclick="window.location.href='dashboard.html'">Update Information</button>
     </div>
 </div>
 

@@ -10,57 +10,47 @@
         body {
             margin: 0;
             font-family: Arial, sans-serif;
+            background-color: #313338;
         }
-
         /* 사이드바 스타일 */
         .sidebar {
             height: 100%;
-            width: 250px;
+            width: 200px;
             position: fixed;
             top: 0;
             left: 0;
-            background-color: #111;
+            background-color: #1e1f22;
             padding-top: 20px;
         }
-
         /* 사이드바 링크 스타일 */
         .sidebar p {
             padding: 10px 15px;
             text-decoration: none;
             font-size: 18px;
-            color: white;
+            color: #FFFFFF;
             display: block;
         }
-
         /* 사이드바 링크에 hover 효과 추가 */
         .sidebar p:hover {
-            background-color: #575757;
+            background-color: #35373c;
         }
-
-        /* 메인 콘텐츠 스타일 */
-        .main-content {
-            margin-left: 250px;
-            padding: 20px;
-        }
-
         /* 상단 네비게이션 바 스타일 */
         .top-nav {
             position: fixed;
             top: 0;
-            left: 250px;
+            left: 200px;
             right: 0;
             height: 50px;
-            background-color: #333;
+            background-color: #232428;
+            color: #FFFFFF;
             display: flex;
             justify-content: flex-end;
             align-items: center;
             padding-right: 20px;
-            color: white;
         }
-
         /* 상단 네비게이션 버튼 스타일 */
         .top-nav button {
-            background-color: #575757;
+            background-color: #35373c;
             color: white;
             border: none;
             padding: 10px 20px;
@@ -68,11 +58,9 @@
             cursor: pointer;
             font-size: 16px;
         }
-
         .top-nav button:hover {
-            background-color: #444;
+            background-color: #3d3e45;
         }
-
         /* 메인 콘텐츠 스타일 */
         .main-content {
             margin-left: 250px;
@@ -83,22 +71,19 @@
             align-items: center;
             height: calc(100vh - 70px);
         }
-
         /* 방 생성하기 버튼 스타일 */
         .create-room-btn {
             padding: 15px 30px;
             background-color: #28a745;
-            color: white;
+            color: #FFFFFF;
             border: none;
             border-radius: 8px;
             font-size: 18px;
             cursor: pointer;
         }
-
         .create-room-btn:hover {
             background-color: #218838;
         }
-
         .modal {
             display: none; /* 기본적으로 모달을 숨김 */
             position: fixed;
@@ -109,7 +94,6 @@
             height: 100%;
             background-color: rgba(0, 0, 0, 0.5); /* 반투명 배경 */
         }
-
         .modal-content {
             background-color: white;
             margin: 15% auto;
@@ -117,37 +101,29 @@
             border: 1px solid #888;
             width: 30%;
         }
-
         .close {
             color: #aaa;
             float: right;
             font-size: 28px;
             font-weight: bold;
         }
-
-        .close:hover,
-        .close:focus {
+        .close:hover, .close:focus {
             color: black;
             text-decoration: none;
             cursor: pointer;
         }
-
         .test-text-viewer{
             display: flex;
             height:200px;
         }
-
-
         .button-list {
             list-style: none; /* 불필요한 점 리스트 제거 */
             padding: 0;
             margin: 0;
         }
-
         .button-list li {
             margin-bottom: 10px; /* 버튼 간 간격 */
         }
-
         .button-item {
             display: inline-block;  /* 인라인 요소를 블록처럼 표시 */
             padding: 10px 20px;  /* 버튼의 안쪽 여백 */
@@ -160,36 +136,29 @@
             cursor: pointer;  /* 마우스를 올렸을 때 포인터 표시 */
             transition: background-color 0.3s ease, border 0.3s ease; /* 호버 시 애니메이션 */
         }
-
         .button-item:hover {
             background-color: #45a049; /* 호버 시 배경색 변경 */
             border: 1px solid #4CAF50; /* 테두리 색상 변경 */
         }
-
-
-
         /* 방 생성 폼 스타일 */
         .room-form {
             display: none; /* 처음에는 숨김 */
-            background-color: white;
+            background-color: #232428;
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-
         .chatting-global-container{
             display: none;
         }
-
         .profile-container {
             display: flex;
             align-items: center;
-            border: 1px solid #ddd;
+            border: 1px solid #404249;
             padding: 20px;
             max-width: 600px;
             margin: auto;
         }
-
         .profile-image {
             width: 150px;
             height: 150px;
@@ -197,37 +166,34 @@
             object-fit: cover;
             margin-right: 20px;
         }
-
         .profile-details {
             display: flex;
             flex-direction: column;
         }
-
         .profile-name {
             font-size: 24px;
             font-weight: bold;
             margin-bottom: 10px;
         }
-
         .profile-bio {
             font-size: 16px;
             color: #555;
         }
-
         label {
+            color: #FFFFFF;
             display: block;
             margin-bottom: 8px;
             font-weight: bold;
         }
-
         input[type="text"], input[type="number"] {
-            width: 100%;
+            width: 91%;
             padding: 10px;
             margin-bottom: 15px;
-            border: 1px solid #ccc;
+            -webkit-text-fill-color: #dbdee1;
+            background-color: #383a40;
+            border: 1px solid #404249;
             border-radius: 4px;
         }
-
         input[type="submit"] {
             width: 100%;
             padding: 10px;
@@ -238,11 +204,9 @@
             font-size: 16px;
             cursor: pointer;
         }
-
         input[type="submit"]:hover {
             background-color: #218838;
         }
-
         #chat-container {
             background: white;
             border: 1px solid #ccc;
@@ -274,7 +238,6 @@
             background-color: #0056b3;
         }
 
-
         /* 페이지의 반응형 설정 */
         @media screen and (max-width: 600px) {
             .sidebar {
@@ -282,13 +245,11 @@
                 height: auto;
                 position: relative;
             }
-
             .sidebar a {
                 float: left;
                 padding: 15px;
                 text-align: center;
             }
-
             .main-content {
                 margin-left: 0;
             }
@@ -321,7 +282,7 @@
         🔔 Notifications
             <span id="notification"></span>
     </button>
-    <button onclick="window.location.href='/dashboard/mypage'">My Page</button>
+    <button onclick="window.location.href='mypage.html'">My Page</button>
     <button onclick="logout()">로그아웃</button>
 </div>
 
@@ -343,16 +304,16 @@
     <!-- 방 생성 폼 -->
     <div class="room-form" id="roomForm">
         <div id="createRoomForm">
-            <label for="title">Room Title:</label>
+            <label for="title">Room Title</label>
             <input type="text" id="title" name="title" placeholder="Enter room title" required>
 
-            <label for="maxMembers">Max Members:</label>
+            <label for="maxMembers">Max Members</label>
             <input type="number" id="maxMembers" name="maxMembers" placeholder="Enter max members" required>
 
-            <label for="repository"> Repository : </label>
+            <label for="repository"> Repository</label>
             <input type="text" id="repository" name="repository" placeholder="input target repository" required>
 
-            <label for="owner">Owner : </label>
+            <label for="owner">Owner</label>
             <input type="text" id="owner" name="owner" placeholder="input target owner" required>
             <input type="submit" onclick="createRoomRequest()" value="Create Room">
         </div>

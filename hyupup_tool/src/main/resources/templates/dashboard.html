@@ -44,7 +44,7 @@
         }
 
         /* 상단 네비게이션 바 스타일 */
-        .topnav {
+        .top-nav {
             position: fixed;
             top: 0;
             left: 250px;
@@ -59,7 +59,7 @@
         }
 
         /* 상단 네비게이션 버튼 스타일 */
-        .topnav button {
+        .top-nav button {
             background-color: #575757;
             color: white;
             border: none;
@@ -69,7 +69,7 @@
             font-size: 16px;
         }
 
-        .topnav button:hover {
+        .top-nav button:hover {
             background-color: #444;
         }
 
@@ -292,7 +292,7 @@
             .main-content {
                 margin-left: 0;
             }
-            .topnav {
+            .top-nav {
                 left: 0;
                 justify-content: center;
             }
@@ -316,7 +316,7 @@
 </div>
 
 <!-- 상단 네비게이션 바 -->
-<div class="topnav">
+<div class="top-nav">
     <button onclick="openEventModal()">
         🔔 Notifications
             <span id="notification"></span>
@@ -424,9 +424,8 @@
     </div>
 
 </div>
-<script type="text/javascript" th:src="@{/js/common.js}">
+<script type="text/javascript" th:src="@{/js/common.js}"></script>
 
-</script>
 <script>
     const form = document.getElementById('roomForm');
     const createRoomButton = document.getElementById('createRoomBtn');
@@ -776,6 +775,7 @@
             alert('형식에 맞는 maxMembers를 입력해 주세요.');
             return false;
         }
+//-1 Member ??
         const repository = document.getElementById('repository').value;
         if(!isNotEmpty(repository)){
             alert('타겟 레포지토리를 입력해 주세요');

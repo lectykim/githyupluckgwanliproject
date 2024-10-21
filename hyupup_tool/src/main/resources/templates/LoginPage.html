@@ -1,13 +1,12 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Page</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            background-color: #313338;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -15,12 +14,13 @@
             margin: 0;
         }
         .login-container {
-            background-color: white;
+            background-color: #232428;
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
         h2 {
+            color: #FFFFFF;
             text-align: center;
             margin-bottom: 20px;
         }
@@ -28,41 +28,44 @@
             margin-bottom: 15px;
         }
         label {
+            color: #FFFFFF;
             display: block;
             font-size: 14px;
             margin-bottom: 5px;
         }
         input[type="text"], input[type="password"] {
-            width: 100%;
+            width: 89%;
             padding: 10px;
-            border: 1px solid #ddd;
+            -webkit-text-fill-color: #dbdee1;
+            background-color: #383a40;
+            border: 1px solid #404249;
             border-radius: 4px;
         }
         .btn {
             width: 100%;
             padding: 10px;
-            background-color: #5cb85c;
-            color: white;
+            background-color: #28a745;
+            color: #FFFFFF;
             border: none;
             border-radius: 4px;
             cursor: pointer;
         }
         .btn:hover {
-            background-color: #4cae4c;
+            background-color: #218838;
         }
         .signup-btn {
             width: 100%;
             padding: 10px;
             margin-top: 15px;
-            background-color: #0275d8;
-            color: white;
+            background-color: #5865f2;
+            color: #FFFFFF;
             border: none;
             border-radius: 4px;
             cursor: pointer;
             text-align: center;
         }
         .signup-btn:hover {
-            background-color: #025aa5;
+            background-color: #4752c4;
         }
         .error-message {
             color: red;
@@ -76,25 +79,22 @@
     <h2>Login</h2>
     <div id="loginForm">
         <div class="form-group">
-            <label for="email">EMAIL:</label>
+            <label for="email">EMAIL</label>
             <input type="text" id="email" name="email" required>
         </div>
         <div class="form-group">
-            <label for="pw">PW:</label>
+            <label for="pw">PW</label>
             <input type="password" id="pw" name="pw" required>
         </div>
         <button onclick="Login()" class="btn">Login</button>
         <!-- 회원가입 버튼 -->
-        <div class="signup-btn" onclick="GoSignUp()">
-            <a style="color: white; text-decoration: none;">Sign Up</a>
-        </div>
+        <button onclick="GoSignUp()" class="signup-btn">Sign Up</button>
     </div>
 
     <div id="error-message" class="error-message"></div>
 </div>
-<script type="text/javascript" th:src="@{/js/common.js}">
+<script type="text/javascript" th:src="@{/js/common.js}"></script>
 
-</script>
 <script>
     const GoSignUp = ()=>{
         window.location.href = "/signup-page";

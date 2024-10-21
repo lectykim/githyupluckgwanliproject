@@ -155,13 +155,12 @@
             display: flex;
             align-items: center;
             border: 1px solid #404249;
-            padding: 20px;
-            max-width: 600px;
+            padding: 10px;
             margin: auto;
         }
         .profile-image {
-            width: 150px;
-            height: 150px;
+            width: 30px;
+            height: 30px;
             border-radius: 50%;
             object-fit: cover;
             margin-right: 20px;
@@ -278,6 +277,12 @@
 
 <!-- 상단 네비게이션 바 -->
 <div class="top-nav">
+    <div class="profile-container">
+        <img class="profile-image" id="profile-image" src="" alt="Profile Image">
+        <div class="profile-details">
+            <div class="profile-name" id="profile-name"></div>
+        </div>
+    </div>
     <button onclick="openEventModal()">
         🔔 Notifications
             <span id="notification"></span>
@@ -291,14 +296,7 @@
 <div class="main-content">
     <button class="create-room-btn" id="createRoomBtn" onclick="showRoomForm()">Create Room</button>
 
-    <div class="profile-container">
-        <img class="profile-image" id="profile-image" src="" alt="Profile Image">
-        <div class="profile-details">
-            <div class="profile-name" id="profile-name"></div>
-            <div class="profile-bio" id="profile-bio"></div>
-        </div>
 
-    </div>
 
 
     <!-- 방 생성 폼 -->

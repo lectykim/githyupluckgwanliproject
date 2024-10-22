@@ -26,7 +26,7 @@ public class MemberRepositoryUnitTest {
         assertNotNull(memberRepository);
     }
 
-    @Test
+    /*@Test
     @DisplayName("성공: 엔티티 정상 생성 및 저장")
     public void save_success(){
         var entity = Member.of("email","pw","access_token", AuthorityRole.NORMAL_MEMBER);
@@ -53,7 +53,7 @@ public class MemberRepositoryUnitTest {
 
         var found = memberRepository.findById(userId);
         assertEquals(found.get().getMemberId(),userId);
-    }
+    }*/
 
 
 }

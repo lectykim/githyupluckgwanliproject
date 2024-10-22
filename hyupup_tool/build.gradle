@@ -37,6 +37,8 @@ dependencies {
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	implementation group: 'com.google.code.gson', name: 'gson', version: '2.11.0'
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	implementation group: 'io.github.java-diff-utils', name: 'java-diff-utils', version: '4.12'
+
 	implementation('com.h2database:h2')
 
 }

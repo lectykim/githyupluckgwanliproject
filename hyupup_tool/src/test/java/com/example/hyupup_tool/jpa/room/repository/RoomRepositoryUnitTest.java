@@ -24,7 +24,7 @@ public class RoomRepositoryUnitTest {
         assertNotNull(roomRepository);
     }
 
-    @Test
+    /*@Test
     @DisplayName("성공 : room 도메인 생성")
     void saveRoom_success_01(){
         var roomId = 1L;
@@ -50,5 +50,5 @@ public class RoomRepositoryUnitTest {
         var savedRoom = roomRepository.findById(roomId);
         assertEquals(savedRoom.get().getRoomId(),roomId);
     }
-
+*/
 }

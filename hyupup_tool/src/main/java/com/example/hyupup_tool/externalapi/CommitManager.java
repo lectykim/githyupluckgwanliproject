@@ -49,4 +49,17 @@ public class CommitManager {
         return response;
 
     }
+
+    public ResponseEntity<byte[]> getFileDiff(String owner,String repo,String path){
+        var memberDto = SessionGetter.getCurrentMemberDto();
+        HttpHeaders httpHeaders = GithubHTTPHeader.getHttpHeaders(memberDto.getGithubAccessToken());
+        HttpEntity<String> entity = new HttpEntity<>(null,httpHeaders);
+        String url = "https://api.github.com/repos/"+owner+"/"+repo+"/contents"+path;
+
+        ResponseEntity<byte[]> response = restTemplate.exchange(url,HttpMethod.GET,entity,byte[].class);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(response.getHeaders().getContentType());
+        headers.setContentLength(response.getBody().length);
+        return response;
+    }
 }

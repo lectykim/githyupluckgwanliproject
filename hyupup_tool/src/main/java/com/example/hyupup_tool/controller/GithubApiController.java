@@ -4,6 +4,8 @@ import com.example.hyupup_tool.entity.dto.GetBranchDetailsResponseDTO;
 import com.example.hyupup_tool.entity.dto.GetBranchListResponseDTO;
 import com.example.hyupup_tool.entity.dto.GetCommitDetailsResponseDTO;
 import com.example.hyupup_tool.entity.dto.GetCommitListResponseDTO;
+import com.example.hyupup_tool.entity.dto.github.FileDiffCheckRequestDTO;
+import com.example.hyupup_tool.entity.dto.github.FileDiffCheckResponseDTO;
 import com.example.hyupup_tool.entity.dto.github.GithubUserInfoResponse;
 import com.example.hyupup_tool.service.GithubApiServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -37,13 +39,22 @@ public class GithubApiController {
     }
 
     @GetMapping("/get-commit-list")
-    public ResponseEntity<byte[]> getCommitList(@RequestParam String owner,@RequestParam String repo){
+    public ResponseEntity<byte[]> getCommitList(@RequestParam(value = "owner") String owner,@RequestParam(value = "repo") String repo){
         return githubApiServiceImpl.getCommitList(owner,repo);
     }
 
     @GetMapping("/get-commit-detail")
-    public ResponseEntity<byte[]> getCommitDetail(@RequestParam String owner,@RequestParam String repo,@RequestParam String sha){
+    public ResponseEntity<byte[]> getCommitDetail(@RequestParam(value = "owner") String owner,@RequestParam(value = "repo") String repo,@RequestParam(value = "sha") String sha){
         return githubApiServiceImpl.getCommitDetail(owner,repo,sha);
     }
 
+    @GetMapping("/get-file-diff")
+    public ResponseEntity<byte[]> getFileDiff(@RequestParam String owner, @RequestParam String repo, @RequestParam String path){
+        return githubApiServiceImpl.getFileDiff(owner,repo,path);
+    }
+
+    @GetMapping("/file-diff-check")
+    public ResponseEntity<FileDiffCheckResponseDTO> fileDiffCheck(FileDiffCheckRequestDTO request){
+        return ResponseEntity.ok(githubApiServiceImpl.fileDiffCheck(request));
+    }
 }

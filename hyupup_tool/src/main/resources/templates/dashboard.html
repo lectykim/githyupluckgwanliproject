@@ -327,7 +327,9 @@
     </div>
     <div class="chatting-global-container" id="chatting-global-container">
         <div id="chat-container"></div>
+        <ul id="commit-selector">
 
+        </ul>
         <div id="info-data">
             방장이 브런치 or 커밋 정보를 선택할 때 동기화됩니다.
         </div>
@@ -391,7 +393,7 @@
     const chattingForm = document.getElementById('chatting-global-container');
     const chatContainer = document.getElementById('chat-container');
     const eventContainer = document.getElementById('event-container');
-
+    const commitSelector = document.getElementById('commit-selector');
 
     const span = document.getElementsByClassName('close')[0];
     let owner;
@@ -401,7 +403,7 @@
     let stompClients = {};
     let currentEvents = {};
     let currentClientChannelId = null;
-
+    let commitFileStore;
 
     const onError = (error)=>{
         console.error(error);
@@ -472,13 +474,31 @@
                 })
                 .then((data)=>{
                     const newData = JSON.parse(data);
+
                     let shaData = '';
+                    commitFileStore = newData.files;
+                    while(commitSelector.hasChildNodes()){
+                        commitSelector.removeChild(commitSelector.firstChild);
+                    }
                     newData.files.forEach((res)=>{
+                        const commitFiles = document.createElement('li');
+                        commitFiles.textContent=res.filename;
+                        commitFiles.className='button-item'
+                        commitFiles.onclick= ()=>viewFile(res.filename);
+                        commitSelector.appendChild(commitFiles);
                         shaData += res.patch;
                     })
-                    document.getElementById('info-data').textContent = shaData;
+                    //document.getElementById('info-data').textContent = shaData;
                 })
         }
+    }
+
+    const viewFile = (filename)=>{
+
+           let shaData = '';
+           const currentFile = findCurrentFile(filename);
+           shaData = currentFile.patch;
+           document.getElementById('info-data').textContent=shaData;
     }
 
     const updateReceivePos = (chat)=>{
@@ -818,6 +838,10 @@
     const findRoomDto = (roomNum) => {
         return roomDtoList.find(data => data.roomId === roomNum) || null;
     };
+
+    const findCurrentFile = (filename) =>{
+        return commitFileStore.find(data=>data.filename === filename) || null;
+    }
 
     const showBeforeChat = (data)=>{
         data.messageHistory.forEach((message)=>{

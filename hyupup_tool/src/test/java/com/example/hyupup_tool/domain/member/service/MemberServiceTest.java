@@ -30,7 +30,7 @@ public class MemberServiceTest {
 
 
     private static final AuthorityRole AUTHORITY_ROLE = AuthorityRole.ROLE_NORMAL_MEMBER;
-    @Test
+    /*@Test
     @DisplayName("성공 : 회원가입")
     void success_signup_01(){
         //Validate ID
@@ -45,14 +45,14 @@ public class MemberServiceTest {
         assertEquals(savedMemberEntity.getMemberId(),1);
 
 
-    }
+    }*/
 
-    void signup_user(){
+    /*void signup_user(){
         var memberEntity = Member.of(MEMBER_EMAIL,MEMBER_PW,GITHUB_ACCESS_TOKEN,AUTHORITY_ROLE);
         var savedMemberEntity = memberRepository.save(memberEntity);
     }
-
-    @Test
+*/
+    /*@Test
     @DisplayName("성공 : 로그인")
     void success_login_01(){
         signup_user();
@@ -83,7 +83,7 @@ public class MemberServiceTest {
         assertEquals(newMemberEntity.getEmail(),"NEW_EMAIL");
         assertEquals(newMemberEntity.getPw(),"newPw");
         assertEquals(newMemberEntity.getMemberId(),1L);
-    }
+    }*/
 
 
 

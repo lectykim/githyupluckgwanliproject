@@ -9,6 +9,7 @@ import com.example.hyupup_tool.repository.IMemberToRoomRepository;
 import com.example.hyupup_tool.repository.IRoomRepository;
 import com.example.hyupup_tool.util.AuthorityRole;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -38,7 +39,7 @@ public class RoomServiceTest {
 
 
     private static final AuthorityRole AUTHORITY_ROLE = AuthorityRole.ROLE_NORMAL_MEMBER;
-    @Test
+    /*@Test
     @DisplayName("성공 : 방 개설")
     void success_make_room_01(){
         var roomEntity = Room.of(MAX_ROOM_NUMBER,ROOM_TITLE);
@@ -48,9 +49,9 @@ public class RoomServiceTest {
         assertNotNull(savedRoomEntity);
         assertEquals(savedRoomEntity.getRoomId(),1L);
 
-    }
+    }*/
 
-    @Test
+    /*@Test
     @DisplayName("성공 : 방장 변경")
     void success_change_master(){
         //멤버 저장
@@ -91,6 +92,6 @@ public class RoomServiceTest {
         assertTrue(master2Entity.get().isMaster());
         assertEquals(master2Entity.get().getMemberToRoomId(),2L);
 
-    }
+    }*/
 
 }

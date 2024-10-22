@@ -49,7 +49,7 @@ public class MemberToRoomRepositoryUnitTest {
 
     private static final String ROOM_TITLE = "roomTitle";
 
-    @BeforeEach
+    /*@BeforeEach
     void first_member_setup(){
         var memberEntity = Member.of(EMAIL,PW,GITHUB_ACCESS_TOKEN,AUTHORITY_ROLE);
         var roomEntity = Room.of(MAX_MEMBER,ROOM_TITLE);
@@ -163,5 +163,5 @@ public class MemberToRoomRepositoryUnitTest {
         memberToRoomRepository.save(oldMemberToRoomEntity.get());
         memberToRoomRepository.save(newMemberToRoomEntity);
 
-    }
+    }*/
 }

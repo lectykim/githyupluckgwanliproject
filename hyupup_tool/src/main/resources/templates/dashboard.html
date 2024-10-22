@@ -108,7 +108,7 @@
             font-weight: bold;
         }
         .close:hover, .close:focus {
-            color: black;
+            color: #000000;
             text-decoration: none;
             cursor: pointer;
         }
@@ -227,14 +227,14 @@
         #send-button {
             padding: 10px;
             border: none;
-            background-color: #007bff;
+            background-color: #5865f2;
             color: #FFFFFF;
             border-radius: 5px;
             margin-left: 5px;
             cursor: pointer;
         }
         #send-button:hover {
-            background-color: #0056b3;
+            background-color: #4752c4;
         }
 
         /* 페이지의 반응형 설정 */
@@ -352,7 +352,7 @@
         <div id="inviteMemberModal" class="modal">
             <div class="modal-content">
                 <span class="close" onclick="removeModal(0)">&times;</span>
-                <h2 >초대자 이메일을 입력하세요.</h2>
+                <h2>초대자 이메일을 입력하세요.</h2>
                 <input type="text" id="invite-email" name="invite-email" placeholder="Enter invite user email" required>
                 <button onclick="callInvite()">전송</button>
             </div>
@@ -362,7 +362,7 @@
         <div id="getCurrentMemberModal" class="modal">
             <div class="modal-content">
                 <span class="close" onclick="removeModal(1)">&times;</span>
-                <h2 >현재 방의 멤버입니다.</h2>
+                <h2>현재 방의 멤버입니다.</h2>
             </div>
         </div>
 
@@ -370,7 +370,7 @@
         <div id="gitSettingModal" class="modal">
             <div class="modal-content">
                 <span class="close" onclick="removeModal(2)">&times;</span>
-                <h2 >협업시 관측하고싶은 레포지토리를 입력해주세요.</h2>
+                <h2>협업시 관측하고싶은 레포지토리를 입력해주세요.</h2>
                 <input type="text" id="git-repository" name="git-repository" placeholder="Enter git repository and branch" required>
                 <button onclick="callRepository()">전송</button>
             </div>

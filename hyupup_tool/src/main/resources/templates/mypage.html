@@ -32,7 +32,7 @@
             margin: 10px 0 5px;
             font-weight: bold;
         }
-        input[type="text"], input[type="email"], input[type="password"] {
+        input {
             width: 96%;
             padding: 10px;
             margin: 5px 0 20px;
@@ -55,7 +55,7 @@
             background-color: #218838;
         }
         .message {
-            color: red;
+            color: #FF0000;
             text-align: center;
             margin-bottom: 20px;
         }
@@ -85,7 +85,7 @@
         <input type="text" id="githubAccessToken" name="githubAccessToken" placeholder="Enter GitHub Access Token" th:value="${memberDto.getGithubAccessToken()}">
 
         <!-- 제출 버튼 -->
-        <button onclick="window.location.href='dashboard.html'">Update Information</button>
+        <button type="submit" onclick="window.location.href='mypage.html'">Update Information</button>
     </div>
 </div>
 

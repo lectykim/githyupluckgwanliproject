@@ -50,8 +50,8 @@ public class GithubApiServiceImpl implements GithubApiService{
         return branchManager.getBranchDetail(owner,repo,branch);
     }
 
-    public ResponseEntity<byte[]> getCommitList(String owner, String repo) {
-        return commitManager.getCommitList(owner,repo);
+    public ResponseEntity<byte[]> getCommitList(String owner, String repo, String path) {
+        return commitManager.getCommitList(owner,repo,path);
     }
 
     public ResponseEntity<byte[]> getCommitDetail(String owner, String repo, String sha) {
@@ -66,23 +66,9 @@ public class GithubApiServiceImpl implements GithubApiService{
     @Override
     public FileDiffCheckResponseDTO fileDiffCheck(FileDiffCheckRequestDTO request) {
         List<String> originList = rawToArray(request.origin());
-        List<String> patchList = rawToArray(request.patch());
-
-
-        originList = originList
-                .stream()
-                .map(s->new String(Base64.getDecoder().decode(s), StandardCharsets.UTF_8))
-                .toList();
-
-        Patch<String> diff = UnifiedDiffUtils.parseUnifiedDiff(patchList);
+        List<String> beforeList = rawToArray(request.before());
         List<String> result = new ArrayList<>();
-        try{
-             result = DiffUtils.patch(originList,diff);
-        } catch (PatchFailedException e) {
-            throw new BadRequestException("Patch Failed");
-        }
-
-        //TODO : originList와 result를 비교하여, 나만의 포맷으로 재정의
+        //TODO : originList와 beforeList를 비교하여, 나만의 포맷으로 재정의
 
         return new FileDiffCheckResponseDTO(result);
 

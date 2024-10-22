@@ -484,7 +484,12 @@
                         const commitFiles = document.createElement('li');
                         commitFiles.textContent=res.filename;
                         commitFiles.className='button-item'
-                        commitFiles.onclick= ()=>viewFile(res.filename);
+                        if(res.status==='modified'){
+                            commitFiles.onclick= ()=>viewFile(res.filename);
+                        }else{
+                            //TODO: create, delete 상태의 file editor 호출
+                        }
+
                         commitSelector.appendChild(commitFiles);
                         shaData += res.patch;
                     })
@@ -493,14 +498,163 @@
         }
     }
 
+    //modified 상태일 경우에만 호출
     const viewFile = (filename)=>{
 
            let shaData = '';
            const currentFile = findCurrentFile(filename);
-           shaData = currentFile.patch;
-           document.getElementById('info-data').textContent=shaData;
+        const getCommitListURL = 'http://localhost:8080/api/v1/github-api/get-commit-list';
+        const roomDto = findRoomDto(currentRoomNum);
+        const getCommitListQueryParam = {
+            owner:roomDto.owner,
+            repo:roomDto.repository,
+            path:filename
+        }
+        const getCommitListQueryString = new URLSearchParams(getCommitListQueryParam).toString()
+        const getCommitListApiReqUrl = `${getCommitListURL}?${getCommitListQueryString}`;
+        fetch(getCommitListApiReqUrl,{
+            method:'GET',
+        })
+            .then((response)=>{
+                if(response.ok){
+                    return response.text();
+                }else{
+                    console.log(response);
+                }
+            })
+            .then((data)=>{
+                const newData = JSON.parse(data);
+
+                const firstData = newData[0].sha;
+                const secondData = newData[1].sha;
+                getFileDiff(firstData,secondData,filename);
+            })
+
+           //shaData = currentFile.patch;
+           //document.getElementById('info-data').textContent=shaData;
     }
 
+    const getFileDiff = async (firstData, secondData, filename) => {
+        let getFileDetailURL = 'http://localhost:8080/api/v1/github-api/get-commit-detail';
+        const roomDto = findRoomDto(currentRoomNum);
+        let firstCommitSha;
+        let secondCommitSha;
+        let firstCommitFileBase64;
+        let secondCommitFileBase64;
+
+        // 첫 번째 ref sha 가져오기
+        let getFileDetailQueryParam = {
+            owner: roomDto.owner,
+            repo: roomDto.repository,
+            sha: firstData
+        };
+        let getFileDetailQueryString = new URLSearchParams(getFileDetailQueryParam).toString();
+        let getFileDetailApiReqUrl = `${getFileDetailURL}?${getFileDetailQueryString}`;
+
+        try {
+            const firstResponse = await fetch(getFileDetailApiReqUrl, {
+                method: 'GET',
+            });
+            if (firstResponse.ok) {
+                const firstData = await firstResponse.json();
+                firstData.files.forEach((file) => {
+                    if (file.filename === filename) {
+                        firstCommitSha = file.sha;
+                    }
+                });
+            } else {
+                console.log(firstResponse);
+            }
+
+            // 두 번째 ref sha 가져오기
+            getFileDetailQueryParam = {
+                owner: roomDto.owner,
+                repo: roomDto.repository,
+                sha: secondData
+            };
+            getFileDetailQueryString = new URLSearchParams(getFileDetailQueryParam).toString();
+            getFileDetailApiReqUrl = `${getFileDetailURL}?${getFileDetailQueryString}`;
+
+            const secondResponse = await fetch(getFileDetailApiReqUrl, {
+                method: 'GET',
+            });
+            if (secondResponse.ok) {
+                const secondData = await secondResponse.json();
+                secondData.files.forEach((file) => {
+                    if (file.filename === filename) {
+                        secondCommitSha = file.sha;
+                    }
+                });
+            } else {
+                console.log(secondResponse);
+            }
+
+            // 첫 번째 파일 base64 data 가져오기
+            getFileDetailURL = 'http://localhost:8080/api/v1/github-api/get-file-diff';
+            getFileDetailQueryParam = {
+                owner: roomDto.owner,
+                repo: roomDto.repository,
+                path: filename,
+                ref: firstCommitSha
+            };
+            getFileDetailQueryString = new URLSearchParams(getFileDetailQueryParam).toString();
+            getFileDetailApiReqUrl = `${getFileDetailURL}?${getFileDetailQueryString}`;
+
+            const firstFileResponse = await fetch(getFileDetailApiReqUrl, {
+                method: 'GET',
+            });
+            if (firstFileResponse.ok) {
+                const firstFileData = await firstFileResponse.json();
+                firstCommitFileBase64 = firstFileData.content;
+            } else {
+                console.log(firstFileResponse);
+            }
+
+            // 두 번째 파일 base64 data 가져오기
+            getFileDetailQueryParam = {
+                owner: roomDto.owner,
+                repo: roomDto.repository,
+                path: filename,
+                ref: secondCommitSha
+            };
+            getFileDetailQueryString = new URLSearchParams(getFileDetailQueryParam).toString();
+            getFileDetailApiReqUrl = `${getFileDetailURL}?${getFileDetailQueryString}`;
+
+            const secondFileResponse = await fetch(getFileDetailApiReqUrl, {
+                method: 'GET',
+            });
+            if (secondFileResponse.ok) {
+                const secondFileData = await secondFileResponse.json();
+                secondCommitFileBase64 = secondFileData.content;
+            } else {
+                console.log(secondFileResponse);
+            }
+
+            // 파일 비교 요청
+            getFileDetailURL = 'http://localhost:8080/api/v1/github-api/file-diff-check';
+            getFileDetailQueryParam = {
+                origin: firstCommitFileBase64,
+                before: secondCommitFileBase64
+            };
+            getFileDetailQueryString = new URLSearchParams(getFileDetailQueryParam).toString();
+            getFileDetailApiReqUrl = `${getFileDetailURL}?${getFileDetailQueryString}`;
+
+            const diffResponse = await fetch(getFileDetailApiReqUrl, {
+                method: 'GET',
+            });
+            if (diffResponse.ok) {
+                const diffData = await diffResponse.json();
+
+                console.log('5연속 api 호출 성공')
+                // TODO: 파일 두 개 비교해서 에디팅하기
+            } else {
+                console.log(diffResponse);
+            }
+
+        } catch (error) {
+            console.error('Error fetching file diff:', error);
+        }
+    };
     const updateReceivePos = (chat)=>{
         const chattingData = {
             sender:currentMemberDTO.email,
@@ -887,7 +1041,8 @@
         const commitApiCallUrl = 'http://localhost:8080/api/v1/github-api/get-commit-list';
         const commitParam = {
             owner:data.owner,
-            repo:data.repository
+            repo:data.repository,
+            path:''
         };
         const commitQueryString = new URLSearchParams(commitParam).toString()
         const commitApiReqUrl = `${commitApiCallUrl}?${commitQueryString}`;

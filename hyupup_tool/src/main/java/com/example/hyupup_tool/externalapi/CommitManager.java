@@ -21,13 +21,18 @@ import java.util.List;
 public class CommitManager {
     private final RestTemplate restTemplate;
 
-    public ResponseEntity<byte[]> getCommitList(String owner, String repo) {
+    public ResponseEntity<byte[]> getCommitList(String owner, String repo,String path) {
         var memberDto = SessionGetter.getCurrentMemberDto();
         HttpHeaders httpHeaders = GithubHTTPHeader.getHttpHeaders(memberDto.getGithubAccessToken());
 
         HttpEntity<String> entity = new HttpEntity<>(null,httpHeaders);
 
-        String url = "https://api.github.com/repos/"+owner+"/"+repo+"/commits";
+        String url = "";
+        if(path.isEmpty()){
+            url = "https://api.github.com/repos/"+owner+"/"+repo+"/commits";
+        }else{
+            url ="https://api.github.com/repos/"+owner+"/"+repo+"/commits?path="+path;
+        }
 
         ResponseEntity<byte[]> response = restTemplate.exchange(url, HttpMethod.GET,entity,byte[].class);
         HttpHeaders headers = new HttpHeaders();

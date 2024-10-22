@@ -39,8 +39,8 @@ public class GithubApiController {
     }
 
     @GetMapping("/get-commit-list")
-    public ResponseEntity<byte[]> getCommitList(@RequestParam(value = "owner") String owner,@RequestParam(value = "repo") String repo){
-        return githubApiServiceImpl.getCommitList(owner,repo);
+    public ResponseEntity<byte[]> getCommitList(@RequestParam(value = "owner") String owner,@RequestParam(value = "repo") String repo, @RequestParam(value = "path") String path){
+        return githubApiServiceImpl.getCommitList(owner,repo,path);
     }
 
     @GetMapping("/get-commit-detail")
@@ -49,7 +49,7 @@ public class GithubApiController {
     }
 
     @GetMapping("/get-file-diff")
-    public ResponseEntity<byte[]> getFileDiff(@RequestParam String owner, @RequestParam String repo, @RequestParam String path){
+    public ResponseEntity<byte[]> getFileDiff(@RequestParam String owner, @RequestParam String repo, @RequestParam String path,@RequestParam String ref){
         return githubApiServiceImpl.getFileDiff(owner,repo,path);
     }
 

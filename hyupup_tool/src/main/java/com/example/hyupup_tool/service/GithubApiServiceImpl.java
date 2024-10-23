@@ -12,6 +12,7 @@ import com.example.hyupup_tool.exception.client.BadRequestException;
 import com.example.hyupup_tool.externalapi.BranchManager;
 import com.example.hyupup_tool.externalapi.CommitManager;
 import com.example.hyupup_tool.externalapi.UserManager;
+import com.example.hyupup_tool.util.DiffFormatter;
 import com.github.difflib.DiffUtils;
 import com.github.difflib.UnifiedDiffUtils;
 import com.github.difflib.patch.Patch;
@@ -37,6 +38,7 @@ public class GithubApiServiceImpl implements GithubApiService{
     private final BranchManager branchManager;
     private final CommitManager commitManager;
     private final UserManager userManager;
+    private final DiffFormatter diffFormatter;
 
     public ResponseEntity<byte[]> getUserInfo(){
         return userManager.getUserInfo(new GithubUserInfoRequest());
@@ -71,8 +73,8 @@ public class GithubApiServiceImpl implements GithubApiService{
 
         origin = new String(Base64.getDecoder().decode(origin),StandardCharsets.UTF_8);
         before = new String(Base64.getDecoder().decode(before),StandardCharsets.UTF_8);
-        List<String> result = new ArrayList<>();
-        return new FileDiffCheckResponseDTO(result);
+        String fileOrigin = diffFormatter.diff(origin,before);
+        return new FileDiffCheckResponseDTO(fileOrigin);
 
 
     }

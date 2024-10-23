@@ -59,7 +59,13 @@ public class CommitManager {
         var memberDto = SessionGetter.getCurrentMemberDto();
         HttpHeaders httpHeaders = GithubHTTPHeader.getHttpHeaders(memberDto.getGithubAccessToken());
         HttpEntity<String> entity = new HttpEntity<>(null,httpHeaders);
-        String url = "https://api.github.com/repos/"+owner+"/"+repo+"/contents"+path;
+        String url;
+        if(ref.isEmpty()){
+            url = "https://api.github.com/repos/"+owner+"/"+repo+"/contents"+path;
+        }else{
+            url = "https://api.github.com/repos/"+owner+"/"+repo+"/contents"+path+"?ref="+ref;
+        }
+
 
         ResponseEntity<byte[]> response = restTemplate.exchange(url,HttpMethod.GET,entity,byte[].class);
         HttpHeaders headers = new HttpHeaders();

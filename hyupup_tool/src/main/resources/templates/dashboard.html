@@ -151,6 +151,15 @@
         .chatting-global-container{
             display: none;
         }
+        .normal-line{
+            background-color: white;
+        }
+        .added-line{
+            background-color: green;
+        }
+        .deleted-line{
+            background-color: red;
+        }
         .profile-container {
             display: flex;
             align-items: center;
@@ -333,6 +342,9 @@
         <div id="info-data">
             방장이 브런치 or 커밋 정보를 선택할 때 동기화됩니다.
         </div>
+        <ul id="commit-editor">
+
+        </ul>
         <div id="test-text-viewer" class="test-text-viewer">
             <div id="branch-title">브런치</div>
             <ul id="branch-data" class="button-list"></ul>
@@ -542,7 +554,7 @@
         let firstCommitFileBase64;
         let secondCommitFileBase64;
 
-        // 첫 번째 ref sha 가져오기
+
         let getFileDetailQueryParam = {
             owner: roomDto.owner,
             repo: roomDto.repository,
@@ -552,42 +564,6 @@
         let getFileDetailApiReqUrl = `${getFileDetailURL}?${getFileDetailQueryString}`;
 
         try {
-            const firstResponse = await fetch(getFileDetailApiReqUrl, {
-                method: 'GET',
-            });
-            if (firstResponse.ok) {
-                const firstData = await firstResponse.json();
-                firstData.files.forEach((file) => {
-                    if (file.filename === filename) {
-                        firstCommitSha = file.sha;
-                    }
-                });
-            } else {
-                console.log(firstResponse);
-            }
-
-            // 두 번째 ref sha 가져오기
-            getFileDetailQueryParam = {
-                owner: roomDto.owner,
-                repo: roomDto.repository,
-                sha: secondData
-            };
-            getFileDetailQueryString = new URLSearchParams(getFileDetailQueryParam).toString();
-            getFileDetailApiReqUrl = `${getFileDetailURL}?${getFileDetailQueryString}`;
-
-            const secondResponse = await fetch(getFileDetailApiReqUrl, {
-                method: 'GET',
-            });
-            if (secondResponse.ok) {
-                const secondData = await secondResponse.json();
-                secondData.files.forEach((file) => {
-                    if (file.filename === filename) {
-                        secondCommitSha = file.sha;
-                    }
-                });
-            } else {
-                console.log(secondResponse);
-            }
 
             // 첫 번째 파일 base64 data 가져오기
             getFileDetailURL = 'http://localhost:8080/api/v1/github-api/get-file-diff';
@@ -595,7 +571,7 @@
                 owner: roomDto.owner,
                 repo: roomDto.repository,
                 path: filename,
-                ref: firstCommitSha
+                ref: firstData
             };
             getFileDetailQueryString = new URLSearchParams(getFileDetailQueryParam).toString();
             getFileDetailApiReqUrl = `${getFileDetailURL}?${getFileDetailQueryString}`;
@@ -615,7 +591,7 @@
                 owner: roomDto.owner,
                 repo: roomDto.repository,
                 path: filename,
-                ref: secondCommitSha
+                ref: secondData
             };
             getFileDetailQueryString = new URLSearchParams(getFileDetailQueryParam).toString();
             getFileDetailApiReqUrl = `${getFileDetailURL}?${getFileDetailQueryString}`;
@@ -629,6 +605,7 @@
             } else {
                 console.log(secondFileResponse);
             }
+
 
             // 파일 비교 요청
             getFileDetailURL = 'http://localhost:8080/api/v1/github-api/file-diff-check';
@@ -645,8 +622,8 @@
             if (diffResponse.ok) {
                 const diffData = await diffResponse.json();
 
-                console.log('5연속 api 호출 성공')
-                // TODO: 파일 두 개 비교해서 에디팅하기
+                modifyEditing(diffData.fileResult);
+
             } else {
                 console.log(diffResponse);
             }
@@ -654,7 +631,39 @@
         } catch (error) {
             console.error('Error fetching file diff:', error);
         }
+
     };
+
+    const modifyEditing = (file)=>{
+        const commitEditorElement = document.getElementById('commit-editor');
+        while(commitEditorElement.hasChildNodes()){
+            commitEditorElement.removeChild(commitEditorElement.firstChild);
+        }
+        const lines = file.split("\n");
+        let idx = 1;
+        // 배열을 순회하면서 조건에 맞는 값을 출력
+        lines.forEach(line => {
+            // 이모지를 제거한 문자열 생성 (😀, 😃 제거)
+            const filteredLine = line.replace(/[😀😃]/g, '');
+            if (line.includes('😀')) {
+                const commitEditorChildElement = document.createElement('li');
+                commitEditorChildElement.textContent = idx + filteredLine;
+                commitEditorChildElement.className='deleted-line';
+                commitEditorElement.appendChild(commitEditorChildElement);
+            } else if (line.includes('😃')) {
+                const commitEditorChildElement = document.createElement('li');
+                commitEditorChildElement.textContent = idx + filteredLine;
+                commitEditorChildElement.className='added-line';
+                commitEditorElement.appendChild(commitEditorChildElement);
+            } else {
+                const commitEditorChildElement = document.createElement('li');
+                commitEditorChildElement.textContent = idx + filteredLine;
+                commitEditorChildElement.className='normal-line';
+                commitEditorElement.appendChild(commitEditorChildElement);
+            }
+            idx++;
+        });
+    }
     const updateReceivePos = (chat)=>{
         const chattingData = {
             sender:currentMemberDTO.email,

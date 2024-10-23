@@ -15,7 +15,7 @@ import java.util.List;
 public interface GithubApiService {
     ResponseEntity<byte[]> gerBranchList(String owner, String repo);
     ResponseEntity<byte[]> getBranchDetail(String owner, String repo, String branch);
-    ResponseEntity<byte[]> getCommitList(String owner, String repo);
+    ResponseEntity<byte[]> getCommitList(String owner, String repo,String path);
     ResponseEntity<byte[]> getCommitDetail(String owner, String repo, String sha);
 
     ResponseEntity<byte[]> getFileDiff(String owner,String repo,String path);

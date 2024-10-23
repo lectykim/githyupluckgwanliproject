@@ -50,7 +50,7 @@ public class GithubApiController {
 
     @GetMapping("/get-file-diff")
     public ResponseEntity<byte[]> getFileDiff(@RequestParam String owner, @RequestParam String repo, @RequestParam String path,@RequestParam String ref){
-        return githubApiServiceImpl.getFileDiff(owner,repo,path);
+        return githubApiServiceImpl.getFileDiff(owner,repo,path,ref);
     }
 
     @GetMapping("/file-diff-check")

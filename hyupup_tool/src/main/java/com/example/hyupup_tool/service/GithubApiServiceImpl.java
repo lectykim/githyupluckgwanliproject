@@ -59,23 +59,31 @@ public class GithubApiServiceImpl implements GithubApiService{
     }
 
     @Override
-    public ResponseEntity<byte[]> getFileDiff(String owner, String repo, String path) {
-        return commitManager.getFileDiff(owner,repo,path);
+    public ResponseEntity<byte[]> getFileDiff(String owner, String repo, String path,String ref) {
+        return commitManager.getFileDiff(owner,repo,path,ref);
     }
 
     @Override
     public FileDiffCheckResponseDTO fileDiffCheck(FileDiffCheckRequestDTO request) {
-        List<String> originList = rawToArray(request.origin());
-        List<String> beforeList = rawToArray(request.before());
-        List<String> result = new ArrayList<>();
-        //TODO : originList와 beforeList를 비교하여, 나만의 포맷으로 재정의
 
+        String origin = rawToArray(request.origin());
+        String before = rawToArray(request.before());
+
+        origin = new String(Base64.getDecoder().decode(origin),StandardCharsets.UTF_8);
+        before = new String(Base64.getDecoder().decode(before),StandardCharsets.UTF_8);
+        List<String> result = new ArrayList<>();
         return new FileDiffCheckResponseDTO(result);
 
 
     }
 
-    public List<String> rawToArray(String str){
-        return Arrays.stream(str.split("\n")).toList();
+    public String rawToArray(String str){
+        StringBuilder sb =new StringBuilder();
+        String[] strs = str.split("\n");
+        for(String data:strs){
+            sb.append(data);
+        }
+        return sb.toString();
     }
+
 }

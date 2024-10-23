@@ -55,7 +55,7 @@ public class CommitManager {
 
     }
 
-    public ResponseEntity<byte[]> getFileDiff(String owner,String repo,String path){
+    public ResponseEntity<byte[]> getFileDiff(String owner,String repo,String path,String ref){
         var memberDto = SessionGetter.getCurrentMemberDto();
         HttpHeaders httpHeaders = GithubHTTPHeader.getHttpHeaders(memberDto.getGithubAccessToken());
         HttpEntity<String> entity = new HttpEntity<>(null,httpHeaders);

@@ -18,9 +18,9 @@ public interface GithubApiService {
     ResponseEntity<byte[]> getCommitList(String owner, String repo,String path);
     ResponseEntity<byte[]> getCommitDetail(String owner, String repo, String sha);
 
-    ResponseEntity<byte[]> getFileDiff(String owner,String repo,String path);
+    ResponseEntity<byte[]> getFileDiff(String owner,String repo,String path,String ref);
 
     FileDiffCheckResponseDTO fileDiffCheck(FileDiffCheckRequestDTO request);
 
-    public List<String> rawToArray(String str);
+    String rawToArray(String str);
 }

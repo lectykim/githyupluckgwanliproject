@@ -13,7 +13,7 @@
 <div class="sidebar" >
     <div>
         <p onclick="showMakeButtonForm()">
-            <span>Make Room Button</span>
+            <span>Make Room</span>
         </p>
     </div>
     <div th:each="room : ${roomDtoList}">
@@ -25,6 +25,7 @@
 
 <!-- 상단 네비게이션 바 -->
 <div class="top-nav">
+    <!-- 상단 프로필 -->
     <div class="profile-container">
         <img class="profile-image" id="profile-image" src="" alt="Profile Image">
         <div class="profile-details">
@@ -105,7 +106,7 @@
         <div id="inviteMemberModal" class="modal">
             <div class="modal-content">
                 <span class="close" onclick="removeModal(0)">&times;</span>
-                <h2>초대자 이메일을 입력하세요.</h2>
+                <label for="invite-email">초대자 이메일을 입력하세요.</label>
                 <input type="text" id="invite-email" name="invite-email" placeholder="Enter invite user email" required>
                 <button onclick="callInvite()">전송</button>
             </div>
@@ -123,7 +124,7 @@
         <div id="gitSettingModal" class="modal">
             <div class="modal-content">
                 <span class="close" onclick="removeModal(2)">&times;</span>
-                <h2>협업시 관측하고싶은 레포지토리를 입력해주세요.</h2>
+                <label for="git-repository">협업시 관측하고싶은 레포지토리를 입력해주세요.</label>
                 <input type="text" id="git-repository" name="git-repository" placeholder="Enter git repository and branch" required>
                 <button onclick="callRepository()">전송</button>
             </div>

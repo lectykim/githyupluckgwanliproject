@@ -1,0 +1,79 @@
+/* 여기에 Page.CSS 를 작성하십시오 */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #313338;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+.container {
+    background-color: #232428;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 600px;
+    margin: 50px auto;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+h2 {
+    color: #FFFFFF;
+    text-align: center;
+    margin-bottom: 20px;
+}
+.form-group {
+    margin-bottom: 15px;
+}
+label,
+.up-lb {
+    color: #FFFFFF;
+    display: block;
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+.up-lb {
+    margin: 10px 0 5px;
+    font-weight: bold;
+}
+input {
+    width: 89%;
+    padding: 10px;
+    -webkit-text-fill-color: #dbdee1;
+    background-color: #383a40;
+    border: 1px solid #404249;
+    border-radius: 4px;
+}
+.login-btn,
+.signup-btn,
+.update-btn {
+    width: 100%;
+    padding: 10px;
+    background-color: #28a745;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.signup-btn {
+    margin-top: 15px;
+    background-color: #5865f2;
+}
+.update-btn{
+    font-size: 16px;
+}
+.login-btn:hover,
+.update-btn:hover {
+    background-color: #218838;
+}
+.signup-btn:hover {
+    background-color: #4752c4;
+}
+.error-message,
+.success-message {
+    color: #FF0000;
+    text-align: center;
+    margin-top: 10px;
+}
+.success-message {
+    color: #00FF00;
+}

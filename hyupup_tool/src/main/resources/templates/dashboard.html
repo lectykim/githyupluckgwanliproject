@@ -61,6 +61,33 @@
         .top-nav button:hover {
             background-color: #35373c;
         }
+        /*상단 프로필*/
+        .profile-container {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            margin: auto;
+        }
+        .profile-image {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 20px;
+        }
+        .profile-details {
+            display: flex;
+            flex-direction: column;
+        }
+        .profile-name {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .profile-bio {
+            font-size: 16px;
+            color: #555;
+        }
         /* 메인 콘텐츠 스타일 */
         .main-content {
             margin-left: 250px;
@@ -70,19 +97,6 @@
             justify-content: center;
             align-items: center;
             height: calc(100vh - 70px);
-        }
-        /* 방 생성하기 버튼 스타일 */
-        .create-room-btn {
-            padding: 15px 30px;
-            background-color: #28a745;
-            color: #FFFFFF;
-            border: none;
-            border-radius: 8px;
-            font-size: 18px;
-            cursor: pointer;
-        }
-        .create-room-btn:hover {
-            background-color: #218838;
         }
         .modal {
             display: none; /* 기본적으로 모달을 숨김 */
@@ -154,40 +168,13 @@
         .chatting-global-container{
             display: none;
         }
-        /*상단 프로필*/
-        .profile-container {
-            display: flex;
-            align-items: center;
-            padding: 10px;
-            margin: auto;
-        }
-        .profile-image {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin-right: 20px;
-        }
-        .profile-details {
-            display: flex;
-            flex-direction: column;
-        }
-        .profile-name {
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-        .profile-bio {
-            font-size: 16px;
-            color: #555;
-        }
         label {
             color: #FFFFFF;
             display: block;
             margin-bottom: 8px;
             font-weight: bold;
         }
-        input[type="text"], input[type="number"] {
+        input {
             width: 89%;
             padding: 10px;
             margin-bottom: 15px;
@@ -196,18 +183,24 @@
             border: 1px solid #404249;
             border-radius: 4px;
         }
-        .cr-btn {
-            width: 100%;
-            padding: 10px;
+        /* 방 생성하기 버튼 스타일 */
+        .create-room-btn, .cr-btn {
+            padding: 15px 30px;
             background-color: #28a745;
             color: #FFFFFF;
             border: none;
-            border-radius: 4px;
-            font-size: 16px;
+            border-radius: 8px;
+            font-size: 18px;
             cursor: pointer;
         }
-        .cr-btn:hover {
+        .create-room-btn:hover, .cr-btn:hover {
             background-color: #218838;
+        }
+        .cr-btn {
+            width: 100%;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 16px;
         }
         #chat-container {
             background: #FFFFFF;
@@ -321,7 +314,7 @@
                 <label for="owner">Owner</label>
                 <input type="text" id="owner" name="owner" placeholder="input target owner" required>
             </div>
-                <button type="submit" onclick="createRoomRequest()" class="cr-btn">Create</button>
+            <button type="submit" onclick="createRoomRequest()" class="cr-btn">Create</button>
         </div>
     </div>
     <div>

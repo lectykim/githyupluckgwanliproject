@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simple Sidebar</title>
+    <link rel="stylesheet" href="Board.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
     <style>
@@ -151,15 +152,6 @@
         .chatting-global-container{
             display: none;
         }
-        .normal-line{
-            background-color: white;
-        }
-        .added-line{
-            background-color: green;
-        }
-        .deleted-line{
-            background-color: red;
-        }
         .profile-container {
             display: flex;
             align-items: center;
@@ -286,6 +278,7 @@
 
 <!-- 상단 네비게이션 바 -->
 <div class="top-nav">
+    <!-- 상단 프로필 -->
     <div class="profile-container">
         <img class="profile-image" id="profile-image" src="" alt="Profile Image">
         <div class="profile-details">
@@ -311,18 +304,23 @@
     <!-- 방 생성 폼 -->
     <div class="room-form" id="roomForm">
         <div id="createRoomForm">
-            <label for="title">Room Title</label>
-            <input type="text" id="title" name="title" placeholder="Enter room title" required>
-
-            <label for="maxMembers">Max Members</label>
-            <input type="number" id="maxMembers" name="maxMembers" placeholder="Enter max members" required>
-
-            <label for="repository"> Repository</label>
-            <input type="text" id="repository" name="repository" placeholder="input target repository" required>
-
-            <label for="owner">Owner</label>
-            <input type="text" id="owner" name="owner" placeholder="input target owner" required>
-            <input type="submit" onclick="createRoomRequest()" value="Create Room">
+            <div class="roomForm-group">
+                <label for="title">Room Title</label>
+                <input type="text" id="title" name="title" placeholder="Enter room title" required>
+            </div>
+            <div class="roomForm-group">
+                <label for="maxMembers">Max Members</label>
+                <input type="number" id="maxMembers" name="maxMembers" placeholder="Enter max members" required>
+            </div>
+            <div class="roomForm-group">
+                <label for="repository"> Repository</label>
+                <input type="text" id="repository" name="repository" placeholder="input target repository" required>
+            </div>
+            <div class="roomForm-group">
+                <label for="owner">Owner</label>
+                <input type="text" id="owner" name="owner" placeholder="input target owner" required>
+            </div>
+            <button type="submit" onclick="createRoomRequest()" class="cr-btn">Create</button>
         </div>
     </div>
     <div>
@@ -364,7 +362,7 @@
         <div id="inviteMemberModal" class="modal">
             <div class="modal-content">
                 <span class="close" onclick="removeModal(0)">&times;</span>
-                <h2 >초대자 이메일을 입력하세요.</h2>
+                <label for="invite-email">초대자 이메일을 입력하세요.</label>
                 <input type="text" id="invite-email" name="invite-email" placeholder="Enter invite user email" required>
                 <button onclick="callInvite()">전송</button>
             </div>
@@ -374,7 +372,7 @@
         <div id="getCurrentMemberModal" class="modal">
             <div class="modal-content">
                 <span class="close" onclick="removeModal(1)">&times;</span>
-                <h2 >현재 방의 멤버입니다.</h2>
+                <h2>현재 방의 멤버입니다.</h2>
             </div>
         </div>
 
@@ -382,7 +380,7 @@
         <div id="gitSettingModal" class="modal">
             <div class="modal-content">
                 <span class="close" onclick="removeModal(2)">&times;</span>
-                <h2 >협업시 관측하고싶은 레포지토리를 입력해주세요.</h2>
+                <label for="git-repository">협업시 관측하고싶은 레포지토리를 입력해주세요.</label>
                 <input type="text" id="git-repository" name="git-repository" placeholder="Enter git repository and branch" required>
                 <button onclick="callRepository()">전송</button>
             </div>

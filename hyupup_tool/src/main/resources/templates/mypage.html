@@ -3,91 +3,33 @@
 <head>
     <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Page - Update Information</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #313338;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            padding: 0;
-        }
-        .container {
-            background-color: #232428;
-            max-width: 600px;
-            margin: 50px auto;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        h2 {
-            color: #FFFFFF;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        label {
-            color: #FFFFFF;
-            display: block;
-            margin: 10px 0 5px;
-            font-weight: bold;
-        }
-        input[type="text"], input[type="email"], input[type="password"] {
-            width: 96%;
-            padding: 10px;
-            margin: 5px 0 20px;
-            -webkit-text-fill-color: #dbdee1;
-            background-color: #383a40;
-            border: 1px solid #404249;
-            border-radius: 4px;
-        }
-        button {
-            width: 100%;
-            padding: 10px;
-            background-color: #28a745;
-            color: #FFFFFF;
-            border: none;
-            border-radius: 4px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #218838;
-        }
-        .message {
-            color: red;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-    </style>
+    <link rel="stylesheet" href="Page.css" />
 </head>
 <body>
-
 <div class="container">
     <h2>Update My Information</h2>
-
     <!-- 폼 제출 후 에러나 성공 메시지가 표시될 영역 -->
-    <div class="message">
+    <div class="error-message">
         <!-- 여기에 에러 메시지 또는 성공 메시지가 표시될 수 있습니다 -->
     </div>
 
-    <div>
+    <div class="form-group">
         <!-- Email 수정 필드 -->
-        <label for="email">Email</label>
+        <label for="email" class="up-lb">Email</label>
         <input type="email" id="email" name="email" placeholder="Enter your email"  th:value="${memberDto.getEmail()}">
-
-        <!-- Password 수정 필드 -->
-        <label for="pw">PW</label>
-        <input type="password" id="pw" name="pw" placeholder="Enter new password" th:value="${memberDto.getPw()}" required>
-
-        <!-- GitHub Access Token 수정 필드 -->
-        <label for="githubAccessToken">GitHub Access Token</label>
-        <input type="text" id="githubAccessToken" name="githubAccessToken" placeholder="Enter GitHub Access Token" th:value="${memberDto.getGithubAccessToken()}">
-
-        <!-- 제출 버튼 -->
-        <button onclick="window.location.href='dashboard.html'">Update Information</button>
     </div>
+    <div class="form-group">
+        <!-- Password 수정 필드 -->
+        <label for="pw" class="up-lb">PW</label>
+        <input type="password" id="pw" name="pw" placeholder="Enter new password" th:value="${memberDto.getPw()}" required>
+    </div>
+    <div class="form-group">
+        <!-- GitHub Access Token 수정 필드 -->
+        <label for="githubAccessToken" class="up-lb">GitHub Access Token</label>
+        <input type="text" id="githubAccessToken" name="githubAccessToken" placeholder="Enter GitHub Access Token" th:value="${memberDto.getGithubAccessToken()}">
+    </div>
+    <!-- 제출 버튼 -->
+    <button type="submit" onclick="window.location.href='mypage.html'" class="update-btn">Update Information</button>
 </div>
-
 </body>
 </html>

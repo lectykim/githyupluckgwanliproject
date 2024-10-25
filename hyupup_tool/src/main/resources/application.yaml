@@ -23,3 +23,6 @@ spring:
 
 logging.level:
   org.hibernate.SQL: debug
+
+server:
+  max-http-request-header-size: 400000

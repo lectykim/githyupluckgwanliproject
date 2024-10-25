@@ -257,6 +257,32 @@
                 left: 0;
                 justify-content: center;
             }
+
+        }
+        .normal-line{
+            background-color: white;
+        }
+        .added-line{
+            background-color: green;
+        }
+        .deleted-line{
+            background-color: red;
+        }
+        .commit-editor{
+            max-width: 400px;  /* 최대 너비 설정 */
+            max-height: 600px; /* 최대 높이 설정 */
+            overflow-y: auto;  /* 세로 스크롤 활성화 */
+            padding: 0;
+            margin: 0;
+            list-style-type: none;
+            border: 1px solid #ccc; /* 리스트 경계 */
+        }
+        .commit-editor li{
+            padding: 10px;
+            border-bottom: 1px solid #ddd; /* 리스트 항목 경계 */
+        }
+        .commit-editor li:last-child{
+            border-bottom: none;
         }
     </style>
 </head>
@@ -340,7 +366,7 @@
         <div id="info-data">
             방장이 브런치 or 커밋 정보를 선택할 때 동기화됩니다.
         </div>
-        <ul id="commit-editor">
+        <ul id="commit-editor" class="commit-editor">
 
         </ul>
         <div id="test-text-viewer" class="test-text-viewer">
@@ -494,10 +520,11 @@
                         const commitFiles = document.createElement('li');
                         commitFiles.textContent=res.filename;
                         commitFiles.className='button-item'
+                        console.log(res.status);
                         if(res.status==='modified'){
                             commitFiles.onclick= ()=>viewFile(res.filename);
                         }else{
-                            //TODO: create, delete 상태의 file editor 호출
+                            commitFiles.onclick = ()=>updateCodeFormat(res.filename,res.status);
                         }
 
                         commitSelector.appendChild(commitFiles);
@@ -506,6 +533,75 @@
                     //document.getElementById('info-data').textContent = shaData;
                 })
         }
+    }
+
+    const updateCodeFormat = async (filename,status) =>{
+        const commitEditorElement = document.getElementById('commit-editor');
+        while(commitEditorElement.hasChildNodes()){
+            commitEditorElement.removeChild(commitEditorElement.firstChild);
+        }
+        const roomDto = findRoomDto(currentRoomNum);
+        let getFileDetailURL = 'http://localhost:8080/api/v1/github-api/get-file-diff';
+        let getFileDetailQueryParam = {
+            owner: roomDto.owner,
+            repo: roomDto.repository,
+            path: filename,
+            ref:''
+        };
+        let getFileDetailQueryString = new URLSearchParams(getFileDetailQueryParam).toString();
+        let getFileDetailApiReqUrl = `${getFileDetailURL}?${getFileDetailQueryString}`;
+        let content;
+        const firstFileResponse = await fetch(getFileDetailApiReqUrl, {
+            method: 'GET',
+        });
+        if (firstFileResponse.ok) {
+            const firstFileData = await firstFileResponse.json();
+            content = base64Decoder(firstFileData.content);
+        } else {
+            console.log(firstFileResponse);
+        }
+
+
+
+        const lines = content.split("\n");
+        let idx = 1;
+        if(status==='added'){
+            lines.forEach(line => {
+                const commitEditorChildElement = document.createElement('li');
+                commitEditorChildElement.textContent = idx + line;
+                commitEditorChildElement.className = 'added-line';
+                commitEditorElement.appendChild(commitEditorChildElement);
+                idx++;
+            })
+        }else{
+            lines.forEach(line => {
+                const commitEditorChildElement = document.createElement('li');
+                commitEditorChildElement.textContent = idx + line;
+                commitEditorChildElement.className = 'deleted-line';
+                commitEditorElement.appendChild(commitEditorChildElement);
+                idx++;
+            })
+        }
+    }
+
+    const base64Decoder = (encodedString) =>{
+        const origin = rawToArray(encodedString);
+        return decodeBase64(origin);
+    }
+
+    const rawToArray=(str)=> {
+        // 문자열을 개행(\n) 기준으로 나누고, 이를 다시 하나의 문자열로 합침
+        const strs = str.split('\n');
+        let sb = '';
+        strs.forEach(data => {
+            sb += data;
+        });
+        return sb;
+    }
+
+    const decodeBase64=(input)=> {
+        // Base64 디코딩 및 UTF-8로 변환
+        return decodeURIComponent(escape(atob(input)));
     }
 
     //modified 상태일 경우에만 호출

@@ -22,7 +22,13 @@
         </p>
     </div>
 </div>
+<div class="commit-bar">
+    <div>
+        <ul id="commit-data" class="button-list">
 
+        </ul>
+    </div>
+</div>
 <!-- 상단 네비게이션 바 -->
 <div class="top-nav">
     <!-- 상단 프로필 -->
@@ -80,30 +86,34 @@
         </div>
     </div>
     <div class="chatting-global-container" id="chatting-global-container">
-        <div id="chat-container"></div>
+
+        <div class="selector-title">
+            파일 선택
+        </div>
         <ul id="commit-selector">
 
         </ul>
         <div id="info-data">
             방장이 브런치 or 커밋 정보를 선택할 때 동기화됩니다.
         </div>
-        <ul id="commit-editor" class="commit-editor">
+        <div class="commit-chat-container">
+            <ul id="commit-editor" class="commit-editor">
 
-        </ul>
-        <div id="test-text-viewer" class="test-text-viewer">
-            <div id="branch-title">브런치</div>
-            <ul id="branch-data" class="button-list"></ul>
-
-            <div id="commit-title">커밋</div>
-            <ul id="commit-data" class="button-list"></ul>
+            </ul>
+            <div id="chat-container"></div>
         </div>
+
         <!-- 오른쪽에 배치할 버튼들을 포함한 컨테이너 추가 -->
         <div id="button-container" class="button-container">
-            <button onclick="inviteMember()" id="invite-button">멤버 초대하기</button>
-            <button onclick="getCurrentMember()" id="view-current-member-button">현재 멤버 보기</button>
-            <button onclick="gitSetting()" id="git-setting-button">Git 설정 변경하기</button>
+            <button onclick="inviteMember()" id="invite-button" class="file-button">멤버 초대하기</button>
+            <button onclick="getCurrentMember()" id="view-current-member-button" class="file-button">현재 멤버 보기</button>
+            <button onclick="gitSetting()" id="git-setting-button" class="file-button">Git 설정 변경하기</button>
         </div>
 
+        <div id="input-container">
+            <input type="text" id="chat-input" placeholder="채팅을 입력하세요..." />
+            <button id="send-button" onclick="sendMessage()">전송</button>
+        </div>
 
         <!-- 모달 구조 -->
         <div id="inviteMemberModal" class="modal">
@@ -135,10 +145,7 @@
 
 
 
-        <div id="input-container">
-            <input type="text" id="chat-input" placeholder="채팅을 입력하세요..." />
-            <button id="send-button" onclick="sendMessage()">전송</button>
-        </div>
+
     </div>
 
 </div>
@@ -240,7 +247,7 @@
                     newData.files.forEach((res)=>{
                         const commitFiles = document.createElement('li');
                         commitFiles.textContent=res.filename;
-                        commitFiles.className='button-item'
+                        commitFiles.className='file-button'
                         console.log(res.status);
                         if(res.status==='modified'){
                             commitFiles.onclick= ()=>viewFile(res.filename);
@@ -705,7 +712,7 @@
                 owner = data.login;
                 document.getElementById('profile-image').src = data.avatar_url;
                 document.getElementById('profile-name').textContent = data.login;
-                document.getElementById('profile-bio').textContent = data.bio;
+                //document.getElementById('profile-bio').textContent = data.bio;
             })
             .catch((error)=>{
                 console.error(error);

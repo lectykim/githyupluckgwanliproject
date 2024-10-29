@@ -1,11 +1,13 @@
 package com.example.hyupup_tool.fake;
 
 import com.example.hyupup_tool.entity.Member;
+import com.example.hyupup_tool.entity.MemberToRoom;
 import com.example.hyupup_tool.entity.Room;
 import com.example.hyupup_tool.repository.IRoomRepository;
 import lombok.Getter;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
@@ -36,6 +38,11 @@ public class FakeIRoomRepository implements IRoomRepository {
     @Override
     public void delete(Room room) {
         db.remove(room.getRoomId());
+    }
+
+    @Override
+    public Optional<List<MemberToRoom>> findMemberToRoomByRoomId(Room room) {
+        return Optional.empty();
     }
 
 

@@ -73,7 +73,6 @@ public class MemberServiceImpl implements MemberService{
         var memberDto = SessionGetter.getCurrentMemberDto();
         var newMemberEntity = memberRepository.findById(memberDto.getMemberId())
                 .orElseThrow(()->new BadRequestException("Session Authentication Error"));
-        newMemberEntity.setEmail(request.email());
         newMemberEntity.setNickname(request.nickname());
         if(!Objects.equals(newMemberEntity.getPw(), request.pw())){
             newMemberEntity.setPw(passwordEncoder.encode(request.pw()));

@@ -1,7 +1,9 @@
 package com.example.hyupup_tool.service;
 
+import com.example.hyupup_tool.entity.Member;
 import com.example.hyupup_tool.entity.MemberToRoom;
 import com.example.hyupup_tool.entity.Room;
+import com.example.hyupup_tool.entity.dto.member.MemberDTO;
 import com.example.hyupup_tool.entity.dto.room.*;
 import com.example.hyupup_tool.exception.client.BadRequestException;
 import com.example.hyupup_tool.exception.server.ServerException;
@@ -56,8 +58,9 @@ public class RoomServiceImpl implements RoomService{
         var roomEntity = roomRepository.findById(request.roomId())
                 .orElseThrow(()-> new BadRequestException("Can't find room"));
 
-        roomEntity.setTitle(request.title());
-        roomEntity.setMaxMember(request.maxMember());
+        roomEntity.setRepository(request.repository());
+        roomEntity.setOwner(request.owner());
+        roomRepository.save(roomEntity);
         sessionGetter.resetCurrentMemberDto();
         return new UpdateRoomResponse(request.roomId());
     }
@@ -210,6 +213,22 @@ public class RoomServiceImpl implements RoomService{
         return new SyncRoomReadPosResponse();
 
     }
+
+    @Override
+    public GetCurrentMemberResponse getCurrentMember(GetCurrentMemberRequest request) {
+        var roomEntity = roomRepository.findById(request.roomId())
+                .orElseThrow(() -> new BadRequestException("Can't find room"));
+
+        var memberToRoomList = roomRepository.findMemberToRoomByRoomId(roomEntity)
+                .orElseThrow(() -> new BadRequestException("Can't find member"));
+
+        List<MemberDTO> memberDTOList = memberToRoomList.stream()
+                .map(memberToRoom -> memberToRoom.getMember().toDto())
+                .collect(Collectors.toList());
+
+        return new GetCurrentMemberResponse(memberDTOList);
+    }
+
 
     @Transactional
     public ChangeMasterResponse changeMaster(ChangeMasterRequest request){

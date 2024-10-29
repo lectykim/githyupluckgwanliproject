@@ -24,8 +24,8 @@ public class RoomValidatorImpl implements RoomValidator{
 
     @Override
     public void updateRoomValidator(UpdateRoomRequest request) {
-        Room.validateTitle(request.title());
-        Room.validateMaxMember(request.maxMember());
+        //Room.validateTitle(request.title());
+        //Room.validateMaxMember(request.maxMember());
     }
 
     @Override

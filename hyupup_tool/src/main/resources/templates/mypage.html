@@ -12,12 +12,6 @@
     <div class="error-message">
         <!-- 여기에 에러 메시지 또는 성공 메시지가 표시될 수 있습니다 -->
     </div>
-
-    <div class="form-group">
-        <!-- Email 수정 필드 -->
-        <label for="email" class="up-lb">Email</label>
-        <input type="email" id="email" name="email" placeholder="Enter your email"  th:value="${memberDto.getEmail()}">
-    </div>
     <div class="form-group">
         <!-- Password 수정 필드 -->
         <label for="pw" class="up-lb">PW</label>
@@ -38,7 +32,6 @@
 </div>
 <script type="text/javascript">
     const updateInfo = ()=>{
-        const email = document.getElementById('email').value;
         const pw = document.getElementById('pw').value;
         const githubAccessToken = document.getElementById('githubAccessToken').value;
         const nickname = document.getElementById('nickname').value;
@@ -47,7 +40,7 @@
             headers:{
                 'Content-Type': 'application/json',
             },
-            body:JSON.stringify({email,pw,githubAccessToken,nickname})
+            body:JSON.stringify({pw,githubAccessToken,nickname})
         })
             .then((response)=>{
                 if(response.ok&& response.status===200){

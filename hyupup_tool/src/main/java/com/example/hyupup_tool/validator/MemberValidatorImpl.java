@@ -42,7 +42,7 @@ public class MemberValidatorImpl implements MemberValidator{
 
     @Override
     public void modifyMemberInfoRequestValidator(ModifyMemberInfoRequest request) {
-        Member.validateEmail(request.email());
+        //Member.validateEmail(request.email());
         Member.validatePw(request.pw());
         Member.validateGithubAccessToken(request.githubAccessToken());
     }

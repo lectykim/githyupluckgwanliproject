@@ -4,8 +4,6 @@ import lombok.NonNull;
 
 public record ModifyMemberInfoRequest(
         @NonNull
-        String email,
-        @NonNull
         String pw,
         @NonNull
         String githubAccessToken,

@@ -42,7 +42,7 @@
         🔔 Notifications
             <span id="notification"></span>
     </button>
-    <button onclick="window.location.href='/dashboard/mypage'">My Page</button>
+    <button onclick="window.location.href='/dashboard/mypage'">내 정보</button>
     <button onclick="logout()">로그아웃</button>
 </div>
 
@@ -93,7 +93,7 @@
         <ul id="commit-selector">
 
         </ul>
-        <div id="info-data">
+        <div id="info-data" class="view-sync">
             방장이 브런치 or 커밋 정보를 선택할 때 동기화됩니다.
         </div>
         <div class="commit-chat-container">
@@ -110,7 +110,7 @@
             <button onclick="gitSetting()" id="git-setting-button" class="file-button">Git 설정 변경하기</button>
         </div>
 
-        <div id="input-container">
+        <div id="input-container" >
             <input type="text" id="chat-input" placeholder="채팅을 입력하세요..." />
             <button id="send-button" onclick="sendMessage()">전송</button>
         </div>

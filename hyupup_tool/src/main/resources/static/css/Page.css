@@ -38,7 +38,7 @@ label,
 input {
     width: 89%;
     padding: 10px;
-    -webkit-text-fill-color: #dbdee1;
+    color: #dbdee1;
     background-color: #383a40;
     border: 1px solid #404249;
     border-radius: 4px;

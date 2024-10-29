@@ -4,9 +4,6 @@ import lombok.NonNull;
 
 public record ModifyMemberInfoRequest(
         @NonNull
-        Long memberId
-        ,
-        @NonNull
         String email,
         @NonNull
         String pw,

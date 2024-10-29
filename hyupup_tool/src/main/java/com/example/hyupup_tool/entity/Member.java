@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Setter //TODO: Setter 제거 후 update 메소드를 활용하는 쪽으로 변경
 public class Member extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,28 +32,28 @@ public class Member extends BaseEntity {
     private Long memberId;
 
     @Column(name = "email",nullable = false)
-    @Setter
+
     private String email;
 
     @Column(name="pw",nullable = false)
-    @Setter
+
     private String pw;
 
     @Column(name="github_access_token",nullable = false)
-    @Setter
+
     private String githubAccessToken;
 
 
     @Enumerated(EnumType.STRING)
-    @Setter
+
     private PurchasePlan purchasePlan;
 
     @Enumerated(EnumType.STRING)
-    @Setter
+
     private AuthorityRole authorityRole;
 
     @Column(name = "nickname",nullable = false)
-    @Setter
+
     private String nickname;
 
     public MemberDTO toDto(){
@@ -68,6 +69,7 @@ public class Member extends BaseEntity {
                                 .collect(Collectors.toList())
                 )
                 .githubAccessToken(githubAccessToken)
+                .nickname(nickname)
                 .build();
     }
 

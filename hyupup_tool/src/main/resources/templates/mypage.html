@@ -28,8 +28,36 @@
         <label for="githubAccessToken" class="up-lb">GitHub Access Token</label>
         <input type="text" id="githubAccessToken" name="githubAccessToken" placeholder="Enter GitHub Access Token" th:value="${memberDto.getGithubAccessToken()}">
     </div>
+    <div class="form-group">
+        <!-- GitHub Access Token 수정 필드 -->
+        <label for="nickname" class="up-lb">Nickname</label>
+        <input type="text" id="nickname" name="nickname" placeholder="Nickname" th:value="${memberDto.getNickname()}">
+    </div>
     <!-- 제출 버튼 -->
-    <button type="submit" onclick="window.location.href='mypage.html'" class="update-btn">Update Information</button>
+    <button type="submit" onclick=updateInfo() class="update-btn">Update Information</button>
 </div>
+<script type="text/javascript">
+    const updateInfo = ()=>{
+        const email = document.getElementById('email').value;
+        const pw = document.getElementById('pw').value;
+        const githubAccessToken = document.getElementById('githubAccessToken').value;
+        const nickname = document.getElementById('nickname').value;
+        fetch('http://localhost:8080/api/v1/member-api/modify-member-info',{
+            method:'POST',
+            headers:{
+                'Content-Type': 'application/json',
+            },
+            body:JSON.stringify({email,pw,githubAccessToken,nickname})
+        })
+            .then((response)=>{
+                if(response.ok&& response.status===200){
+                    window.location.href = "/dashboard/main"
+                }else if(response.status === 400 || response.status === 500){
+                    alert("modify failed");
+                }
+            });
+    }
+</script>
 </body>
+
 </html>

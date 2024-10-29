@@ -252,3 +252,12 @@ input {
         justify-content: center;
     }
 }
+.normal-line{
+    background-color: white;
+}
+.added-line{
+    background-color: green;
+}
+.deleted-line{
+    background-color: red;
+}

@@ -6,7 +6,8 @@ body {
     background-color: #313338;
 }
 /* 사이드바 스타일 */
-.sidebar{
+.sidebar,
+.commit-bar {
     height: 100%;
     width: 140px;
     position: fixed;
@@ -15,18 +16,10 @@ body {
     background-color: #1e1f22;
     padding-top: 20px;
 }
-
 .commit-bar{
-    height: 100%;
-    width: 140px;
-    position: fixed;
-    top: 0;
     left: 140px;
-    background-color: #1e1f22;
-    padding-top: 20px;
     overflow-y: scroll;
 }
-
 /* 사이드바 링크 스타일 */
 .sidebar p {
     padding: 10px 15px;
@@ -43,7 +36,7 @@ body {
 .top-nav {
     position: fixed;
     top: 0;
-    left: 140px;
+    left: 280px;
     right: 0;
     height: 50px;
     background-color: #232428;
@@ -183,29 +176,29 @@ input {
     text-decoration: none;
     cursor: pointer;
 }
-.modal-content label {
+.modal-content label,
+.modal-content h2 {
     color: #FFFFFF;
 }
 .test-text-viewer{
     display: flex;
     height:200px;
-
 }
 .button-list {
     list-style: none; /* 불필요한 점 리스트 제거 */
     padding: 0;
     margin: 0;
-
 }
 .commit-chat-container{
     display:flex;
     align-items: center;
     justify-content: center;
 }
-.file-button{
+.file-button,
+.button-item {
     display: inline-block;  /* 인라인 요소를 블록처럼 표시 */
     padding: 10px 20px;  /* 버튼의 안쪽 여백 */
-    background-color: skyblue; /* 버튼 배경색 (초록색) */
+    background-color: skyblue; /* 버튼 배경색 */
     color: #FFFFFF;  /* 텍스트 색상 */
     text-decoration: none; /* 링크의 밑줄 제거 */
     border-radius: 5px;  /* 모서리 둥글게 */
@@ -214,7 +207,8 @@ input {
     cursor: pointer;  /* 마우스를 올렸을 때 포인터 표시 */
     transition: background-color 0.3s ease, border 0.3s ease; /* 호버 시 애니메이션 */
 }
-.file-button:hover{
+.file-button:hover,
+.button-item:hover {
     background-color: springgreen;
     border: 1px solid #4CAF50
 }
@@ -222,21 +216,12 @@ input {
     margin-bottom: 10px; /* 버튼 간 간격 */
 }
 .button-item {
-    display: inline-block;  /* 인라인 요소를 블록처럼 표시 */
-    padding: 10px 20px;  /* 버튼의 안쪽 여백 */
     background-color: #4CAF50; /* 버튼 배경색 (초록색) */
-    color: #FFFFFF;  /* 텍스트 색상 */
-    text-decoration: none; /* 링크의 밑줄 제거 */
-    border-radius: 5px;  /* 모서리 둥글게 */
-    border: 1px solid transparent; /* 테두리 추가 */
-    font-size: 16px;  /* 글자 크기 */
-    cursor: pointer;  /* 마우스를 올렸을 때 포인터 표시 */
-    transition: background-color 0.3s ease, border 0.3s ease; /* 호버 시 애니메이션 */
 }
 .button-item:hover {
     background-color: #45a049; /* 호버 시 배경색 변경 */
-    border: 1px solid #4CAF50; /* 테두리 색상 변경 */
 }
+.commit-editor,
 #chat-container {
     max-width: 400px;  /* 최대 너비 설정 */
     max-height: 600px; /* 최대 높이 설정 */
@@ -245,20 +230,27 @@ input {
     margin: 0;
     list-style-type: none;
     border: 1px solid #ccc; /* 리스트 경계 */
+}
+.commit-editor li{
+    padding: 10px;
+    border-bottom: 1px solid #ddd; /* 리스트 항목 경계 */
     color:white;
 }
-#input-container {
+.commit-editor li:last-child{
+    border-bottom: none;
+}
+#chat-container {
+    color:white;
+}
+#input-container,
+.button-container {
     display: flex;
     margin-top: 10px;
     align-items: center;
     justify-content: center;
 }
-.button-container{
-    display:flex;
-    margin-top:10px;
+.button-container {
     width: 600px;
-    align-items: center;
-    justify-content: center;
 }
 .selector-title{
     color:white;
@@ -304,23 +296,6 @@ input {
         justify-content: center;
     }
 }
-.commit-editor{
-    max-width: 400px;  /* 최대 너비 설정 */
-    max-height: 600px; /* 최대 높이 설정 */
-    overflow-y: auto;  /* 세로 스크롤 활성화 */
-    padding: 0;
-    margin: 0;
-    list-style-type: none;
-    border: 1px solid #ccc; /* 리스트 경계 */
-}
-.commit-editor li{
-    padding: 10px;
-    border-bottom: 1px solid #ddd; /* 리스트 항목 경계 */
-    color:white;
-}
-.commit-editor li:last-child{
-    border-bottom: none;
-}
 .normal-line{
     background-color: #313338;
 }
@@ -329,4 +304,5 @@ input {
 }
 .deleted-line{
     background-color: red;
+    color: #000000;
 }

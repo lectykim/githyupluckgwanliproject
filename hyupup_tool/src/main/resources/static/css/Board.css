@@ -7,6 +7,7 @@ body {
 }
 /* 사이드바 스타일 */
 .sidebar,
+.branch-bar,
 .commit-bar {
     height: 100%;
     width: 140px;
@@ -16,10 +17,16 @@ body {
     background-color: #1e1f22;
     padding-top: 20px;
 }
-.commit-bar{
+.branch-bar,
+.commit-bar {
+    width: 220px;
     left: 140px;
     overflow-y: scroll;
-    scrollbar-color: #404249 #1e1f22;
+    background-color: #232428;
+    scrollbar-color: #404249 #232428;
+}
+.commit-bar {
+    top: 450px;
 }
 /* 사이드바 링크 스타일 */
 .sidebar p {
@@ -37,7 +44,7 @@ body {
 .top-nav {
     position: fixed;
     top: 0;
-    left: 280px;
+    left: 360px;
     right: 0;
     height: 50px;
     background-color: #232428;
@@ -306,5 +313,4 @@ input {
 }
 .deleted-line{
     background-color: red;
-    color: #000000;
 }

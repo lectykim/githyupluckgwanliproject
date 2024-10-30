@@ -218,6 +218,9 @@ input {
     background-color: springgreen;
     border: 1px solid #4CAF50
 }
+.member-list-li{
+    background-color: springgreen;
+}
 .button-list li {
     margin-bottom: 10px; /* 버튼 간 간격 */
 }

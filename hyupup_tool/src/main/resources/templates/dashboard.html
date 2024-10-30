@@ -544,9 +544,10 @@
             })
             .then((data)=>{
                 console.log(data);
-                data.memberDTOList.foreach((dto)=>{
+                data.memberDTOList.forEach((dto)=>{
                     const memberData = document.createElement('li');
-                    memberData.textContent = dto.email + ':' + dto.nickname
+                    memberData.textContent = '[이메일] : '+dto.email + '[닉네임] : ' + dto.nickname
+                    memberData.className='member-list-li'
                     currentMemberListElement.appendChild(memberData);
                 })
             })

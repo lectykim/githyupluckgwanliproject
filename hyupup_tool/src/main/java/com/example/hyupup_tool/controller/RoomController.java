@@ -94,4 +94,11 @@ public class RoomController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/get-current-member")
+    public ResponseEntity<GetCurrentMemberResponse> getCurrentMember(GetCurrentMemberRequest request){
+        var response = roomServiceImpl.getCurrentMember(request);
+
+        return ResponseEntity.ok(response);
+    }
+
 }

@@ -8,6 +8,7 @@ import com.example.hyupup_tool.exception.server.ServerException;
 import com.example.hyupup_tool.repository.MemberRepository;
 import com.example.hyupup_tool.security.CustomUserDetails;
 import com.example.hyupup_tool.util.AuthorityRole;
+import com.example.hyupup_tool.util.SessionGetter;
 import com.example.hyupup_tool.validator.MemberValidator;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -27,6 +29,7 @@ public class MemberServiceImpl implements MemberService{
     private final MemberRepository memberRepository;
     private final MemberValidator memberValidator;
     private final PasswordEncoder passwordEncoder;
+    private final SessionGetter sessionGetter;
     public LoginResponse login(LoginRequest request) {
         memberValidator.loginRequestValidator(request);
         Optional<Member> memberOptional = memberRepository.findMemberByEmailAndPw(request.email(),request.pw());
@@ -53,7 +56,7 @@ public class MemberServiceImpl implements MemberService{
         );
 
         var insertedmember = memberRepository.save(member);
-
+        sessionGetter.resetCurrentMemberDto();
         return new SignupResponse(insertedmember.getMemberId());
 
 
@@ -67,20 +70,18 @@ public class MemberServiceImpl implements MemberService{
     @Transactional
     public ModifyMemberInfoResponse modifyMemberInfo(ModifyMemberInfoRequest request) {
         memberValidator.modifyMemberInfoRequestValidator(request);
-        var user = memberRepository.findById(request.memberId())
-                .orElseThrow(()-> new BadRequestException("Id is not found"));
-            try {
-                var updatedUser = memberRepository.save(Member.of(request.email(),
-                        request.pw(),
-                        request.githubAccessToken(),
-                        AuthorityRole.ROLE_NORMAL_MEMBER,
-                        request.nickname()
-                        )
-                );
-                return new ModifyMemberInfoResponse(updatedUser.getMemberId());
-            } catch (DataIntegrityViolationException e){
-                throw new ServerException(e.getMessage());
-            }
+        var memberDto = SessionGetter.getCurrentMemberDto();
+        var newMemberEntity = memberRepository.findById(memberDto.getMemberId())
+                .orElseThrow(()->new BadRequestException("Session Authentication Error"));
+        newMemberEntity.setNickname(request.nickname());
+        if(!Objects.equals(newMemberEntity.getPw(), request.pw())){
+            newMemberEntity.setPw(passwordEncoder.encode(request.pw()));
+        }
+        sessionGetter.resetCurrentMemberDto();
+        newMemberEntity.setGithubAccessToken(request.githubAccessToken());
+        memberRepository.save(newMemberEntity);
+
+        return new ModifyMemberInfoResponse(newMemberEntity.getMemberId());
     }
 
     @Override

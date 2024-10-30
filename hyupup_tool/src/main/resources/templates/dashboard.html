@@ -130,6 +130,9 @@
             <div class="modal-content">
                 <span class="close" onclick="removeModal(1)">&times;</span>
                 <h2>현재 방의 멤버입니다.</h2>
+                <ul id="current-member-list">
+
+                </ul>
             </div>
         </div>
 
@@ -137,8 +140,10 @@
         <div id="gitSettingModal" class="modal">
             <div class="modal-content">
                 <span class="close" onclick="removeModal(2)">&times;</span>
-                <label for="git-repository">협업시 관측하고싶은 레포지토리를 입력해주세요.</label>
-                <input type="text" id="git-repository" name="git-repository" placeholder="Enter git repository and branch" required>
+                <label for="git-repository">협업시 관측하고싶은 레포를 입력해주세요.</label>
+                <input type="text" id="git-repository" name="git-repository" placeholder="Enter git repository" required>
+                <label for="git-owner">오너를 입력해주세요.</label>
+                <input type="text" id="git-owner" name="git-owner" placeholder="Input the ownwer" required>
                 <button onclick="callRepository()">전송</button>
             </div>
         </div>
@@ -513,6 +518,40 @@
     const getCurrentMember = ()=>{
         const modal = document.getElementById('getCurrentMemberModal');
         modal.style.display = 'block'
+
+        //멤버삭제
+        const currentMemberListElement = document.getElementById('current-member-list');
+        while(currentMemberListElement.hasChildNodes()){
+            currentMemberListElement.removeChild(currentMemberListElement.firstChild);
+        }
+
+        //api call
+        const currentMemberListURL = 'http://localhost:8080/api/v1/room-api/get-current-member';
+        const currentMemberListQueryParam = {
+            roomId:currentRoomNum
+        }
+        const currentMemberListQueryString = new URLSearchParams(currentMemberListQueryParam).toString()
+        const currentMemberListApiReqUrl = `${currentMemberListURL}?${currentMemberListQueryString}`;
+        fetch(currentMemberListApiReqUrl,{
+            method:'GET',
+        })
+            .then((response)=>{
+                if(response.ok){
+                    return response.json();
+                }else{
+                    console.log(response);
+                }
+            })
+            .then((data)=>{
+                console.log(data);
+                data.memberDTOList.foreach((dto)=>{
+                    const memberData = document.createElement('li');
+                    memberData.textContent = dto.email + ':' + dto.nickname
+                    currentMemberListElement.appendChild(memberData);
+                })
+            })
+
+
     }
 
     const sendMessage = ()=>{
@@ -627,7 +666,22 @@
     }
 
     const callRepository = ()=>{
-
+        const repository = document.getElementById('git-repository').value;
+        const owner = document.getElementById('git-owner').value;
+        fetch('http://localhost:8080/api/v1/room-api/update',{
+                method:'POST',
+                headers:{
+                    'Content-Type': 'application/json',
+                },
+                body:JSON.stringify({roomId: currentRoomNum,repository,owner})
+            })
+            .then((response)=>{
+                if(response.ok&& response.status===200){
+                    window.location.reload();
+                }else if(response.status === 400 || response.status === 500){
+                    alert("modify failed");
+                }
+            });
     }
     const gitSetting = () => {
         const modal = document.getElementById('gitSettingModal');

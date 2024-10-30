@@ -21,4 +21,6 @@ public interface RoomService {
     GetBeforeChatContentResponse getBeforeChatContent(GetBeforeChatContentRequest request);
 
     SyncRoomReadPosResponse syncRoomReadPos(SyncRoomReadPosRequest request);
+
+    GetCurrentMemberResponse getCurrentMember(GetCurrentMemberRequest request);
 }

@@ -6,8 +6,8 @@ public record UpdateRoomRequest (
         @NonNull
         Long roomId,
         @NonNull
-        String title,
+        String repository,
         @NonNull
-        Long maxMember
+        String owner
 ){
 }

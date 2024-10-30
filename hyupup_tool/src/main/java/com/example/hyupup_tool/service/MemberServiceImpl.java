@@ -56,7 +56,7 @@ public class MemberServiceImpl implements MemberService{
         );
 
         var insertedmember = memberRepository.save(member);
-        sessionGetter.resetCurrentMemberDto();
+        //sessionGetter.resetCurrentMemberDto();
         return new SignupResponse(insertedmember.getMemberId());
 
 

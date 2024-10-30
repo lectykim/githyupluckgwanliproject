@@ -6,6 +6,7 @@
     <link rel="stylesheet" th:href="@{/css/Board.css}" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <base href="/">
 </head>
 <body>
 
@@ -198,7 +199,7 @@
     const showGithubData = (data)=>{
 
         if(data.type==='BRANCH'){
-            const branchDetailURL = 'http://localhost:8080/api/v1/github-api/get-branch-detail';
+            const branchDetailURL = 'api/v1/github-api/get-branch-detail';
             const roomDto = findRoomDto(currentRoomNum);
             const branchQueryParam = {
                 owner:roomDto.owner,
@@ -222,7 +223,7 @@
                     document.getElementById('info-data').textContent = newData.name;
                 })
         }else{
-            const commitDetailURL = 'http://localhost:8080/api/v1/github-api/get-commit-detail';
+            const commitDetailURL = 'api/v1/github-api/get-commit-detail';
             const roomDto = findRoomDto(currentRoomNum);
             const commitQueryParam = {
                 owner:roomDto.owner,
@@ -274,7 +275,7 @@
             commitEditorElement.removeChild(commitEditorElement.firstChild);
         }
         const roomDto = findRoomDto(currentRoomNum);
-        let getFileDetailURL = 'http://localhost:8080/api/v1/github-api/get-file-diff';
+        let getFileDetailURL = 'api/v1/github-api/get-file-diff';
         let getFileDetailQueryParam = {
             owner: roomDto.owner,
             repo: roomDto.repository,
@@ -342,7 +343,7 @@
 
            let shaData = '';
            const currentFile = findCurrentFile(filename);
-        const getCommitListURL = 'http://localhost:8080/api/v1/github-api/get-commit-list';
+        const getCommitListURL = 'api/v1/github-api/get-commit-list';
         const roomDto = findRoomDto(currentRoomNum);
         const getCommitListQueryParam = {
             owner:roomDto.owner,
@@ -374,7 +375,7 @@
     }
 
     const getFileDiff = async (firstData, secondData, filename) => {
-        let getFileDetailURL = 'http://localhost:8080/api/v1/github-api/get-commit-detail';
+        let getFileDetailURL = 'api/v1/github-api/get-commit-detail';
         const roomDto = findRoomDto(currentRoomNum);
         let firstCommitSha;
         let secondCommitSha;
@@ -393,7 +394,7 @@
         try {
 
             // 첫 번째 파일 base64 data 가져오기
-            getFileDetailURL = 'http://localhost:8080/api/v1/github-api/get-file-diff';
+            getFileDetailURL = 'api/v1/github-api/get-file-diff';
             getFileDetailQueryParam = {
                 owner: roomDto.owner,
                 repo: roomDto.repository,
@@ -435,7 +436,7 @@
 
 
             // 파일 비교 요청
-            getFileDetailURL = 'http://localhost:8080/api/v1/github-api/file-diff-check';
+            getFileDetailURL = 'api/v1/github-api/file-diff-check';
             getFileDetailQueryParam = {
                 origin: firstCommitFileBase64,
                 before: secondCommitFileBase64
@@ -507,7 +508,7 @@
 
 
     const logout = ()=>{
-        window.location.href = 'http://localhost:8080/logout';
+        window.location.href = 'logout';
     }
 
     const inviteMember = ()=>{
@@ -526,7 +527,7 @@
         }
 
         //api call
-        const currentMemberListURL = 'http://localhost:8080/api/v1/room-api/get-current-member';
+        const currentMemberListURL = 'api/v1/room-api/get-current-member';
         const currentMemberListQueryParam = {
             roomId:currentRoomNum
         }
@@ -586,7 +587,7 @@
             acceptButton.textContent = '수락';
             acceptButton.onclick = () => {
                 // 수락 버튼 클릭 시 실행할 코드
-                fetch('http://localhost:8080/api/v1/room-api/accept-invite',{
+                fetch('api/v1/room-api/accept-invite',{
                     method:'POST',
                     headers:{
                         'Content-Type':'application/json'
@@ -610,7 +611,7 @@
             declineButton.textContent = '거절';
             declineButton.onclick = () => {
                 // 거절 버튼 클릭 시 실행할 코드
-                fetch('http://localhost:8080/api/v1/room-api/deny-invite',{
+                fetch('api/v1/room-api/deny-invite',{
                     method:'POST',
                     headers:{
                         'Content-Type':'application/json'
@@ -646,7 +647,7 @@
             alert('형식에 맞는 이메일을 입력해주세요');
             return false;
         }
-        fetch('http://localhost:8080/api/v1/room-api/invite-other-member',{
+        fetch('api/v1/room-api/invite-other-member',{
             method:'POST',
             headers:{
                 'Content-Type':'application/json'
@@ -669,7 +670,7 @@
     const callRepository = ()=>{
         const repository = document.getElementById('git-repository').value;
         const owner = document.getElementById('git-owner').value;
-        fetch('http://localhost:8080/api/v1/room-api/update',{
+        fetch('api/v1/room-api/update',{
                 method:'POST',
                 headers:{
                     'Content-Type': 'application/json',
@@ -714,7 +715,7 @@
     }
 
     const getNotification = ()=>{
-        fetch('http://localhost:8080/api/v1/room-api/get-all-event',{
+        fetch('api/v1/room-api/get-all-event',{
             method:'GET',
             headers:{
                 'Content-Type':'application/json'
@@ -746,7 +747,7 @@
 
                 }
             })
-        fetch('http://localhost:8080/api/v1/github-api/user',{
+        fetch('api/v1/github-api/user',{
             method:'GET',
             headers:{
                 'Content-Type':'application/json',
@@ -859,7 +860,7 @@
     }
 
     const syncReadPos = (roomNum)=>{
-        fetch('http://localhost:8080/api/v1/room-api/sync-room-read-pos',{
+        fetch('api/v1/room-api/sync-room-read-pos',{
             method:'POST',
             headers:{
                 'Content-Type':'application/json'
@@ -897,7 +898,7 @@
 
     const masterSettingForm = (data)=>{
         slaveSettingForm()
-        const branchApiCallUrl = 'http://localhost:8080/api/v1/github-api/get-branch-list';
+        const branchApiCallUrl = 'api/v1/github-api/get-branch-list';
         const branchParam = {
             owner:data.owner,
             repo:data.repository
@@ -924,7 +925,7 @@
                 })
 
             })
-        const commitApiCallUrl = 'http://localhost:8080/api/v1/github-api/get-commit-list';
+        const commitApiCallUrl = 'api/v1/github-api/get-commit-list';
         const commitParam = {
             owner:data.owner,
             repo:data.repository,

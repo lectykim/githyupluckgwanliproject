@@ -4,6 +4,7 @@
     <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Page - Update Information</title>
     <link rel="stylesheet" th:href="@{/css/Page.css}" />
+    <base href="/">
 </head>
 <body>
 <div class="container">
@@ -35,7 +36,7 @@
         const pw = document.getElementById('pw').value;
         const githubAccessToken = document.getElementById('githubAccessToken').value;
         const nickname = document.getElementById('nickname').value;
-        fetch('http://localhost:8080/api/v1/member-api/modify-member-info',{
+        fetch('api/v1/member-api/modify-member-info',{
             method:'POST',
             headers:{
                 'Content-Type': 'application/json',

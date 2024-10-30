@@ -7,6 +7,7 @@ import com.example.hyupup_tool.service.MemberService;
 import com.example.hyupup_tool.service.RoomService;
 import com.example.hyupup_tool.util.SessionGetter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,6 +27,7 @@ public class DashboardController {
 
         model.addAttribute("roomDtoList",getCurrentRoomResponse.roomDTOList());
         model.addAttribute("currentMemberDTO",currentMemberDTO);
+
         return "/dashboard";
     }
 

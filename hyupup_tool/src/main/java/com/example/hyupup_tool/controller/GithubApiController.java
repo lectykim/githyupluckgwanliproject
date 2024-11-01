@@ -44,8 +44,8 @@ public class GithubApiController {
     }
 
     @GetMapping("/get-commit-detail")
-    public ResponseEntity<byte[]> getCommitDetail(@RequestParam(value = "owner") String owner,@RequestParam(value = "repo") String repo,@RequestParam(value = "sha") String sha){
-        return githubApiServiceImpl.getCommitDetail(owner,repo,sha);
+    public ResponseEntity<byte[]> getCommitDetail(@RequestParam(value = "owner") String owner,@RequestParam(value = "repo") String repo,@RequestParam(value = "sha") String sha,@RequestParam(value="refSha") String refSha){
+        return githubApiServiceImpl.getCommitDetail(owner,repo,sha,refSha);
     }
 
     @GetMapping("/get-file-diff")

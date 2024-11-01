@@ -174,6 +174,11 @@
     let currentEvents = {};
     let currentClientChannelId = null;
     let commitFileStore;
+    let commitGraph = [];
+    let branchStore = [];
+    let colorArr = [];
+    colorArr.push('red','orange','yellow','green','blue','navy','white')
+    let branchColorCount=0;
 
     const onError = (error)=>{
         console.error(error);
@@ -228,7 +233,8 @@
             const commitQueryParam = {
                 owner:roomDto.owner,
                 repo:roomDto.repository,
-                sha:data.data
+                sha:data.data,
+                refSha:''
             }
             const commitQueryString = new URLSearchParams(commitQueryParam).toString()
             const commitApiReqUrl = `${commitDetailURL}?${commitQueryString}`;
@@ -264,7 +270,6 @@
                         commitSelector.appendChild(commitFiles);
                         shaData += res.patch;
                     })
-                    //document.getElementById('info-data').textContent = shaData;
                 })
         }
     }
@@ -386,7 +391,8 @@
         let getFileDetailQueryParam = {
             owner: roomDto.owner,
             repo: roomDto.repository,
-            sha: firstData
+            sha: firstData,
+            refSha:''
         };
         let getFileDetailQueryString = new URLSearchParams(getFileDetailQueryParam).toString();
         let getFileDetailApiReqUrl = `${getFileDetailURL}?${getFileDetailQueryString}`;
@@ -896,7 +902,7 @@
         document.getElementById('info-data').textContent='';
     }
 
-    const masterSettingForm = (data)=>{
+    const masterSettingForm = async (data)=>{
         slaveSettingForm()
         const branchApiCallUrl = 'api/v1/github-api/get-branch-list';
         const branchParam = {
@@ -905,7 +911,7 @@
         }
         const branchQueryString = new URLSearchParams(branchParam).toString()
         const branchApiReqUrl = `${branchApiCallUrl}?${branchQueryString}`;
-        fetch(branchApiReqUrl,{
+        await fetch(branchApiReqUrl,{
             method:'GET',
         })
             .then((response)=>response.text())
@@ -913,46 +919,83 @@
 
 
                 const textIterator = JSON.parse(text);
-                const branchData = document.getElementById('branch-data');
+
                 textIterator.forEach((data)=>{
+                    branchStore[branchColorCount] = {
+                        branch:data.name,
+                        color:colorArr[branchColorCount%7]
+                    }
+                    branchColorCount++;
 
-                    const branchChild = document.createElement('li');
-                    branchChild.textContent=data.name;
-                    branchChild.className='button-item'
-                    branchChild.onclick=()=>branchChildOnClick(data.name);
-
-                    branchData.appendChild(branchChild);
                 })
 
             })
-        const commitApiCallUrl = 'api/v1/github-api/get-commit-list';
-        const commitParam = {
-            owner:data.owner,
-            repo:data.repository,
-            path:''
-        };
-        const commitQueryString = new URLSearchParams(commitParam).toString()
-        const commitApiReqUrl = `${commitApiCallUrl}?${commitQueryString}`;
-        fetch(commitApiReqUrl,{
-            method:'GET',
+        for (const res of branchStore) {
+            const commitApiCallUrl = 'api/v1/github-api/get-commit-detail';
+            const commitParam = {
+                owner:data.owner,
+                repo:data.repository,
+                sha:'',
+                refSha:res.branch
+            };
+            const commitQueryString = new URLSearchParams(commitParam).toString()
+            const commitApiReqUrl = `${commitApiCallUrl}?${commitQueryString}`;
+
+            await fetch(commitApiReqUrl,{
+                method:'GET',
+            })
+                .then((response)=>response.text())
+                .then((text)=>{
+                    console.log(text);
+                    const textIterator = JSON.parse(text);
+
+                    if (Array.isArray(textIterator)) {
+                        textIterator.forEach((data) => {
+                            commitGraph.push({
+                                branch: res.branch,
+                                color: res.color,
+                                timestamp: data.commit.author.date,
+                                message: data.commit.message,
+                                sha: data.sha,
+                            });
+                        });
+                    } else {
+                        // textIterator가 배열이 아닌 경우 단일 객체로 처리
+                        commitGraph.push({
+                            branch: res.branch,
+                            color: res.color,
+                            timestamp: textIterator.commit.author.date,
+                            message: textIterator.commit.message,
+                            sha: textIterator.sha,
+                        });
+                    }
+
+                })
+        }
+
+        drawCommitGraph();
+
+
+    }
+
+    const drawCommitGraph = ()=>{
+        //날짜를 기준으로 내림차순으로 정렬
+        commitGraph.sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp))
+
+        //커밋 순서대로 화면 그리기
+        const commitData = document.getElementById('commit-data');
+        while(commitData.hasChildNodes()){
+            commitData.removeChild(commitData.firstChild);
+        }
+
+        commitGraph.forEach((data)=>{
+            const commitEle = document.createElement('li');
+            commitEle.textContent = '(' + data.branch + ') : ' +  data.message;
+            commitEle.className = 'commit-graph-object'
+            commitEle.style.backgroundColor = data.color;
+            commitEle.onclick = ()=>commitChildOnClick(data.sha);
+            commitData.appendChild(commitEle);
         })
-            .then((response)=>response.text())
-            .then((text)=>{
-
-                let textData = '';
-                console.log(text);
-                const textIterator = JSON.parse(text);
-                const commitData = document.getElementById('commit-data');
-
-                textIterator.forEach((data)=>{
-
-                    const commitChild = document.createElement('li');
-                    commitChild.textContent = data.commit.message;
-                    commitChild.className='button-item'
-                    commitChild.onclick = ()=>commitChildOnClick(data.sha)
-                    commitData.appendChild(commitChild);
-                })
-            })
     }
 
     const branchChildOnClick = (name)=>{

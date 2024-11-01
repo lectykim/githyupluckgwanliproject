@@ -18,13 +18,17 @@ body {
 
 .commit-bar{
     height: 100%;
-    width: 140px;
+    width: 340px;
     position: fixed;
-    top: 0;
+    top: 50px;
     left: 140px;
     background-color: #1e1f22;
     padding-top: 20px;
     overflow-y: scroll;
+}
+
+.commit-graph-object{
+    font-size: x-small;
 }
 
 /* 사이드바 링크 스타일 */
@@ -192,7 +196,7 @@ input {
 
 }
 .button-list {
-    list-style: none; /* 불필요한 점 리스트 제거 */
+    /*list-style: none; */
     padding: 0;
     margin: 0;
 

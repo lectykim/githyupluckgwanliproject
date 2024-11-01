@@ -56,8 +56,8 @@ public class GithubApiServiceImpl implements GithubApiService{
         return commitManager.getCommitList(owner,repo,path);
     }
 
-    public ResponseEntity<byte[]> getCommitDetail(String owner, String repo, String sha) {
-        return commitManager.getCommitDetail(owner,repo,sha);
+    public ResponseEntity<byte[]> getCommitDetail(String owner, String repo, String sha,String refSha) {
+        return commitManager.getCommitDetail(owner,repo,sha,refSha);
     }
 
     @Override

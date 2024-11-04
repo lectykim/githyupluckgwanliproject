@@ -8,4 +8,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class Parents {
     private String sha;
+    private String url;
+    private String htmlUrl;
 }

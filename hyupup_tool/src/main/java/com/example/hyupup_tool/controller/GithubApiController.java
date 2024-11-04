@@ -54,7 +54,7 @@ public class GithubApiController {
     }
 
     @PostMapping("/sync-git-graph")
-    public ResponseEntity<SyncGitGraphResponse> syncGitGraph(SyncGitGraphRequest request){
+    public ResponseEntity<SyncGitGraphResponse> syncGitGraph(@RequestBody SyncGitGraphRequest request){
         return ResponseEntity.ok(githubApiServiceImpl.syncGitGraph(request));
     }
 

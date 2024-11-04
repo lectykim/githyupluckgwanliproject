@@ -120,7 +120,16 @@ public class GithubApiServiceImpl implements GithubApiService{
 
     @Override
     public GetGitGraphResponse getGitGraph(GetGitGraphRequest request) {
-        return null;
+        var roomEntity = roomRepository.findById(request.roomId())
+                .orElseThrow(()-> new BadRequestException("Room not found"));
+
+        return new GetGitGraphResponse(
+                drawGitGraph(
+                        commitManager.getRecentCommit(
+                                roomEntity.getOwner(),roomEntity.getRepository()
+                        ),roomEntity.getOwner(),roomEntity.getRepository()
+                )
+        );
     }
 
     public String rawToArray(String str){
@@ -172,6 +181,8 @@ public class GithubApiServiceImpl implements GithubApiService{
             //부모 커밋을 큐에 삽입
             for(var parents:iter.getParentsList()){
                 var next = findGitGraph(parents.getSha());
+                if(next == null)
+                    continue;
                 gitGraphIterators.add(next);
             }
 
@@ -210,8 +221,8 @@ public class GithubApiServiceImpl implements GithubApiService{
             //브런치
             listOps.rightPush(dto.getSha(),branch);
             //메세지
-            listOps.rightPush(dto.getSha(),dto.getInnerCommit().getMessage());
-            for(Parents parents:dto.getParentsList()){
+            listOps.rightPush(dto.getSha(),dto.getCommit().getMessage());
+            for(Parents parents:dto.getParents()){
                 //부모 커밋 sha
                 listOps.rightPush(dto.getSha(),parents.getSha());
             }
@@ -238,7 +249,7 @@ public class GithubApiServiceImpl implements GithubApiService{
             gitGraphIterator.setMessage(gitGraphList.get(1));
             List<Parents> parentsList = new ArrayList<>();
             for(int idx=2;idx<gitGraphList.size();idx++){
-                Parents parents = new Parents(gitGraphList.get(idx));
+                Parents parents = new Parents(gitGraphList.get(idx),null,null);
                 parentsList.add(parents);
             }
             gitGraphIterator.setParentsList(parentsList);

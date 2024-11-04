@@ -10,7 +10,7 @@ public class GetCommitDetailsResponseDTO {
 
     private String sha;
 
-    private InnerCommit innerCommit;
+    private InnerCommit commit;
 
     private String url;
 
@@ -18,7 +18,7 @@ public class GetCommitDetailsResponseDTO {
 
     private Committer committer;
 
-    private List<Parents> parentsList;
+    private List<Parents> parents;
 
     private List<CommitFile> files;
 

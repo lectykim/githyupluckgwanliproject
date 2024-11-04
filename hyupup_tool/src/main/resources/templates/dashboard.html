@@ -109,6 +109,7 @@
             <button onclick="inviteMember()" id="invite-button" class="file-button">멤버 초대하기</button>
             <button onclick="getCurrentMember()" id="view-current-member-button" class="file-button">현재 멤버 보기</button>
             <button onclick="gitSetting()" id="git-setting-button" class="file-button">Git 설정 변경하기</button>
+            <button onclick="SyncGitGraph()" class="file-button">Git Log Graph 초기화</button>
         </div>
 
         <div id="input-container">
@@ -902,100 +903,39 @@
         document.getElementById('info-data').textContent='';
     }
 
-    const masterSettingForm = async (data)=>{
+    const masterSettingForm = (data)=>{
         slaveSettingForm()
-        const branchApiCallUrl = 'api/v1/github-api/get-branch-list';
-        const branchParam = {
-            owner:data.owner,
-            repo:data.repository
-        }
-        const branchQueryString = new URLSearchParams(branchParam).toString()
-        const branchApiReqUrl = `${branchApiCallUrl}?${branchQueryString}`;
-        await fetch(branchApiReqUrl,{
+        fetch('api/v1/github-api/get-git-graph?roomId='+currentRoomNum,{
             method:'GET',
+            headers:{
+                'Content-Type':'application/json'
+            },
         })
-            .then((response)=>response.text())
-            .then((text)=>{
-
-
-                const textIterator = JSON.parse(text);
-
-                textIterator.forEach((data)=>{
-                    branchStore[branchColorCount] = {
-                        branch:data.name,
-                        color:colorArr[branchColorCount%7]
-                    }
-                    branchColorCount++;
-
-                })
-
+            .then((res)=>{
+                if(res.ok)
+                    return res.json();
             })
-        for (const res of branchStore) {
-            const commitApiCallUrl = 'api/v1/github-api/get-commit-detail';
-            const commitParam = {
-                owner:data.owner,
-                repo:data.repository,
-                sha:'',
-                refSha:res.branch
-            };
-            const commitQueryString = new URLSearchParams(commitParam).toString()
-            const commitApiReqUrl = `${commitApiCallUrl}?${commitQueryString}`;
-
-            await fetch(commitApiReqUrl,{
-                method:'GET',
+            .then((data)=>{
+                //TODO Drawing Graph
+                console.log(data);
             })
-                .then((response)=>response.text())
-                .then((text)=>{
-                    console.log(text);
-                    const textIterator = JSON.parse(text);
-
-                    if (Array.isArray(textIterator)) {
-                        textIterator.forEach((data) => {
-                            commitGraph.push({
-                                branch: res.branch,
-                                color: res.color,
-                                timestamp: data.commit.author.date,
-                                message: data.commit.message,
-                                sha: data.sha,
-                            });
-                        });
-                    } else {
-                        // textIterator가 배열이 아닌 경우 단일 객체로 처리
-                        commitGraph.push({
-                            branch: res.branch,
-                            color: res.color,
-                            timestamp: textIterator.commit.author.date,
-                            message: textIterator.commit.message,
-                            sha: textIterator.sha,
-                        });
-                    }
-
-                })
-        }
-
-        drawCommitGraph();
-
-
     }
 
-    const drawCommitGraph = ()=>{
-        //날짜를 기준으로 내림차순으로 정렬
-        commitGraph.sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp))
-
-        //커밋 순서대로 화면 그리기
-        const commitData = document.getElementById('commit-data');
-        while(commitData.hasChildNodes()){
-            commitData.removeChild(commitData.firstChild);
-        }
-
-        commitGraph.forEach((data)=>{
-            const commitEle = document.createElement('li');
-            commitEle.textContent = '(' + data.branch + ') : ' +  data.message;
-            commitEle.className = 'commit-graph-object'
-            commitEle.style.backgroundColor = data.color;
-            commitEle.onclick = ()=>commitChildOnClick(data.sha);
-            commitData.appendChild(commitEle);
+    const SyncGitGraph = ()=>{
+        fetch('api/v1/github-api/sync-git-graph',{
+            method:'POST',
+            headers:{
+                'Content-Type':'application/json'
+            },
+            body:JSON.stringify({roomId:currentRoomNum})
         })
+            .then((res)=>{
+                if(res.ok)
+                    return res.json();
+            })
+            .then((data)=>{
+                console.log(data);
+            })
     }
 
     const branchChildOnClick = (name)=>{

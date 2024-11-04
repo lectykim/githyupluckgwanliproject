@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
+import java.util.Objects;
 
 @Component
 @RequiredArgsConstructor
@@ -53,7 +54,6 @@ public class CommitManager {
             url ="https://api.github.com/repos/"+owner+"/"+repo+"/commits?sha="+refSha;
         }
 
-
         ResponseEntity<byte[]> response = restTemplate.exchange(url, HttpMethod.GET,entity,byte[].class);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(response.getHeaders().getContentType());
@@ -62,6 +62,38 @@ public class CommitManager {
 
     }
 
+    public List<GetCommitDetailsResponseDTO> getCommitDetailsWithDto(String owner,String repo,String sha,String refSha){
+        var memberDto = SessionGetter.getCurrentMemberDto();
+        HttpHeaders httpHeaders = GithubHTTPHeader.getHttpHeaders(memberDto.getGithubAccessToken());
+        HttpEntity<String> entity = new HttpEntity<>(null,httpHeaders);
+        String url;
+        if(refSha.isEmpty()){
+            url = "https://api.github.com/repos/"+owner+"/"+repo+"/commits/"+sha;
+        }
+        else{
+            url ="https://api.github.com/repos/"+owner+"/"+repo+"/commits?sha="+refSha;
+        }
+
+        ResponseEntity<List<GetCommitDetailsResponseDTO>> response = restTemplate.exchange(
+                url,
+                HttpMethod.GET,
+                entity,
+                new ParameterizedTypeReference<List<GetCommitDetailsResponseDTO>>(){}
+        );
+        return response.getBody();
+    }
+
+    public String getRecentCommit(String owner,String repo){
+        var memberDto = SessionGetter.getCurrentMemberDto();
+        HttpHeaders httpHeaders = GithubHTTPHeader.getHttpHeaders(memberDto.getGithubAccessToken());
+
+        HttpEntity<String> entity = new HttpEntity<>(null,httpHeaders);
+
+        String url = "https://api.github.com/repos/"+owner+"/"+repo+"/commits";
+        ResponseEntity<List<GetCommitListResponseDTO>> response = restTemplate.exchange(url, HttpMethod.GET, entity, new ParameterizedTypeReference<List<GetCommitListResponseDTO>>() {});
+
+        return Objects.requireNonNull(response.getBody()).getFirst().getSha();
+    }
     public ResponseEntity<byte[]> getFileDiff(String owner,String repo,String path,String ref){
         var memberDto = SessionGetter.getCurrentMemberDto();
         HttpHeaders httpHeaders = GithubHTTPHeader.getHttpHeaders(memberDto.getGithubAccessToken());

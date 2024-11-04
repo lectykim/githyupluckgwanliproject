@@ -1,8 +1,10 @@
 package com.example.hyupup_tool.entity.dto.util;
 
+import lombok.Getter;
+
 import java.time.LocalDateTime;
 
-
+@Getter
 public class InnerCommit{
     private Author author;
     private Committer committer;

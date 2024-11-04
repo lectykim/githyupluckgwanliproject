@@ -43,6 +43,18 @@ public class BranchManager {
         return new ResponseEntity<>(response.getBody(), headers, response.getStatusCode());
     }
 
+    public List<GetBranchListResponseDTO> getBranchListWithDto(String owner, String repo) {
+        var memberDto = SessionGetter.getCurrentMemberDto();
+        HttpHeaders httpHeaders = GithubHTTPHeader.getHttpHeaders(memberDto.getGithubAccessToken());
+
+        HttpEntity<String> entity = new HttpEntity<>(null,httpHeaders);
+
+        String url = "https://api.github.com/repos/"+owner+"/"+repo+"/branches";
+
+        ResponseEntity<List<GetBranchListResponseDTO>> response = restTemplate.exchange(url, HttpMethod.GET, entity, new ParameterizedTypeReference<List<GetBranchListResponseDTO>>() {});
+        return response.getBody();
+    }
+
     public ResponseEntity<byte[]> getBranchDetail(String owner, String repo, String branch) {
         var memberDto = SessionGetter.getCurrentMemberDto();
         HttpHeaders httpHeaders = GithubHTTPHeader.getHttpHeaders(memberDto.getGithubAccessToken());

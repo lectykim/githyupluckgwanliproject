@@ -3,7 +3,9 @@ package com.example.hyupup_tool.entity.dto;
 import com.example.hyupup_tool.entity.dto.util.Author;
 import com.example.hyupup_tool.entity.dto.util.Committer;
 import com.example.hyupup_tool.entity.dto.util.InnerCommit;
+import lombok.Getter;
 
+@Getter
 public class GetCommitListResponseDTO {
 
     private String sha;

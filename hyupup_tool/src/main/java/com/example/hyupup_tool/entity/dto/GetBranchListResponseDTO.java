@@ -1,5 +1,8 @@
 package com.example.hyupup_tool.entity.dto;
 
+import lombok.Getter;
+
+@Getter
 public class GetBranchListResponseDTO {
     private String name;
 

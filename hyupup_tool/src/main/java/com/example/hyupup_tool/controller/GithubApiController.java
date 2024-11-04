@@ -4,16 +4,11 @@ import com.example.hyupup_tool.entity.dto.GetBranchDetailsResponseDTO;
 import com.example.hyupup_tool.entity.dto.GetBranchListResponseDTO;
 import com.example.hyupup_tool.entity.dto.GetCommitDetailsResponseDTO;
 import com.example.hyupup_tool.entity.dto.GetCommitListResponseDTO;
-import com.example.hyupup_tool.entity.dto.github.FileDiffCheckRequestDTO;
-import com.example.hyupup_tool.entity.dto.github.FileDiffCheckResponseDTO;
-import com.example.hyupup_tool.entity.dto.github.GithubUserInfoResponse;
+import com.example.hyupup_tool.entity.dto.github.*;
 import com.example.hyupup_tool.service.GithubApiServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -56,5 +51,15 @@ public class GithubApiController {
     @GetMapping("/file-diff-check")
     public ResponseEntity<FileDiffCheckResponseDTO> fileDiffCheck(FileDiffCheckRequestDTO request){
         return ResponseEntity.ok(githubApiServiceImpl.fileDiffCheck(request));
+    }
+
+    @PostMapping("/sync-git-graph")
+    public ResponseEntity<SyncGitGraphResponse> syncGitGraph(SyncGitGraphRequest request){
+        return ResponseEntity.ok(githubApiServiceImpl.syncGitGraph(request));
+    }
+
+    @GetMapping("/get-git-graph")
+    public ResponseEntity<GetGitGraphResponse> getGitGraph(GetGitGraphRequest request){
+        return ResponseEntity.ok(githubApiServiceImpl.getGitGraph(request));
     }
 }

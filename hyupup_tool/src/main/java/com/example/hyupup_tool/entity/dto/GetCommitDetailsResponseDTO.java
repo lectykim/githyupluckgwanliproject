@@ -1,17 +1,14 @@
 package com.example.hyupup_tool.entity.dto;
 
-import com.example.hyupup_tool.entity.dto.util.Author;
-import com.example.hyupup_tool.entity.dto.util.CommitFile;
-import com.example.hyupup_tool.entity.dto.util.Committer;
-import com.example.hyupup_tool.entity.dto.util.InnerCommit;
+import com.example.hyupup_tool.entity.dto.util.*;
+import lombok.Getter;
 
 import java.util.List;
 
+@Getter
 public class GetCommitDetailsResponseDTO {
 
     private String sha;
-
-    private String nodeId;
 
     private InnerCommit innerCommit;
 
@@ -20,6 +17,8 @@ public class GetCommitDetailsResponseDTO {
     private Author author;
 
     private Committer committer;
+
+    private List<Parents> parentsList;
 
     private List<CommitFile> files;
 

@@ -1,7 +1,7 @@
 /* 여기에 Page.CSS 를 작성하십시오 */
 body {
     font-family: Arial, sans-serif;
-    background-color: #313338;
+    background-color: #2c2f38;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -9,12 +9,11 @@ body {
     margin: 0;
 }
 .container {
-    background-color: #232428;
-    padding: 20px;
-    border-radius: 8px;
-    max-width: 600px;
-    margin: 50px auto;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    background-color: #393e46;
+    padding: 40px;
+    border-radius: 10px;
+    width: 300px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 h2 {
     color: #FFFFFF;
@@ -26,7 +25,7 @@ h2 {
 }
 label,
 .up-lb {
-    color: #FFFFFF;
+    color: #c7c7c7;
     display: block;
     font-size: 14px;
     margin-bottom: 5px;
@@ -39,40 +38,47 @@ input {
     width: 89%;
     padding: 10px;
     color: #dbdee1;
-    background-color: #383a40;
-    border: 1px solid #404249;
-    border-radius: 4px;
+    background-color: #444b57;
+    border: none;
+    border-radius: 5px;
 }
 .login-btn,
 .signup-btn,
 .update-btn {
     width: 100%;
     padding: 10px;
-    background-color: #28a745;
+    background-color: #7289da;
     color: #FFFFFF;
     border: none;
-    border-radius: 4px;
+    border-radius: 5px;
     cursor: pointer;
-}
-.signup-btn {
-    background-color: #5865f2;
-}
-.update-btn{
     font-size: 16px;
+    transition: background-color 0.3s;
 }
 .login-btn:hover,
-.update-btn:hover {
-    background-color: #218838;
-}
+.update-btn:hover,
 .signup-btn:hover {
-    background-color: #4752c4;
+    background-color: #5a6fb2;
+}
+.signup-link {
+    display: block;
+    text-align: center;
+    margin-top: 10px;
+    font-size: 12px;
+    color: #7289da;
+    cursor: pointer;
+    text-decoration: none;
+}
+.signup-link:hover {
+    text-decoration: underline;
 }
 .error-message,
 .success-message {
-    color: #FF0000;
+    color: #ff6b6b;
+    font-size: 12px;
     text-align: center;
     margin-top: 10px;
 }
 .success-message {
-    color: #00FF00;
+    color: #4caf50;
 }

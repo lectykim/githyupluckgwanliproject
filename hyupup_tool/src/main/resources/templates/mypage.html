@@ -3,55 +3,49 @@
 <head>
     <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Page - Update Information</title>
-    <link rel="stylesheet" th:href="@{/css/Page.css}" />
-    <base href="/">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<div class="container">
-    <h2>Update My Information</h2>
-    <!-- 폼 제출 후 에러나 성공 메시지가 표시될 영역 -->
+<div class="info-container">
+    <h2 class="title">Update My Information</h2>
     <div class="error-message">
-        <!-- 여기에 에러 메시지 또는 성공 메시지가 표시될 수 있습니다 -->
+        <!-- Here the error or success message will display if needed -->
     </div>
     <div class="form-group">
-        <!-- Password 수정 필드 -->
-        <label for="pw" class="up-lb">PW</label>
-        <input type="password" id="pw" name="pw" placeholder="Enter new password" th:value="${memberDto.getPw()}" required>
+        <label for="pw" class="form-label">PW</label>
+        <input type="password" id="pw" name="pw" placeholder="Enter new password" required>
     </div>
     <div class="form-group">
-        <!-- GitHub Access Token 수정 필드 -->
-        <label for="githubAccessToken" class="up-lb">GitHub Access Token</label>
-        <input type="text" id="githubAccessToken" name="githubAccessToken" placeholder="Enter GitHub Access Token" th:value="${memberDto.getGithubAccessToken()}">
+        <label for="githubAccessToken" class="form-label">GitHub Access Token</label>
+        <input type="text" id="githubAccessToken" name="githubAccessToken" placeholder="Enter GitHub Access Token">
     </div>
     <div class="form-group">
-        <!-- GitHub Access Token 수정 필드 -->
-        <label for="nickname" class="up-lb">Nickname</label>
-        <input type="text" id="nickname" name="nickname" placeholder="Nickname" th:value="${memberDto.getNickname()}">
+        <label for="nickname" class="form-label">Nickname</label>
+        <input type="text" id="nickname" name="nickname" placeholder="Nickname">
     </div>
-    <!-- 제출 버튼 -->
-    <button type="submit" onclick=updateInfo() class="update-btn">Update Information</button>
+    <button type="submit" onclick="updateInfo()" class="update-btn">Update Information</button>
 </div>
 <script type="text/javascript">
-    const updateInfo = ()=>{
+    const updateInfo = () => {
         const pw = document.getElementById('pw').value;
         const githubAccessToken = document.getElementById('githubAccessToken').value;
         const nickname = document.getElementById('nickname').value;
-        fetch('api/v1/member-api/modify-member-info',{
-            method:'POST',
-            headers:{
+
+        fetch('api/v1/member-api/modify-member-info', {
+            method: 'POST',
+            headers: {
                 'Content-Type': 'application/json',
             },
-            body:JSON.stringify({pw,githubAccessToken,nickname})
+            body: JSON.stringify({ pw, githubAccessToken, nickname })
         })
-            .then((response)=>{
-                if(response.ok&& response.status===200){
-                    window.location.href = "/dashboard/main"
-                }else if(response.status === 400 || response.status === 500){
-                    alert("modify failed");
+            .then((response) => {
+                if (response.ok && response.status === 200) {
+                    window.location.href = "/dashboard/main";
+                } else {
+                    alert("Failed to update information.");
                 }
             });
-    }
+    };
 </script>
 </body>
-
 </html>

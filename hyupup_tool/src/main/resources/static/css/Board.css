@@ -30,6 +30,49 @@ body {
     font-size: x-small;
 }
 
+/* CSS */
+.button-40 {
+    background-color: #111827;
+    border: 1px solid transparent;
+    border-radius: .75rem;
+    box-sizing: border-box;
+    color: #FFFFFF;
+    cursor: pointer;
+    flex: 0 0 auto;
+    font-family: "Inter var",ui-sans-serif,system-ui,-apple-system,system-ui,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+    font-size: 1.125rem;
+    font-weight: 600;
+    line-height: 1.5rem;
+    padding: .75rem 1.2rem;
+    text-align: center;
+    text-decoration: none #6B7280 solid;
+    text-decoration-thickness: auto;
+    transition-duration: .2s;
+    transition-property: background-color,border-color,color,fill,stroke;
+    transition-timing-function: cubic-bezier(.4, 0, 0.2, 1);
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    width: auto;
+}
+
+.button-40:hover {
+    background-color: #374151;
+}
+
+.button-40:focus {
+    box-shadow: none;
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+}
+
+@media (min-width: 768px) {
+    .button-40 {
+        padding: .75rem 1.5rem;
+    }
+}
+
+
 /* 사이드바 링크 스타일 */
 .sidebar p {
     padding: 10px 15px;
@@ -276,7 +319,7 @@ input {
 .button-container{
     display:flex;
     margin-top:10px;
-    width: 600px;
+    width: auto;
     align-items: center;
     justify-content: center;
 }
@@ -325,7 +368,7 @@ input {
     }
 }
 .commit-editor{
-    max-width: 400px;  /* 최대 너비 설정 */
+    max-width: 900px;  /* 최대 너비 설정 */
     max-height: 600px; /* 최대 높이 설정 */
     overflow-y: auto;  /* 세로 스크롤 활성화 */
     padding: 0;

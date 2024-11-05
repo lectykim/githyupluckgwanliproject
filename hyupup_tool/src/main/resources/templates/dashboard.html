@@ -88,29 +88,26 @@
     </div>
     <div class="chatting-global-container" id="chatting-global-container">
 
-        <div class="selector-title">
-            파일 선택
-        </div>
-        <ul id="commit-selector">
-
-        </ul>
-        <div id="info-data">
-            방장이 브런치 or 커밋 정보를 선택할 때 동기화됩니다.
-        </div>
-        <div class="commit-chat-container">
-            <ul id="commit-editor" class="commit-editor">
-
-            </ul>
-            <div id="chat-container"></div>
-        </div>
-
         <!-- 오른쪽에 배치할 버튼들을 포함한 컨테이너 추가 -->
-        <div id="button-container" class="button-container">
-            <button onclick="inviteMember()" id="invite-button" class="file-button">멤버 초대하기</button>
-            <button onclick="getCurrentMember()" id="view-current-member-button" class="file-button">현재 멤버 보기</button>
-            <button onclick="gitSetting()" id="git-setting-button" class="file-button">Git 설정 변경하기</button>
-            <button onclick="SyncGitGraph()" class="file-button">Git Log Graph 초기화</button>
+
+        <div style="justify-content: center">
+            <div id="button-container" class="button-container">
+                <button onclick="inviteMember()" id="invite-button" class="button-40">⚙️ 멤버 초대하기</button>
+                <button onclick="getCurrentMember()" id="view-current-member-button" class="button-40">⚙️ 현재 멤버 보기</button>
+                <button onclick="gitSetting()" id="git-setting-button" class="button-40">⚙️ Git 설정 변경하기</button>
+                <button onclick="SyncGitGraph()" class="button-40">⚙️ Git Log Graph 초기화</button>
+            </div>
+            <div class="commit-chat-container">
+
+                <ul id="commit-editor" class="commit-editor">
+
+                </ul>
+                <div id="chat-container"></div>
+            </div>
         </div>
+
+
+
 
         <div id="input-container">
             <input type="text" id="chat-input" placeholder="채팅을 입력하세요..." />
@@ -201,7 +198,7 @@
             const str = chat.data.split('/');
             updateCodeFormat(str[0],str[1]);
         }else if(chat.type==='MODIFIED'){
-            viewFile(data)
+            viewFile(chat.data)
         } else{
             //알림 동기화
             notificationSynchronization(chat);
@@ -315,7 +312,7 @@
     const viewFile = (filename)=>{
 
            let shaData = '';
-           const currentFile = findCurrentFile(filename);
+           //const currentFile = findCurrentFile(filename);
         const getCommitListURL = 'api/v1/github-api/get-commit-list';
         const roomDto = findRoomDto(currentRoomNum);
         const getCommitListQueryParam = {
@@ -337,7 +334,7 @@
             })
             .then((data)=>{
                 const newData = JSON.parse(data);
-
+                console.log(newData);
                 const firstData = newData[0].sha;
                 const secondData = newData[1].sha;
                 getFileDiff(firstData,secondData,filename);
@@ -866,12 +863,9 @@
             chatContainer.scrollTop = chatContainer.scrollHeight; // 스크롤을 가장 아래로
         })
     }
-    const slaveSettingForm = ()=>{
-        document.getElementById('info-data').textContent='';
-    }
 
     const masterSettingForm = (data,event)=>{
-        slaveSettingForm()
+
         fetch('api/v1/github-api/get-git-graph?roomId='+currentRoomNum,{
             method:'GET',
             headers:{

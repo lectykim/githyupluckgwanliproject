@@ -917,8 +917,59 @@
             })
             .then((data)=>{
                 //TODO Drawing Graph
+                drawGitGraph(data);
                 console.log(data);
             })
+    }
+
+    const drawGitGraph = (data)=>{
+        const commitData = document.getElementById('commit-data');
+        while(commitData.hasChildNodes()){
+            commitData.removeChild(commitData.firstChild);
+        }
+        let colorObject = [];
+        data.gitGraphDtoList.forEach((inner)=>{
+            colorObject.push(
+                {
+                    branch:inner.branch,
+                    color:inner.branchColor
+                }
+            )
+            const innerCommitData = document.createElement('li');
+
+            innerCommitData.style.color='white';
+
+            const spanData = document.createElement('span');
+            spanData.style.color=inner.branchColor;
+            spanData.textContent = '|' + '\\'.repeat(inner.branchLineNum) + '*'
+            innerCommitData.appendChild(spanData);
+            innerCommitData.appendChild(document.createTextNode(inner.commitMessage));
+            innerCommitData.onclick = ()=>commitChildOnClick(inner.commitSha);
+            commitData.appendChild(innerCommitData);
+        })
+        //console.log(colorObject);
+
+        const set = new Set();
+
+        const uniqueArr = colorObject.filter(item =>{
+            if(set.has(item.branch)){
+                return false;
+            }
+            set.add(item.branch);
+            return true;
+        })
+
+        console.log(uniqueArr);
+        uniqueArr.forEach((data)=>{
+            const branchColorData = document.createElement('li');
+            branchColorData.appendChild(document.createTextNode(data.branch));
+            const spanData = document.createElement('span');
+            spanData.style.color= data.color;
+            spanData.textContent = 'O';
+            branchColorData.appendChild(spanData);
+
+            commitData.appendChild(branchColorData);
+        })
     }
 
     const SyncGitGraph = ()=>{

@@ -153,11 +153,12 @@ public class GithubApiServiceImpl implements GithubApiService{
         gitGraphIterators.add(findGitGraph(recentCommitSha));
         while(!gitGraphIterators.isEmpty()){
             var iter = gitGraphIterators.poll();
-
+            if(iter == null)
+                continue;
             String branchColor = branchColorStore.get(iter.getBranch());
             Long branchLine = branchLineNumStore.get(iter.getBranch());
             if(branchColor == null){
-                branchColor = redisTemplate.opsForValue().get(owner+":"+repo+":color:");
+                branchColor = redisTemplate.opsForValue().get(owner+":"+repo+":"+iter.getBranch()+":color:");
                 branchColorStore.put(iter.getBranch(),branchColor);
             }
             if(branchLine == null){
@@ -189,6 +190,18 @@ public class GithubApiServiceImpl implements GithubApiService{
 
         }
 
+        gitGraphDtoList = new ArrayList<>(gitGraphDtoList.stream()
+                .collect(Collectors.toMap(
+                        GitGraphDto::commitSha,          // commitSha를 키로 사용
+                        dto -> dto,                      // dto 자체를 값으로 저장
+                        (dto1, dto2) -> dto1.branchLineNum() > dto2.branchLineNum() ? dto1 : dto2 // branchLineNum이 높은 것을 선택
+                ))
+                .values());
+
+        gitGraphDtoList.sort((o1, o2) -> {
+            return o1.recentCommitNum().compareTo(o2.recentCommitNum());
+        });
+
         return gitGraphDtoList;
     }
 
@@ -204,6 +217,8 @@ public class GithubApiServiceImpl implements GithubApiService{
             String sb = owner +
                     ":" +
                     repo +
+                    ":"+
+                    branchList.get(idx).getName()+
                     ":color:";
             valueOperations.set(sb,colors[idx%7]);
         }

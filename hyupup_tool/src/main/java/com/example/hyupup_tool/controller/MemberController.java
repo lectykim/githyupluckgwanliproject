@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 public class MemberController {
 
     private final MemberServiceImpl memberServiceImpl;
-
+ 
     /*@PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest){
         LoginResponse response = memberServiceImpl.login(loginRequest);

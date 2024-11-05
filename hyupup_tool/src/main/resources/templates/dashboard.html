@@ -164,7 +164,7 @@
     const chattingForm = document.getElementById('chatting-global-container');
     const chatContainer = document.getElementById('chat-container');
     const eventContainer = document.getElementById('event-container');
-    const commitSelector = document.getElementById('commit-selector');
+    //const commitSelector = document.getElementById('commit-selector');
 
     const span = document.getElementsByClassName('close')[0];
     let owner;
@@ -197,7 +197,12 @@
             updateReceivePos(chat);
         }else if((chat.type==='COMMIT'||chat.type==='BRANCH')&&chat.channelId==currentRoomNum){
             showGithubData(chat);
-        }else{
+        }else if(chat.type==='OTHER'){
+            const str = chat.data.split('/');
+            updateCodeFormat(str[0],str[1]);
+        }else if(chat.type==='MODIFIED'){
+            viewFile(data)
+        } else{
             //알림 동기화
             notificationSynchronization(chat);
         }
@@ -229,50 +234,12 @@
                     document.getElementById('info-data').textContent = newData.name;
                 })
         }else{
-            const commitDetailURL = 'api/v1/github-api/get-commit-detail';
-            const roomDto = findRoomDto(currentRoomNum);
-            const commitQueryParam = {
-                owner:roomDto.owner,
-                repo:roomDto.repository,
-                sha:data.data,
-                refSha:''
-            }
-            const commitQueryString = new URLSearchParams(commitQueryParam).toString()
-            const commitApiReqUrl = `${commitDetailURL}?${commitQueryString}`;
-            fetch(commitApiReqUrl,{
-                method:'GET',
-            })
-                .then((response)=>{
-                    if(response.ok){
-                        return response.text();
-                    }else{
-                        console.log(response);
-                    }
-                })
-                .then((data)=>{
-                    const newData = JSON.parse(data);
 
-                    let shaData = '';
-                    commitFileStore = newData.files;
-                    while(commitSelector.hasChildNodes()){
-                        commitSelector.removeChild(commitSelector.firstChild);
-                    }
-                    newData.files.forEach((res)=>{
-                        const commitFiles = document.createElement('li');
-                        commitFiles.textContent=res.filename;
-                        commitFiles.className='file-button'
-                        console.log(res.status);
-                        if(res.status==='modified'){
-                            commitFiles.onclick= ()=>viewFile(res.filename);
-                        }else{
-                            commitFiles.onclick = ()=>updateCodeFormat(res.filename,res.status);
-                        }
-
-                        commitSelector.appendChild(commitFiles);
-                        shaData += res.patch;
-                    })
-                })
         }
+    }
+
+    const getFileName = (filename)=>{
+        return filename.split('/').pop();
     }
 
     const updateCodeFormat = async (filename,status) =>{
@@ -837,7 +804,7 @@
             });
     }
 
-    const connectChatting = (roomNum)=>{
+    const connectChatting = (roomNum,event)=>{
         currentRoomNum = roomNum;
         roomDtoList.forEach((data)=>{
             if(data.roomId === roomNum){
@@ -848,7 +815,7 @@
                         memberToRoomDTO.master&&
                         memberToRoomDTO.memberId === currentMemberDTO.memberId){
                         showBeforeChat(data);
-                        masterSettingForm(data);
+                        masterSettingForm(data,event);
                         hideChattingContent();
                         chattingForm.style.display='block';
                         syncReadPos(roomNum);
@@ -903,7 +870,7 @@
         document.getElementById('info-data').textContent='';
     }
 
-    const masterSettingForm = (data)=>{
+    const masterSettingForm = (data,event)=>{
         slaveSettingForm()
         fetch('api/v1/github-api/get-git-graph?roomId='+currentRoomNum,{
             method:'GET',
@@ -916,13 +883,12 @@
                     return res.json();
             })
             .then((data)=>{
-                //TODO Drawing Graph
-                drawGitGraph(data);
+                drawGitGraph(data,event);
                 console.log(data);
             })
     }
 
-    const drawGitGraph = (data)=>{
+    const drawGitGraph = (data,event)=>{
         const commitData = document.getElementById('commit-data');
         while(commitData.hasChildNodes()){
             commitData.removeChild(commitData.firstChild);
@@ -935,16 +901,25 @@
                     color:inner.branchColor
                 }
             )
-            const innerCommitData = document.createElement('li');
+            const innerCommitData = document.createElement('div');
 
             innerCommitData.style.color='white';
-
+            innerCommitData.className = 'tooltip'
+            innerCommitData.id='commit-'+inner.recentCommitNum
             const spanData = document.createElement('span');
             spanData.style.color=inner.branchColor;
             spanData.textContent = '|' + '\\'.repeat(inner.branchLineNum) + '*'
             innerCommitData.appendChild(spanData);
-            innerCommitData.appendChild(document.createTextNode(inner.commitMessage));
-            innerCommitData.onclick = ()=>commitChildOnClick(inner.commitSha);
+
+            const textNode = document.createElement('div');
+            textNode.appendChild(spanData);
+            textNode.appendChild(document.createTextNode(inner.commitMessage));
+
+            innerCommitData.appendChild(textNode);
+
+
+
+            innerCommitData.onclick = ()=>addCommitChild(inner.commitSha,inner.recentCommitNum);
             commitData.appendChild(innerCommitData);
         })
         //console.log(colorObject);
@@ -971,6 +946,55 @@
             commitData.appendChild(branchColorData);
         })
     }
+
+    const addCommitChild = (sha,num)=>{
+
+        const commitDetailURL = 'api/v1/github-api/get-commit-detail';
+        const roomDto = findRoomDto(currentRoomNum);
+        const commitQueryParam = {
+            owner:roomDto.owner,
+            repo:roomDto.repository,
+            sha:sha,
+            refSha:''
+        }
+        const commitQueryString = new URLSearchParams(commitQueryParam).toString()
+        const commitApiReqUrl = `${commitDetailURL}?${commitQueryString}`;
+        fetch(commitApiReqUrl,{
+            method:'GET',
+        })
+            .then((response)=>{
+                if(response.ok){
+                    return response.text();
+                }else{
+                    console.log(response);
+                }
+            })
+            .then((data)=>{
+                const newData = JSON.parse(data);
+                commitFileStore = newData.files;
+                const commitSelector = document.getElementById('commit-'+num);
+                const firstChild = commitSelector.firstChild;
+                while(commitSelector.hasChildNodes()){
+                    commitSelector.removeChild(commitSelector.firstChild);
+                }
+                commitSelector.appendChild(firstChild);
+                newData.files.forEach((res)=>{
+                    const commitFiles = document.createElement('div');
+                    commitFiles.textContent='📁 ' + getFileName(res.filename);
+                    commitFiles.className='tooltip-text'
+                    console.log(res.status);
+                    if(res.status==='modified'){
+                        commitFiles.onclick= ()=>modifiedCommit(res.filename)
+                    }else{
+                        commitFiles.onclick = ()=>otherCommit(res.filename,res.status);
+                    }
+
+                    commitSelector.appendChild(commitFiles);
+                })
+            })
+    }
+
+
 
     const SyncGitGraph = ()=>{
         fetch('api/v1/github-api/sync-git-graph',{
@@ -1004,12 +1028,26 @@
         )
     }
 
-    const commitChildOnClick = (sha)=>{
+    const modifiedCommit = (data)=>{
         const chattingData = {
             sender:currentMemberDTO.email,
             channelId:currentRoomNum.toString(),
-            type:'COMMIT',
-            data:sha
+            type:'MODIFIED',
+            data:data
+        }
+        stompClients[currentRoomNum].send(
+            "/pub/github/"+currentRoomNum,
+            {},
+            JSON.stringify(chattingData)
+        )
+    }
+
+    const otherCommit = (data,status)=>{
+        const chattingData = {
+            sender:currentMemberDTO.email,
+            channelId:currentRoomNum.toString(),
+            type:'OTHER',
+            data:data+'/'+status
         }
         stompClients[currentRoomNum].send(
             "/pub/github/"+currentRoomNum,

@@ -4,88 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>로그인 페이지</title>
-    <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #2c2f38;
-            font-family: Arial, sans-serif;
-        }
-
-        .container {
-            background-color: #393e46;
-            padding: 40px;
-            border-radius: 10px;
-            width: 300px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-
-        h2 {
-            color: #fff;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        .form-group label {
-            color: #c7c7c7;
-            font-size: 14px;
-            display: block;
-            margin-bottom: 5px;
-        }
-
-        .form-group input {
-            width: 93%;
-            padding: 10px;
-            border-radius: 5px;
-            border: none;
-            background-color: #444b57;
-            color: #fff;
-        }
-
-        .login-btn {
-            width: 100%;
-            padding: 10px;
-            background-color: #7289da;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        .login-btn:hover {
-            background-color: #5a6fb2;
-        }
-
-        .signup-btn {
-            display: block;
-            text-align: center;
-            margin-top: 10px;
-            font-size: 12px;
-            color: #7289da;
-            cursor: pointer;
-            text-decoration: none;
-        }
-
-        .signup-btn:hover {
-            text-decoration: underline;
-        }
-
-        .error-message {
-            color: #ff6b6b;
-            font-size: 12px;
-            text-align: center;
-            margin-top: 10px;
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 <div class="container">
@@ -100,8 +19,8 @@
             <input type="password" id="pw" name="pw" required>
         </div>
         <button onclick="Login()" class="login-btn">로그인</button>
-        <a onclick="GoSignUp()" class="signup-btn">회원가입</a>
-        <a onclick="FindIDPW()" class="signup-btn">ID/PW 찾기</a>
+        <a onclick="GoSignUp()" class="signup-link">회원가입</a>
+        <a onclick="FindIDPW()" class="signup-link">ID/PW 찾기</a>
     </div>
     <div id="error-message" class="error-message"></div>
 </div>
@@ -111,7 +30,6 @@
     }
 
     const FindIDPW = () => {
-        // ID/PW 찾기 페이지로 이동하는 기능 구현
         window.location.href = "/find-idpw";
     }
 

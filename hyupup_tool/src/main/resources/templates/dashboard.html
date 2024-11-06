@@ -23,7 +23,7 @@
         </p>
     </div>
 </div>
-<div class="commit-bar">
+<div class="commit-bar" id="commit-bar">
     <div>
         <ul id="commit-data" class="button-list">
 
@@ -39,6 +39,7 @@
             <div class="profile-name" id="profile-name"></div>
         </div>
     </div>
+    <button onclick="commitBarVisible()">hide commit bar</button>
     <button onclick="openEventModal()">
         🔔 Notifications
             <span id="notification"></span>
@@ -175,6 +176,7 @@
     let commitGraph = [];
     let branchStore = [];
     let colorArr = [];
+    let isCommitBarVisible = true;
     colorArr.push('red','orange','yellow','green','blue','navy','white')
     let branchColorCount=0;
 
@@ -880,6 +882,18 @@
                 drawGitGraph(data,event);
                 console.log(data);
             })
+    }
+
+    const commitBarVisible = ()=>{
+        const commitBar = document.getElementById('commit-bar')
+        if(isCommitBarVisible){
+            commitBar.style.display = 'none'
+            isCommitBarVisible = false;
+        }else{
+            commitBar.style.display = 'block'
+            isCommitBarVisible = true;
+        }
+
     }
 
     const drawGitGraph = (data,event)=>{

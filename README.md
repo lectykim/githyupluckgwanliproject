@@ -44,8 +44,17 @@ Code Sympony는 WebSocket과 Github API를 활용하여,
 
 ## Page image
 
-
+### Sign up Page
 ![signup-page](https://github.com/user-attachments/assets/4f8b0a5b-71f8-47a0-a826-ea0458d8b573)
-![modifypage](https://github.com/user-attachments/assets/1633be95-7fb1-40d5-8e8b-79d2d79cae2d)
+
+### Login Page
 ![loginpage](https://github.com/user-attachments/assets/da579a90-b434-4f66-aa7e-5e161c4de29a)
+
+### Dashboard
+
 ![dashboard](https://github.com/user-attachments/assets/c52d9360-91bf-4024-a847-0b4138c34cf6)
+
+### Modify Page
+![modifypage](https://github.com/user-attachments/assets/1633be95-7fb1-40d5-8e8b-79d2d79cae2d)
+
+

@@ -450,16 +450,19 @@
                 const commitEditorChildElement = document.createElement('li');
                 commitEditorChildElement.textContent = idx + filteredLine;
                 commitEditorChildElement.className='deleted-line';
+                commitEditorChildElement.id = 'line'+idx;
                 commitEditorElement.appendChild(commitEditorChildElement);
             } else if (line.includes('😃')) {
                 const commitEditorChildElement = document.createElement('li');
                 commitEditorChildElement.textContent = idx + filteredLine;
                 commitEditorChildElement.className='added-line';
+                commitEditorChildElement.id = 'line'+idx;
                 commitEditorElement.appendChild(commitEditorChildElement);
             } else {
                 const commitEditorChildElement = document.createElement('li');
                 commitEditorChildElement.textContent = idx + filteredLine;
                 commitEditorChildElement.className='normal-line';
+                commitEditorChildElement.id = 'line'+idx;
                 commitEditorElement.appendChild(commitEditorChildElement);
             }
             idx++;
@@ -1063,11 +1066,21 @@
             JSON.stringify(chattingData)
         )
     }
-
+    const  isHashNumberString = (str)=> {
+        const regex = /^#\d+$/;
+        return regex.test(str);
+    }
+    function scrollToLine(id) {
+        document.getElementById(id).scrollIntoView({ behavior: "smooth" });
+    }
 
     const addChildChatting = (message)=>{
         const messageElement = document.createElement('div')
         messageElement.textContent = message.sender + ' : ' + message.data
+        if(isHashNumberString(message.data)){
+            //scrollToLine()
+            window.location.hash='line'+message.data.split('#')[1];
+        }
         chatContainer.appendChild(messageElement);
         chatContainer.scrollTop = chatContainer.scrollHeight; // 스크롤을 가장 아래로
     }
